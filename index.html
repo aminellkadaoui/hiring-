@@ -109,6 +109,7 @@
   .chip .tick{width:24px;height:24px;border-radius:8px;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 24px;color:#fff;font-size:13px;transition:background .25s,border-color .25s}
   .chip.radio .tick{border-radius:50%}
   .chip .tick i{opacity:0;transform:scale(.5);transition:transform .25s cubic-bezier(.22,.61,.36,1),opacity .2s}
+  .chip .tick-sp{flex:0 0 24px}
   .chip.on{border-color:var(--blue-2);background:rgba(66,165,255,.12);color:var(--blue-2)}
   .chip.on .tick{background:var(--blue-2);border-color:var(--blue-2)}
   .chip.on .tick i{opacity:1;transform:scale(1)}
@@ -222,8 +223,6 @@
       <div class="node" id="tl-2"><span class="tc">00:02</span><span class="knob"><i class="ph-bold ph-pencil-simple-line"></i></span></div>
       <div class="line" id="ln-2"><span class="fill"></span></div>
       <div class="node" id="tl-3"><span class="tc">00:03</span><span class="knob"><i class="ph-bold ph-film-slate"></i></span></div>
-      <div class="line" id="ln-3"><span class="fill"></span></div>
-      <div class="node" id="tl-done"><span class="tc">تم</span><span class="knob"><i class="ph-bold ph-check"></i></span></div>
     </div>
   </div>
 
@@ -240,7 +239,7 @@
             </div>
           </div>
           <div class="scrubber">
-            <div class="scrub-track"><div class="scrub-fill" id="vidFill"><span class="scrub-knob"></span></div></div>
+            <div class="scrub-track"><div class="scrub-fill" id="vidFill"></div></div>
             <div class="scrub-tc" id="vidPct">0%</div>
           </div>
           <button class="btn" id="videoNextBtn" disabled onclick="goForm()">أكمل المشاهدة للمتابعة</button>
@@ -302,7 +301,7 @@
       {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
       {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"radio",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
-      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
+      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم","إنترنت مستقر فقط","جهاز مناسب فقط","لا"],required:true},
       {id:"ideal",label:"كيف يبدو العمل المثالي بالنسبة لك؟",placeholder:"اشرح باختصار...",type:"textarea",required:true},
       {id:"why",label:"لماذا تريد العمل معنا؟",placeholder:"اشرح باختصار...",type:"textarea",required:true}
     ],
@@ -333,7 +332,7 @@
     document.getElementById('applyForm').innerHTML=(c.questions||[]).filter(q=>!q.hidden).map(q=>{
       const id='f_'+q.id, ph=esc(q.placeholder||'');
       let input;
-      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">'+esc(o)+'</span></label>';
+      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">'+esc(o)+'</span><span class="tick-sp"></span></label>';
       const card=(o,kind)=>'<label class="opt-card'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap">'+optIcon(o)+'</span><span class="opt-lbl">'+esc(o)+'</span></label>';
       if(q.type==='textarea') input='<textarea id="'+id+'" placeholder="'+ph+'"></textarea>';
       else if(q.type==='select') input='<select id="'+id+'"><option value="">اختر...</option>'+(q.options||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
@@ -447,11 +446,11 @@
 
   /* ---------- trial stage ---------- */
   function renderTrial(){
-    let h='<div class="trial-intro"><div class="t-h">موضوع الترايل وتفاصيله الكاملة على صفحة Notion</div>';
+    let h='<div class="trial-intro"><div class="t-h">موضوع الترايل المجاني وتفاصيله الكاملة على صفحة Notion</div>';
     if(content.notionUrl) h+='<a class="btn shine" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> افتح تفاصيل الترايل الآن <i class="ph-bold ph-arrow-left"></i></a>';
     else h+='<p class="muted">سنشارك تفاصيل الترايل معك قريباً.</p>';
     h+='</div>';
-    h+='<div class="consent"><p class="consent-q">هل توافق على تنفيذ هذا الترايل؟</p>'+
+    h+='<div class="consent"><p class="consent-q">هل تقبل تنفيذ ترايل مجاني؟</p>'+
        '<div class="consent-btns">'+
          '<button class="btn green" id="agreeBtn"><i class="ph-bold ph-check"></i> أوافق على العمل عليه</button>'+
          '<button class="btn ghost" id="declineBtn"><i class="ph-bold ph-x"></i> لا أوافق</button>'+
@@ -474,7 +473,7 @@
   function trialDone(title,sub){
     document.getElementById('trialWrap').innerHTML='<div class="success"><div class="check"><i class="ph-bold ph-check"></i></div><h2>'+title+'</h2><p class="muted">'+sub+'</p>'+
       (content.notionUrl?'<a class="btn shine" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> افتح تفاصيل الترايل</a>':'')+'</div>';
-    setNode('tl-3','done'); fillLine('ln-3'); setNode('tl-done','done');
+    setNode('tl-3','done');
   }
   async function agreeTrial(){
     trialDone('رائع — بالتوفيق في الترايل!','نتطلّع لمشاهدة عملك. التفاصيل الكاملة على صفحة Notion.');

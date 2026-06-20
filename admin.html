@@ -131,6 +131,10 @@
   .info-row .lbl{font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:500}
   .info-row .val{font-size:15px;word-break:break-word}
   .info-row a{color:var(--blue-2);text-decoration:none;font-weight:500} .info-row a:hover{text-decoration:underline}
+  .ans-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:3px}
+  .ans-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:rgba(66,165,255,.1);color:var(--blue-2);font-size:13px;font-weight:600;border:1px solid rgba(66,165,255,.22)}
+  .ans-chip img{width:16px;height:16px;object-fit:contain;display:block}
+  .ans-chip i{font-size:15px}
   .divider{height:1px;background:rgba(16,20,24,.07);margin:20px 0}
   .rate-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   .rate-chip{font-family:inherit;font-size:14px;font-weight:600;padding:12px 6px;border-radius:14px;cursor:pointer;background:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.9);color:var(--muted);transition:transform .25s cubic-bezier(.22,.61,.36,1),background .2s,border-color .2s,color .2s}
@@ -309,7 +313,7 @@
       {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
       {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"radio",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
-      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
+      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم","إنترنت مستقر فقط","جهاز مناسب فقط","لا"],required:true},
       {id:"ideal",label:"كيف يبدو العمل المثالي بالنسبة لك؟",placeholder:"اشرح باختصار...",type:"textarea",required:true},
       {id:"why",label:"لماذا تريد العمل معنا؟",placeholder:"اشرح باختصار...",type:"textarea",required:true}
     ]
@@ -329,6 +333,17 @@
   function fmtDate(iso){ if(!iso) return '—'; try{ return new Date(iso).toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'}); }catch(e){ return iso; } }
   function country(name){ if(!name) return '—'; const p=name.split(/[—\-–|،,]/); return p.length>1?p[p.length-1].trim():'—'; }
   function sanitize(c){ (c.questions||[]).forEach(q=>{ if(Array.isArray(q.options)) q.options=q.options.filter(o=>String(o).trim().toLowerCase()!=='wise'); }); return c; }
+  const LOGO={'figma':'figma','after effects':'aftereffects','premiere pro':'premiere','premiere':'premiere','davinci resolve':'davinci','davinci':'davinci','paypal':'paypal','binance':'binance','notion':'notion'};
+  function aIcon(label){ const k=String(label).trim().toLowerCase(); if(LOGO[k]) return '<img src="logos/'+LOGO[k]+'.svg" alt="" onerror="this.style.display=\'none\'">'; if(k.includes('بنك')) return '<i class="ph-bold ph-bank"></i>'; if(k.startsWith('أخرى')) return '<i class="ph-bold ph-dots-three"></i>'; return ''; }
+  function answerHtml(q,v){
+    if(v==null||v==='') return '<span class="muted">—</span>';
+    if(q.type==='url') return '<a href="'+esc(v)+'" target="_blank" rel="noopener">'+esc(v)+'</a>';
+    if(q.type==='checkbox'||q.type==='radio'||q.type==='select'){
+      const parts=String(v).split(/[،,]/).map(s=>s.trim()).filter(Boolean);
+      return '<div class="ans-chips">'+parts.map(p=>'<span class="ans-chip">'+aIcon(p)+'<span>'+esc(p)+'</span></span>').join('')+'</div>';
+    }
+    return esc(v);
+  }
 
   /* LOGIN */
   function doLogin(){
@@ -382,11 +397,7 @@
     currentId=id; currentRating=a.rating||null; $('dr-name').textContent=a.name||'—';
 
     const answers=(content.questions||[]).map(q=>{
-      const v=a[q.id];
-      let val;
-      if(q.type==='url' && v) val=`<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>`;
-      else val=esc((v==null||v==='')?'—':v);
-      return `<div class="info-row"><div class="lbl">${esc(q.label)}</div><div class="val">${val}</div></div>`;
+      return `<div class="info-row"><div class="lbl">${esc(q.label)}</div><div class="val">${answerHtml(q,a[q.id])}</div></div>`;
     }).join('');
 
     let consentHtml;
