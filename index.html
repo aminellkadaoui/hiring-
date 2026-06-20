@@ -99,20 +99,22 @@
   .field textarea{min-height:100px;resize:vertical}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
-  /* horizontal chips — for text-only options */
-  .choice{display:flex;flex-wrap:wrap;gap:11px}
-  .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:10px;padding:13px 18px;border-radius:18px;background:rgba(255,255,255,.55);
-    border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14.5px;font-weight:500;user-select:none;color:var(--ink);line-height:1.1;
+  /* text options — clear pressable cards in a balanced grid */
+  .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .chip{display:flex;align-items:center;justify-content:center;gap:11px;padding:15px 16px;border-radius:var(--r-md);background:rgba(255,255,255,.6);
+    border:1.5px solid rgba(255,255,255,.92);cursor:pointer;font-size:14.5px;font-weight:600;user-select:none;color:var(--ink);text-align:center;box-shadow:var(--soft-shadow);
     transition:transform .28s cubic-bezier(.22,.61,.36,1),border-color .25s,background .25s,color .25s}
-  .chip:hover{border-color:rgba(66,165,255,.45);background:rgba(255,255,255,.82);transform:translateY(-2px)}
+  .chip:hover{border-color:rgba(66,165,255,.5);background:rgba(255,255,255,.92);transform:translateY(-3px)}
   .chip input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
-  .chip .tick{width:20px;height:20px;border-radius:7px;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 20px;color:#fff;font-size:11px;transition:.15s}
+  .chip .tick{width:24px;height:24px;border-radius:8px;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 24px;color:#fff;font-size:13px;transition:background .25s,border-color .25s}
   .chip.radio .tick{border-radius:50%}
-  .chip .tick i{opacity:0;transform:scale(.6);transition:.15s}
-  .chip.on{border-color:var(--blue-2);background:rgba(66,165,255,.1);color:var(--blue-2);font-weight:600}
+  .chip .tick i{opacity:0;transform:scale(.5);transition:transform .25s cubic-bezier(.22,.61,.36,1),opacity .2s}
+  .chip.on{border-color:var(--blue-2);background:rgba(66,165,255,.12);color:var(--blue-2)}
   .chip.on .tick{background:var(--blue-2);border-color:var(--blue-2)}
   .chip.on .tick i{opacity:1;transform:scale(1)}
-  .chip .lbl{white-space:nowrap}
+  .chip .lbl{line-height:1.3}
+  @media(max-width:520px){ .choice{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:340px){ .choice{grid-template-columns:1fr} }
 
   /* vertical icon cards — uniform size, icon on top, label below, tick fixed top */
   /* container: grouped from the right (RTL), fixed gap, never spread full width */
