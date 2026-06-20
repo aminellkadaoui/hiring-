@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>انضم للفريق — أمين الكداوي</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0A0A0A;
+  --surface:#111;
+  --surface2:#161616;
+  --border:#1E1E1E;
+  --border2:#2A2A2A;
+  --text:#E2E2E2;
+  --muted:#555;
+  --muted2:#888;
+  --accent:#C8A96E;
+  --accent-dim:rgba(200,169,110,0.1);
+  --accent-border:rgba(200,169,110,0.25);
+  --red:#C84B4B;
+  --green:#4A8C65;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* TOP LINE */
+.top-line{
+  position:fixed;top:0;left:0;right:0;
+  height:2px;background:var(--accent);
+  opacity:0.7;z-index:100;
+}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 24px 80px;
+  max-width:680px;margin:0 auto;
+}
+
+.eyebrow{
+  font-size:10px;font-weight:700;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:36px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--border2);}
+
+.hero h1{
+  font-size:clamp(30px,5.5vw,50px);
+  font-weight:700;line-height:1.2;
+  color:#fff;margin-bottom:20px;
+}
+.hero h1 em{font-style:normal;color:var(--accent);}
+
+.hero .sub{
+  font-size:16px;color:var(--muted2);
+  max-width:480px;margin-bottom:52px;
+  font-weight:300;line-height:1.9;
+}
+
+.hero-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--accent);color:#000;
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-size:14px;font-weight:700;
+  padding:14px 28px;border-radius:3px;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:opacity .2s;
+}
+.hero-cta:hover{opacity:.88}
+.hero-cta svg{transform:rotate(180deg)}
+
+/* STAGES MAP */
+.stages-map{
+  max-width:680px;margin:0 auto;
+  padding:0 24px 80px;
+}
+
+.block-label{
+  font-size:10px;font-weight:700;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:24px;
+  padding-bottom:16px;border-bottom:1px solid var(--border);
+}
+
+.stage-row{
+  display:flex;align-items:stretch;
+  gap:0;margin-bottom:2px;
+  border:1px solid var(--border);
+  border-radius:3px;overflow:hidden;
+  transition:border-color .3s;
+}
+
+.stage-row.s-active{border-color:var(--accent-border);}
+.stage-row.s-done{border-color:#1a2e1f;}
+.stage-row.s-locked{opacity:.38;pointer-events:none;}
+
+.stage-num{
+  width:52px;min-width:52px;
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--muted);
+  border-left:1px solid var(--border);
+}
+.stage-row.s-active .stage-num{color:var(--accent);background:var(--accent-dim);}
+.stage-row.s-done .stage-num{color:var(--green);}
+
+.stage-body{
+  flex:1;padding:18px 20px;
+  background:var(--surface2);
+}
+.stage-title{font-size:14px;font-weight:600;color:#ddd;margin-bottom:3px;}
+.stage-desc{font-size:12px;color:var(--muted);}
+
+.stage-tag{
+  padding:0 18px;display:flex;align-items:center;
+  background:var(--surface);border-right:1px solid var(--border);
+  font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;white-space:nowrap;
+}
+.stage-row.s-active .stage-tag{color:var(--accent);}
+.stage-row.s-done .stage-tag{color:var(--green);}
+.stage-row.s-locked .stage-tag{color:var(--muted);}
+
+/* SECTION WRAPPER */
+.section{max-width:680px;margin:0 auto;padding:0 24px 80px;}
+
+.section-head{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:32px;padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.section-head .n{
+  width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--accent);
+  flex-shrink:0;
+}
+.section-head h2{
+  font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);
+}
+
+/* VIDEO */
+.video-wrap{
+  background:#000;border:1px solid var(--border);
+  border-radius:3px;overflow:hidden;margin-bottom:24px;
+}
+.video-ratio{position:relative;padding-bottom:56.25%;}
+.video-ratio iframe,.video-ratio video{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+}
+.video-placeholder{
+  position:absolute;inset:0;
+  background:#080808;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;
+}
+.play-ring{
+  width:68px;height:68px;border-radius:50%;
+  border:1.5px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .2s,background .2s;
+}
+.play-ring:hover{transform:scale(1.07);background:var(--accent-dim);}
+
+.video-footer{
+  padding:14px 18px;
+  border-top:1px solid var(--border);
+  background:var(--surface);
+}
+.prog-bar{height:2px;background:var(--border2);border-radius:2px;margin-bottom:10px;}
+.prog-fill{height:100%;background:var(--accent);width:0%;transition:width .4s;}
+.prog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+
+/* BUTTON */
+.btn{
+  display:block;width:100%;
+  padding:16px 24px;
+  background:var(--accent);color:#000;
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-size:14px;font-weight:700;
+  text-align:center;border:none;border-radius:3px;
+  cursor:pointer;transition:opacity .2s;
+}
+.btn:hover{opacity:.88}
+.btn:disabled{
+  background:var(--border2);color:var(--muted);
+  cursor:not-allowed;opacity:1;
+}
+.btn-sub{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;}
+
+/* HIDDEN */
+.hidden{display:none!important;}
+
+/* NOTICE */
+.notice{
+  background:var(--accent-dim);
+  border:1px solid var(--accent-border);
+  border-radius:3px;padding:20px 22px;
+  margin-bottom:24px;
+}
+.notice p{font-size:14px;color:#aaa;line-height:1.9;}
+.notice strong{color:var(--accent);font-weight:600;}
+
+.notice-neutral{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:3px;padding:20px 22px;
+  margin-bottom:24px;
+}
+.notice-neutral p{font-size:13px;color:var(--muted2);line-height:1.9;}
+.notice-neutral code{
+  color:var(--accent);
+  font-family:monospace;font-size:12px;
+  background:rgba(200,169,110,0.08);
+  padding:2px 6px;border-radius:2px;
+}
+
+/* SCORECARD */
+.score-rows{display:flex;flex-direction:column;gap:2px;margin-bottom:16px;}
+.score-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  background:var(--surface);border:1px solid var(--border);border-radius:3px;
+}
+.score-row span:first-child{font-size:13px;color:var(--muted2);}
+.score-row .pts{font-size:16px;font-weight:700;color:var(--accent);}
+.score-legend{
+  display:flex;gap:20px;flex-wrap:wrap;
+  font-size:11px;color:var(--muted);padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.score-legend span b{color:var(--muted2);}
+
+/* NOT FOR */
+.not-for{
+  background:rgba(200,50,50,0.05);
+  border:1px solid rgba(200,50,50,0.15);
+  border-radius:3px;padding:22px 24px;margin-bottom:40px;
+}
+.not-for-title{
+  font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--red);margin-bottom:16px;
+}
+.not-for ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.not-for li{
+  font-size:13px;color:#777;
+  display:flex;align-items:flex-start;gap:10px;
+}
+.not-for li::before{content:'×';color:var(--red);font-weight:700;flex-shrink:0;margin-top:2px;}
+
+/* BENEFITS */
+.benefits{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:40px;}
+.benefit{
+  padding:22px;background:var(--surface);
+  border:1px solid var(--border);border-radius:3px;
+}
+.benefit h4{font-size:13px;font-weight:600;color:#ccc;margin-bottom:6px;}
+.benefit p{font-size:12px;color:var(--muted);line-height:1.7;}
+.benefit .ic{font-size:18px;margin-bottom:10px;}
+
+/* FORM */
+.form-group{margin-bottom:22px;}
+.form-group label{
+  display:block;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;
+}
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;background:var(--surface);
+  border:1px solid var(--border2);border-radius:3px;
+  padding:13px 16px;color:var(--text);
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-size:14px;outline:none;
+  transition:border-color .2s;direction:rtl;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{border-color:var(--accent);}
+.form-group textarea{resize:vertical;min-height:110px;line-height:1.7;}
+.form-group select option{background:#111;}
+.form-hint{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.6;}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 24px;text-align:center;
+  max-width:680px;margin:0 auto;
+}
+footer p{font-size:11px;color:var(--muted);line-height:2;}
+
+/* MODAL */
+.modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.94);z-index:200;
+  align-items:center;justify-content:center;padding:24px;
+}
+.modal.open{display:flex;}
+.modal-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:4px;padding:44px 36px;
+  max-width:420px;width:100%;text-align:center;
+}
+.modal-box h3{font-size:22px;font-weight:700;color:#fff;margin-bottom:10px;}
+.modal-box p{font-size:14px;color:var(--muted2);margin-bottom:32px;line-height:1.8;}
+
+@media(max-width:580px){
+  .benefits{grid-template-columns:1fr;}
+  .hero h1{font-size:26px;}
+  .stage-tag{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-line"></div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <p class="eyebrow">أمين الكداوي — فريق المونتاج</p>
+  <h1>نبحث عن <em>محترف واحد</em><br>لا عن عشرة</h1>
+  <p class="sub">
+    ما عندنا نقص في المونتيرين — عندنا نقص في الموثوقية.
+    إذا كنت تسلّم في الوقت، تتواصل بوضوح، وتأخذ الملاحظات باحتراف — تابع.
+  </p>
+  <a href="#video-section" class="hero-cta">
+    ابدأ الآن
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</section>
+
+<!-- ═══════════════ STAGES MAP ═══════════════ -->
+<div class="stages-map">
+  <p class="block-label">مراحل التقديم — كل مرحلة تفتح بعد إكمال السابقة</p>
+
+  <div class="stage-row s-active" id="sr1">
+    <div class="stage-tag" id="st1">الآن</div>
+    <div class="stage-body">
+      <div class="stage-title">شاهد الفيديو كاملاً</div>
+      <div class="stage-desc">3 دقائق — الزر مقفول حتى تنتهي</div>
+    </div>
+    <div class="stage-num" id="sn1">01</div>
+  </div>
+
+  <div class="stage-row s-locked" id="sr2">
+    <div class="stage-tag" id="st2">مقفل</div>
+    <div class="stage-body">
+      <div class="stage-title">اقرأ تعليمات الترايل</div>
+      <div class="stage-desc">المواصفات الكاملة + معايير التقييم</div>
+    </div>
+    <div class="stage-num" id="sn2">02</div>
+  </div>
+
+  <div class="stage-row s-locked" id="sr3">
+    <div class="stage-tag" id="st3">مقفل</div>
+    <div class="stage-body">
+      <div class="stage-title">أنجز الترايل وأرفع رابطه</div>
+      <div class="stage-desc">فيديو حقيقي — يُدفع لو اعتُمد</div>
+    </div>
+    <div class="stage-num" id="sn3">03</div>
+  </div>
+
+  <div class="stage-row s-locked" id="sr4">
+    <div class="stage-tag" id="st4">مقفل</div>
+    <div class="stage-body">
+      <div class="stage-title">أكمل الفورم وأرسل تقديمك</div>
+      <div class="stage-desc">7 أسئلة — يفتح بعد رفع الترايل</div>
+    </div>
+    <div class="stage-num" id="sn4">04</div>
+  </div>
+</div>
+
+<!-- ═══════════════ NOT FOR ═══════════════ -->
+<div class="section">
+  <div class="not-for">
+    <div class="not-for-title">هذا المكان مش لك إذا</div>
+    <ul>
+      <li>تبحث عن دخل جانبي بدون التزام حقيقي</li>
+      <li>تختفي لما تواجهك مشكلة بدل ما تخبر</li>
+      <li>تأخذ الملاحظات كهجوم شخصي لا كأداة تطوير</li>
+      <li>ما عندك بورتفوليو فيه شغل فعلي منتج</li>
+      <li>تقبل مشاريع أكثر مما تستطيع تسليمه في الوقت</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════ VIDEO ═══════════════ -->
+<section class="section" id="video-section">
+  <div class="section-head">
+    <div class="n">1</div>
+    <h2>شاهد الفيديو كاملاً</h2>
+  </div>
+
+  <div class="video-wrap">
+    <div class="video-ratio" id="videoRatio">
+      <!-- VIDEO GOES HERE - admin can change video URL -->
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="play-ring" onclick="startVideo()" id="playBtn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <polygon points="7,4 20,12 7,20" fill="#C8A96E"/>
+          </svg>
+        </div>
+        <p style="font-size:12px;color:#444;">اضغط لتشغيل الفيديو</p>
+      </div>
+      <div id="videoEmbed" style="display:none;position:absolute;inset:0;"></div>
+    </div>
+    <div class="video-footer">
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      <div class="prog-meta">
+        <span id="progPct">0% مشاهدة</span>
+        <span id="progHint">الزر يفتح عند 100%</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn" id="videoBtn" disabled onclick="unlockTrial()">
+    أكملت الفيديو — المرحلة الثانية ←
+  </button>
+  <p class="btn-sub" id="videoBtnSub">شاهد الفيديو كاملاً أولاً</p>
+</section>
+
+<!-- ═══════════════ TRIAL ═══════════════ -->
+<section class="section hidden" id="trialSection">
+  <div class="section-head">
+    <div class="n">2</div>
+    <h2>تعليمات الترايل</h2>
+  </div>
+
+  <div class="notice">
+    <p>
+      <strong>الترايل فيديو حقيقي.</strong> ستحصل على الخامات والبريف كاملاً.
+      عندك <strong>48 ساعة</strong> من لحظة الاستلام.
+      إذا اعتُمد الشغل وسُلّم للعميل — تتقاضى أجرك كاملاً.
+      إذا لم يُعتمد — لا دفع.<br><br>
+      <strong>قاعدة واحدة لا تتغير:</strong> لو واجهتك مشكلة — أخبرني قبل الموعد مش بعده.
+    </p>
+  </div>
+
+  <div class="notice-neutral">
+    <p>
+      <strong style="color:#bbb;">المواصفات التقنية:</strong><br>
+      — التسليم عبر Frame.io حصراً<br>
+      — تسمية الملف: <code>01 - Client - VideoName - V1.mp4</code><br>
+      — لا موسيقى في أي فيديو نهائي<br>
+      — الـ Hook واضح في أول 3 ثواني<br>
+      — التأثيرات تخدم الفكرة — لا تكديس بصري
+    </p>
+  </div>
+
+  <p style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">معايير التقييم — 100 نقطة</p>
+  <div class="score-rows">
+    <div class="score-row">
+      <span>الالتزام — تسليم في 48h + اتباع التعليمات + التواصل المبكر</span>
+      <span class="pts">40</span>
+    </div>
+    <div class="score-row">
+      <span>الجودة — قوة الـ Hook + تدفق الفيديو + وضوح الفكرة</span>
+      <span class="pts">35</span>
+    </div>
+    <div class="score-row">
+      <span>التواصل — وضوح الأسئلة + سرعة الرد + الاحترافية</span>
+      <span class="pts">25</span>
+    </div>
+  </div>
+  <div class="score-legend">
+    <span><b>65+</b> = قبول مباشر</span>
+    <span><b>55–64</b> = نتواصل قبل القرار</span>
+    <span><b>أقل من 55</b> = رفض</span>
+    <span><b>تأخير بدون إبلاغ</b> = 0 في الالتزام = رفض فوري</span>
+  </div>
+
+  <div style="margin-top:32px;">
+    <button class="btn" onclick="unlockForm()">فهمت — جاهز أبدأ الترايل ←</button>
+  </div>
+</section>
+
+<!-- ═══════════════ FORM ═══════════════ -->
+<section class="section hidden" id="formSection">
+  <div class="section-head">
+    <div class="n">3</div>
+    <h2>التقديم النهائي</h2>
+  </div>
+
+  <div class="form-group">
+    <label>الاسم الكامل والبلد</label>
+    <input type="text" id="f-name" placeholder="مثال: أحمد الزهراني — السعودية">
+  </div>
+
+  <div class="form-group">
+    <label>رقم واتساب</label>
+    <input type="tel" id="f-phone" placeholder="+212 6XX XXX XXX" dir="ltr">
+  </div>
+
+  <div class="form-group">
+    <label>طريقة الدفع المفضلة</label>
+    <select id="f-payment">
+      <option value="">اختر...</option>
+      <option>PayPal</option>
+      <option>Wise</option>
+      <option>بنك محلي / تحويل</option>
+      <option>أخرى</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>سعرك لكل فيديو ريلز (بالدولار)</label>
+    <input type="number" id="f-price" placeholder="اكتب رقماً فقط" dir="ltr">
+    <p class="form-hint">اكتب ما تراه عادلاً لشغلك — لا تعرف سعري</p>
+  </div>
+
+  <div class="form-group">
+    <label>البورتفوليو</label>
+    <input type="url" id="f-portfolio" placeholder="رابط Drive أو Behance أو YouTube..." dir="ltr">
+  </div>
+
+  <div class="form-group">
+    <label>رابط الترايل المنجز</label>
+    <input type="url" id="f-trial" placeholder="رابط Frame.io أو Drive" dir="ltr">
+    <p class="form-hint">لا يُقبل التقديم بدون ترايل مكتمل</p>
+  </div>
+
+  <div class="form-group">
+    <label>على ماذا ركّزت أكثر في الترايل ولماذا؟</label>
+    <textarea id="f-think" placeholder="اشرح قراراتك — ليس الخطوات اللي اتبعتها"></textarea>
+    <p class="form-hint">"عملت كذا" ≠ "ركّزت على الـ Hook لأن المشاهد يقرر في أول 3 ثواني"</p>
+  </div>
+
+  <button class="btn" onclick="submitForm()">إرسال التقديم ←</button>
+  <p class="btn-sub">رد خلال 48 ساعة بنتيجة واحدة واضحة</p>
+</section>
+
+<!-- ═══════════════ BENEFITS ═══════════════ -->
+<div class="section">
+  <p class="block-label">ما ستحصل عليه إذا قُبلت</p>
+  <div class="benefits">
+    <div class="benefit">
+      <div class="ic">⚙️</div>
+      <h4>Workflow جاهز ومجرّب</h4>
+      <p>نظام عمل بُني على مئات الريلز — تدخله مباشرة بدون تخمين</p>
+    </div>
+    <div class="benefit">
+      <div class="ic">📈</div>
+      <h4>أجر يرتفع تلقائياً</h4>
+      <p>يبدأ ثابتاً ويرتفع مع الالتزام والنتائج — بدون ما تطلب</p>
+    </div>
+    <div class="benefit">
+      <div class="ic">🎯</div>
+      <h4>Feedback مكتوب</h4>
+      <p>ملاحظات حقيقية على كل فيديو تطوّر مستواك فعلياً</p>
+    </div>
+    <div class="benefit">
+      <div class="ic">🤝</div>
+      <h4>علاقة طويلة المدى</h4>
+      <p>نبحث عن شخص واحد للمدى البعيد — لا دوامة تعاقد مستمر</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>
+    لا موسيقى. لا محتوى مخالف للقيم. لا وعود مبالغ فيها.<br>
+    <span style="color:#2a2a2a;">أمين الكداوي — نظام توظيف المونتيرين</span>
+  </p>
+</footer>
+
+<!-- SUCCESS MODAL -->
+<div class="modal" id="doneModal">
+  <div class="modal-box">
+    <h3>وصل تقديمك</h3>
+    <p>راجعنا شغلك خلال 48 ساعة ونتواصل معك بنتيجة واحدة واضحة — قبول أو رفض مع سبب.</p>
+    <button class="btn" onclick="document.getElementById('doneModal').classList.remove('open')" style="max-width:240px;margin:0 auto;">حسناً</button>
+  </div>
+</div>
+
+<script>
+// ── CONFIG: loaded from admin ──
+let CONFIG = {
+  videoUrl: '',
+  videoType: 'youtube' // youtube | vimeo | direct
+};
+
+// Load config from localStorage (set by admin panel)
+function loadConfig(){
+  const saved = localStorage.getItem('funnel_config');
+  if(saved){ try{ CONFIG = {...CONFIG,...JSON.parse(saved)}; }catch(e){} }
+  applyVideoUrl();
+}
+
+function applyVideoUrl(){
+  if(!CONFIG.videoUrl) return;
+  const embed = document.getElementById('videoEmbed');
+  const ph = document.getElementById('videoPlaceholder');
+
+  if(CONFIG.videoType === 'youtube'){
+    const id = extractYTId(CONFIG.videoUrl);
+    if(id){
+      embed.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?enablejsapi=1&rel=0" frameborder="0" allowfullscreen allow="autoplay"></iframe>`;
+      ph.style.display='none';
+      embed.style.display='block';
+      setupYouTubeProgress(id);
+    }
+  } else if(CONFIG.videoType === 'direct'){
+    embed.innerHTML = `<video id="mainVideo" src="${CONFIG.videoUrl}" controls style="width:100%;height:100%;"></video>`;
+    ph.style.display='none';
+    embed.style.display='block';
+    setupDirectProgress();
+  }
+}
+
+function extractYTId(url){
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?\/\s]{11})/);
+  return m ? m[1] : null;
+}
+
+// ── VIDEO PROGRESS ──
+let videoWatched = false;
+let fakeInterval = null;
+
+function startVideo(){
+  // If no URL set, simulate for demo
+  if(!CONFIG.videoUrl){
+    document.getElementById('videoPlaceholder').style.opacity='0.4';
+    simulateProgress();
+    return;
+  }
+  applyVideoUrl();
+}
+
+function simulateProgress(){
+  let p = 0;
+  fakeInterval = setInterval(()=>{
+    p += 1.5;
+    setProgress(Math.min(p,100));
+    if(p>=100){ clearInterval(fakeInterval); onComplete(); }
+  },200);
+}
+
+function setupYouTubeProgress(id){
+  // YouTube iframe API
+  if(window.YT && window.YT.Player){
+    initYTPlayer(id); return;
+  }
+  window.onYouTubeIframeAPIReady = ()=> initYTPlayer(id);
+  const s = document.createElement('script');
+  s.src='https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+}
+
+function initYTPlayer(id){
+  const player = new YT.Player('videoEmbed',{
+    events:{
+      onStateChange:(e)=>{
+        if(e.data===YT.PlayerState.PLAYING) trackYT(player);
+      }
+    }
+  });
+}
+
+function trackYT(player){
+  const interval = setInterval(()=>{
+    try{
+      const pct = (player.getCurrentTime()/player.getDuration())*100;
+      setProgress(pct);
+      if(pct>=95){ clearInterval(interval); onComplete(); }
+    }catch(e){ clearInterval(interval); }
+  },1000);
+}
+
+function setupDirectProgress(){
+  const v = document.getElementById('mainVideo');
+  if(!v) return;
+  v.addEventListener('timeupdate',()=>{
+    if(!v.duration) return;
+    const pct=(v.currentTime/v.duration)*100;
+    setProgress(pct);
+    if(pct>=95) onComplete();
+  });
+}
+
+function setProgress(pct){
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progPct').textContent = Math.round(pct)+'% مشاهدة';
+}
+
+function onComplete(){
+  if(videoWatched) return;
+  videoWatched=true;
+  document.getElementById('videoBtn').disabled=false;
+  document.getElementById('videoBtnSub').textContent='الفيديو اكتمل — يمكنك المتابعة';
+  document.getElementById('progHint').textContent='✓ مكتمل';
+}
+
+// ── STAGE UNLOCK ──
+function unlockTrial(){
+  setStage(1,'done');
+  setStage(2,'active');
+  document.getElementById('trialSection').classList.remove('hidden');
+  scroll('trialSection');
+}
+
+function unlockForm(){
+  setStage(2,'done');
+  setStage(3,'done');
+  setStage(4,'active');
+  document.getElementById('formSection').classList.remove('hidden');
+  scroll('formSection');
+}
+
+function setStage(n,state){
+  const row=document.getElementById('sr'+n);
+  const tag=document.getElementById('st'+n);
+  row.className='stage-row s-'+state;
+  if(state==='done') tag.textContent='✓ مكتمل';
+  else if(state==='active') tag.textContent='الآن';
+  else tag.textContent='مقفل';
+}
+
+function scroll(id){
+  setTimeout(()=>{
+    document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  },100);
+}
+
+// ── FORM SUBMIT ──
+async function submitForm(){
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const payment=document.getElementById('f-payment').value;
+  const price=document.getElementById('f-price').value.trim();
+  const portfolio=document.getElementById('f-portfolio').value.trim();
+  const trial=document.getElementById('f-trial').value.trim();
+  const think=document.getElementById('f-think').value.trim();
+
+  if(!name||!phone||!payment||!price||!portfolio||!trial||!think){
+    alert('أكمل جميع الحقول قبل الإرسال');
+    return;
+  }
+
+  const app={
+    id: Date.now(),
+    date: new Date().toISOString(),
+    status: 'pending',
+    name, phone, payment, price, portfolio, trial, think,
+    score: null, notes: ''
+  };
+
+  // Save to localStorage (admin reads from same origin)
+  const apps = JSON.parse(localStorage.getItem('funnel_apps')||'[]');
+  apps.unshift(app);
+  localStorage.setItem('funnel_apps', JSON.stringify(apps));
+
+  document.getElementById('doneModal').classList.add('open');
+}
+
+// Init
+loadConfig();
+</script>
+</body>
+</html>
