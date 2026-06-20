@@ -93,13 +93,20 @@
   .field textarea{min-height:100px;resize:vertical}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
-  .checks{display:flex;flex-wrap:wrap;gap:10px}
-  .check-opt{display:flex;align-items:center;gap:9px;padding:11px 15px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);cursor:pointer;font-size:14px;font-weight:500;transition:.15s;user-select:none}
-  .check-opt input{width:17px;height:17px;accent-color:var(--blue-2)}
-  .check-opt.on{border-color:var(--blue-2);background:rgba(66,165,255,.1);color:var(--blue-2)}
+  .choice{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{display:inline-flex;align-items:center;gap:10px;padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.55);
+    border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14px;font-weight:500;transition:.15s;user-select:none;position:relative;color:var(--ink)}
+  .chip:hover{border-color:rgba(66,165,255,.45);background:rgba(255,255,255,.75)}
+  .chip input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+  .chip .tick{width:20px;height:20px;border-radius:7px;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 20px;color:#fff;font-size:11px;transition:.15s}
+  .chip.radio .tick{border-radius:50%}
+  .chip .tick i{opacity:0;transform:scale(.6);transition:.15s}
+  .chip.on{border-color:var(--blue-2);background:rgba(66,165,255,.1);color:var(--blue-2);font-weight:600}
+  .chip.on .tick{background:var(--blue-2);border-color:var(--blue-2)}
+  .chip.on .tick i{opacity:1;transform:scale(1)}
   .opt-logo{width:19px;height:19px;object-fit:contain;flex:0 0 19px}
-  .check-opt>i{font-size:18px;color:var(--blue-2)}
-  .other-in{margin-top:10px}
+  .chip>i.ph-bold{font-size:18px;color:var(--blue-2);flex:0 0 auto}
+  .other-in{margin-top:12px}
 
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;
     background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-family:inherit;font-weight:600;font-size:16px;
@@ -255,8 +262,8 @@
       {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
       {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Wise","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
-      {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"select",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
-      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"select",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
+      {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"radio",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
+      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
       {id:"ideal",label:"كيف يبدو العمل المثالي بالنسبة لك؟",placeholder:"اشرح باختصار...",type:"textarea",required:true},
       {id:"why",label:"لماذا تريد العمل معنا؟",placeholder:"اشرح باختصار...",type:"textarea",required:true}
     ],
@@ -285,18 +292,24 @@
     document.getElementById('applyForm').innerHTML=(c.questions||[]).map(q=>{
       const id='f_'+q.id, ph=esc(q.placeholder||'');
       let input;
+      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span>'+optIcon(o)+'<span>'+esc(o)+'</span></label>';
       if(q.type==='textarea') input='<textarea id="'+id+'" placeholder="'+ph+'"></textarea>';
       else if(q.type==='select') input='<select id="'+id+'"><option value="">اختر...</option>'+(q.options||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
       else if(q.type==='checkbox'){
-        input='<div class="checks">'+(q.options||[]).map(o=>'<label class="check-opt"><input type="checkbox" name="'+id+'" value="'+esc(o)+'"> '+optIcon(o)+'<span>'+esc(o)+'</span></label>').join('')+'</div>';
+        input='<div class="choice">'+(q.options||[]).map(o=>chip(o,'checkbox')).join('')+'</div>';
         if((q.options||[]).includes('أخرى')) input+='<input type="text" class="other-in" id="'+id+'_other" placeholder="اذكر الطريقة الأخرى..." style="display:none">';
       }
+      else if(q.type==='radio') input='<div class="choice">'+(q.options||[]).map(o=>chip(o,'radio')).join('')+'</div>';
       else input='<input type="'+esc(q.type||'text')+'" id="'+id+'" placeholder="'+ph+'"'+(q.type==='number'?' min="0"':'')+'>';
       return '<div class="field"><label>'+esc(q.label)+'</label>'+input+'</div>';
     }).join('');
-    document.querySelectorAll('.check-opt input').forEach(cb=>cb.addEventListener('change',()=>{
-      cb.closest('.check-opt').classList.toggle('on',cb.checked);
-      if(cb.value==='أخرى'){ const ot=document.getElementById(cb.name+'_other'); if(ot) ot.style.display=cb.checked?'block':'none'; }
+    document.querySelectorAll('.chip input').forEach(inp=>inp.addEventListener('change',()=>{
+      if(inp.type==='radio'){
+        document.querySelectorAll('input[name="'+inp.name+'"]').forEach(o=>o.closest('.chip').classList.toggle('on',o.checked));
+      } else {
+        inp.closest('.chip').classList.toggle('on',inp.checked);
+        if(inp.value==='أخرى'){ const ot=document.getElementById(inp.name+'_other'); if(ot) ot.style.display=inp.checked?'block':'none'; }
+      }
     }));
   }
   renderForm(DEFAULT_CONTENT);
@@ -362,7 +375,8 @@
         let vals=[...document.querySelectorAll('input[name="f_'+q.id+'"]:checked')].map(c=>c.value);
         if(vals.includes('أخرى')){ const ot=document.getElementById('f_'+q.id+'_other'); if(ot&&ot.value.trim()) vals=vals.map(v=>v==='أخرى'?('أخرى: '+ot.value.trim()):v); }
         val=vals.join('، ');
-      } else { const el=document.getElementById('f_'+q.id); val=el?String(el.value).trim():''; }
+      } else if(q.type==='radio'){ const r=document.querySelector('input[name="f_'+q.id+'"]:checked'); val=r?r.value:''; }
+      else { const el=document.getElementById('f_'+q.id); val=el?String(el.value).trim():''; }
       answers[q.id]=val;
       if(q.required && !val) missing=true;
     });

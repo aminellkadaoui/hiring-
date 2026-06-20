@@ -107,6 +107,18 @@
   .filters{display:flex;gap:9px;margin-bottom:20px;flex-wrap:wrap}
   .filters button{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);color:var(--muted);font-family:inherit;font-size:14px;font-weight:500;padding:9px 18px;border-radius:999px;cursor:pointer;transition:.2s;box-shadow:var(--soft-shadow)}
   .filters button.active{background:linear-gradient(135deg,rgba(66,165,255,.16),rgba(142,232,200,.16));border-color:rgba(66,165,255,.4);color:var(--blue-2);font-weight:600}
+  .r-exc{background:rgba(142,232,200,.32);color:var(--mint-ink)}
+  .r-good{background:rgba(66,165,255,.16);color:var(--blue-2)}
+  .r-mid{background:rgba(255,213,128,.32);color:#b7791f}
+  .r-low{background:rgba(254,202,202,.5);color:var(--red-ink)}
+  .rate-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .rate-chip{font-family:inherit;font-size:14px;font-weight:600;padding:12px 6px;border-radius:13px;cursor:pointer;transition:.15s;
+    background:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.9);color:var(--muted)}
+  .rate-chip:hover{border-color:rgba(66,165,255,.4)}
+  .rate-chip.on.r-exc{background:rgba(142,232,200,.4);border-color:var(--mint-ink);color:var(--mint-ink)}
+  .rate-chip.on.r-good{background:rgba(66,165,255,.18);border-color:var(--blue-2);color:var(--blue-2)}
+  .rate-chip.on.r-mid{background:rgba(255,213,128,.4);border-color:#b7791f;color:#b7791f}
+  .rate-chip.on.r-low{background:rgba(254,202,202,.55);border-color:var(--red-ink);color:var(--red-ink)}
   .score-cell{font-family:var(--mono);font-weight:600;font-size:15px}
   .sc-g{color:var(--mint-ink)} .sc-y{color:var(--blue-2)} .sc-r{color:var(--red-ink)} .sc-n{color:var(--muted)}
   .price-cell{font-family:var(--mono);direction:ltr;display:inline-block}
@@ -232,7 +244,7 @@
         <div class="glass">
           <div class="card-head"><i class="ph-bold ph-clock-counter-clockwise blue"></i> آخر 5 متقدمين</div>
           <div class="tbl-wrap"><table>
-            <thead><tr><th>الاسم</th><th>البلد / الهاتف</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+            <thead><tr><th>الاسم</th><th>البلد / الهاتف</th><th>التقييم</th><th>الحالة</th><th>التاريخ</th></tr></thead>
             <tbody id="recentBody"><tr><td colspan="5" class="empty">جارٍ التحميل...</td></tr></tbody>
           </table></div>
         </div>
@@ -249,7 +261,7 @@
           <button data-filter="rejected">مرفوض</button>
         </div>
         <div class="glass"><div class="tbl-wrap"><table>
-          <thead><tr><th>الاسم / الهاتف</th><th>البلد</th><th>السعر</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+          <thead><tr><th>الاسم / الهاتف</th><th>البلد</th><th>السعر</th><th>التقييم</th><th>الحالة</th><th>التاريخ</th></tr></thead>
           <tbody id="applicantsBody"><tr><td colspan="6" class="empty">جارٍ التحميل...</td></tr></tbody>
         </table></div></div>
       </section>
@@ -270,13 +282,6 @@
           <div class="hint">أضف / احذف / عدّل أسئلة التقديم. الحقول name / phone / price تُستخدم في الجدول.</div>
           <div id="c-questions"></div>
           <button class="btn ghost sm addbtn" data-add="question"><i class="ph-bold ph-plus"></i> سؤال جديد</button>
-        </div>
-
-        <div class="glass settings-card">
-          <h3><i class="ph-bold ph-gauge blue"></i> Scorecard التقييم</h3>
-          <div class="hint">معايير تقييم المتقدمين ودرجتها القصوى (تُستخدم في صفحة المتقدمين).</div>
-          <div id="c-score"></div>
-          <button class="btn ghost sm addbtn" data-add="score"><i class="ph-bold ph-plus"></i> إضافة معيار</button>
         </div>
 
         <div class="save-bar"><button class="btn full" id="saveContentBtn"><i class="ph-bold ph-floppy-disk"></i> حفظ كل المحتوى</button></div>
@@ -342,13 +347,13 @@
       {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
       {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Wise","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
-      {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"select",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
-      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"select",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
+      {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"radio",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
+      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
       {id:"ideal",label:"كيف يبدو العمل المثالي بالنسبة لك؟",placeholder:"اشرح باختصار...",type:"textarea",required:true},
       {id:"why",label:"لماذا تريد العمل معنا؟",placeholder:"اشرح باختصار...",type:"textarea",required:true}
-    ],
-    scorecard: [{label:"الالتزام",max:40},{label:"الجودة",max:35},{label:"التواصل",max:25}]
+    ]
   };
+  const RATINGS = ["ضعيف","متوسط","جيد","ممتاز"];
 
   let applicants = [];
   let currentFilter = 'all';
@@ -360,9 +365,8 @@
   function toast(msg,type){ const t=$('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3000); }
   function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   function statusBadge(s){ if(s==='accepted') return '<span class="status-badge s-accepted">مقبول</span>'; if(s==='rejected') return '<span class="status-badge s-rejected">مرفوض</span>'; return '<span class="status-badge s-pending">قيد المراجعة</span>'; }
-  function maxTotal(){ return (content.scorecard||[]).reduce((s,x)=>s+(+x.max||0),0)||100; }
-  function scoreClass(v){ if(v==null) return 'sc-n'; const m=maxTotal(); if(v>=0.65*m) return 'sc-g'; if(v>=0.55*m) return 'sc-y'; return 'sc-r'; }
-  function totalClass(v){ const m=maxTotal(); if(v>=0.65*m) return 'tg'; if(v>=0.55*m) return 'ty'; return 'tr'; }
+  function ratingCls(r){ return r==='ممتاز'?'r-exc':r==='جيد'?'r-good':r==='متوسط'?'r-mid':r==='ضعيف'?'r-low':''; }
+  function ratingBadge(r){ return r?('<span class="status-badge '+ratingCls(r)+'">'+esc(r)+'</span>'):'<span class="muted">—</span>'; }
   function fmtDate(iso){ if(!iso) return '—'; try{ return new Date(iso).toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'}); }catch(e){ return iso; } }
   function country(name){ if(!name) return '—'; const p=name.split(/[—\-–|،,]/); return p.length>1?p[p.length-1].trim():'—'; }
 
@@ -398,25 +402,22 @@
   function renderRecent(){
     const rows=applicants.slice(0,5);
     if(!rows.length){ $('recentBody').innerHTML='<tr><td colspan="5" class="empty">لا يوجد متقدمون بعد</td></tr>'; return; }
-    $('recentBody').innerHTML=rows.map(a=>{ const sv=a.scoreTotal; return `<tr data-id="${a.id}"><td>${esc(a.name)}</td><td class="muted">${esc(country(a.name))} · ${esc(a.phone)}</td><td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td><td>${statusBadge(a.status)}</td><td class="muted">${fmtDate(a.date)}</td></tr>`; }).join('');
+    $('recentBody').innerHTML=rows.map(a=>`<tr data-id="${a.id}"><td>${esc(a.name)}</td><td class="muted">${esc(country(a.name))} · ${esc(a.phone)}</td><td>${ratingBadge(a.rating)}</td><td>${statusBadge(a.status)}</td><td class="muted">${fmtDate(a.date)}</td></tr>`).join('');
     bindRows('recentBody');
   }
   function renderApplicants(){
     let rows=applicants; if(currentFilter!=='all') rows=rows.filter(a=>a.status===currentFilter);
     if(!rows.length){ $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">لا يوجد متقدمون في هذه الفئة</td></tr>'; return; }
-    $('applicantsBody').innerHTML=rows.map(a=>{ const sv=a.scoreTotal; return `<tr data-id="${a.id}"><td><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></td><td class="muted">${esc(country(a.name))}</td><td><span class="price-cell">$${esc(a.price)}</span></td><td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td><td>${statusBadge(a.status)}</td><td class="muted">${fmtDate(a.date)}</td></tr>`; }).join('');
+    $('applicantsBody').innerHTML=rows.map(a=>`<tr data-id="${a.id}"><td><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></td><td class="muted">${esc(country(a.name))}</td><td><span class="price-cell">$${esc(a.price)}</span></td><td>${ratingBadge(a.rating)}</td><td>${statusBadge(a.status)}</td><td class="muted">${fmtDate(a.date)}</td></tr>`).join('');
     bindRows('applicantsBody');
   }
   function bindRows(bodyId){ $(bodyId).querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>openDrawer(tr.dataset.id))); }
 
   /* ---------- DRAWER ---------- */
+  let currentRating = null;
   function openDrawer(id){
     const a=applicants.find(x=>x.id===id); if(!a) return;
-    currentId=id; $('dr-name').textContent=a.name||'—';
-    const sc=content.scorecard||DEFAULT_CONTENT.scorecard;
-    const m0=(sc[0]&&sc[0].max)||40, m1=(sc[1]&&sc[1].max)||35, m2=(sc[2]&&sc[2].max)||25;
-    const l0=(sc[0]&&sc[0].label)||'الالتزام', l1=(sc[1]&&sc[1].label)||'الجودة', l2=(sc[2]&&sc[2].label)||'التواصل';
-    const commit=(a.scoreCommit!=null)?a.scoreCommit:'', quality=(a.scoreQuality!=null)?a.scoreQuality:'', comm=(a.scoreComm!=null)?a.scoreComm:'';
+    currentId=id; currentRating=a.rating||null; $('dr-name').textContent=a.name||'—';
 
     const answers=(content.questions||[]).map(q=>{
       const v=a[q.id];
@@ -435,45 +436,32 @@
       ${answers}
       ${consentHtml}
       <div class="divider"></div>
-      <div class="lbl" style="font-size:14px;color:var(--ink);margin-bottom:10px;font-weight:600">التقييم (Scorecard)</div>
-      <div class="score-edit">
-        <div class="se"><label>${esc(l0)} / ${m0}</label><input type="number" id="sc-commit" min="0" max="${m0}" value="${commit}"></div>
-        <div class="se"><label>${esc(l1)} / ${m1}</label><input type="number" id="sc-quality" min="0" max="${m1}" value="${quality}"></div>
-        <div class="se"><label>${esc(l2)} / ${m2}</label><input type="number" id="sc-comm" min="0" max="${m2}" value="${comm}"></div>
+      <div class="lbl" style="font-size:14px;color:var(--ink);margin-bottom:10px;font-weight:600">التقييم العام</div>
+      <div class="rate-chips" id="rateChips">
+        ${RATINGS.map(r=>`<button type="button" class="rate-chip ${ratingCls(r)} ${a.rating===r?'on':''}" data-r="${esc(r)}">${esc(r)}</button>`).join('')}
       </div>
-      <div class="total-box"><div class="tn" id="sc-total">0</div><div class="tl">المجموع من ${maxTotal()}</div></div>
-      <div class="info-row"><div class="lbl">ملاحظات</div><textarea class="in" id="sc-notes" placeholder="ملاحظاتك الداخلية...">${esc(a.notes)}</textarea></div>
+      <div class="info-row" style="margin-top:18px"><div class="lbl">ملاحظات</div><textarea class="in" id="sc-notes" placeholder="ملاحظاتك الداخلية...">${esc(a.notes)}</textarea></div>
       <div class="drawer-actions">
         <button class="btn green" id="actAccept"><i class="ph-bold ph-check"></i> قبول</button>
         <button class="btn" id="actReview"><i class="ph-bold ph-hourglass"></i> للمراجعة</button>
         <button class="btn red" id="actReject"><i class="ph-bold ph-x"></i> رفض</button>
       </div>`;
-    ['sc-commit','sc-quality','sc-comm'].forEach(cid=>$(cid).addEventListener('input',recalcTotal));
-    recalcTotal();
+    $('rateChips').querySelectorAll('.rate-chip').forEach(b=>b.addEventListener('click',()=>{
+      currentRating = (currentRating===b.dataset.r) ? null : b.dataset.r;
+      $('rateChips').querySelectorAll('.rate-chip').forEach(x=>x.classList.toggle('on',x.dataset.r===currentRating));
+    }));
     $('actAccept').addEventListener('click',()=>saveApplicant('accepted'));
     $('actReview').addEventListener('click',()=>saveApplicant('pending'));
     $('actReject').addEventListener('click',()=>saveApplicant('rejected'));
     $('overlay').classList.add('show'); $('drawer').classList.add('show');
   }
-  function getScores(){
-    const sc=content.scorecard||DEFAULT_CONTENT.scorecard;
-    const m0=(sc[0]&&sc[0].max)||40,m1=(sc[1]&&sc[1].max)||35,m2=(sc[2]&&sc[2].max)||25;
-    const c=parseInt($('sc-commit').value),q=parseInt($('sc-quality').value),mm=parseInt($('sc-comm').value);
-    const commit=isNaN(c)?null:Math.min(m0,Math.max(0,c));
-    const quality=isNaN(q)?null:Math.min(m1,Math.max(0,q));
-    const comm=isNaN(mm)?null:Math.min(m2,Math.max(0,mm));
-    const any=commit!=null||quality!=null||comm!=null;
-    const total=any?(commit||0)+(quality||0)+(comm||0):null;
-    return {commit,quality,comm,total};
-  }
-  function recalcTotal(){ const {total}=getScores(); const el=$('sc-total'); const t=total==null?0:total; el.textContent=t; el.className='tn '+totalClass(t); }
   async function saveApplicant(status){
     if(!currentId) return;
-    const {commit,quality,comm,total}=getScores(); const notes=$('sc-notes').value;
+    const notes=$('sc-notes').value;
     try{
-      await updateDoc(doc(db,'applicants',currentId),{status,scoreCommit:commit,scoreQuality:quality,scoreComm:comm,scoreTotal:total,notes});
+      await updateDoc(doc(db,'applicants',currentId),{status,rating:currentRating,notes});
       const a=applicants.find(x=>x.id===currentId);
-      if(a){ a.status=status; a.scoreCommit=commit; a.scoreQuality=quality; a.scoreComm=comm; a.scoreTotal=total; a.notes=notes; }
+      if(a){ a.status=status; a.rating=currentRating; a.notes=notes; }
       renderStats(); renderRecent(); renderApplicants(); closeDrawer(); toast('تم الحفظ بنجاح','ok');
     }catch(e){ console.error(e); toast('تعذّر الحفظ','err'); }
   }
@@ -524,7 +512,7 @@
       <div class="q-grid">
         <input class="in q-label" placeholder="نص السؤال" value="${esc(q.label||'')}">
         <input class="in q-ph" placeholder="نص توضيحي (placeholder)" value="${esc(q.placeholder||'')}">
-        <select class="in q-type">${typeOpt('text','نص')}${typeOpt('number','رقم')}${typeOpt('url','رابط')}${typeOpt('textarea','نص طويل')}${typeOpt('select','قائمة')}${typeOpt('checkbox','اختيار متعدد')}</select>
+        <select class="in q-type">${typeOpt('text','نص')}${typeOpt('number','رقم')}${typeOpt('url','رابط')}${typeOpt('textarea','نص طويل')}${typeOpt('select','قائمة')}${typeOpt('checkbox','اختيار متعدد')}${typeOpt('radio','اختيار واحد')}</select>
         <input class="in q-options" placeholder="الخيارات (للقائمة/الاختيار المتعدد) مفصولة بفاصلة" value="${esc(opts)}">
       </div>
       <div class="q-foot">
@@ -537,20 +525,18 @@
   function renderContentEditors(){
     const c=content;
     $('c-notion').value=c.notionUrl||'';
-    $('c-score').innerHTML=(c.scorecard||[]).map(scoreRow).join('');
     qSeq=0;
     $('c-questions').innerHTML=(c.questions||[]).map(qRow).join('');
   }
   function collectContent(){
-    const scorecard=[...document.querySelectorAll('#c-score .score-row')].map(r=>({label:r.querySelector('.sc-label').value.trim(),max:parseInt(r.querySelector('.sc-max').value)||0})).filter(s=>s.label);
     const questions=[...document.querySelectorAll('#c-questions .q-row')].map(r=>{
       const type=r.querySelector('.q-type').value;
       const q={id:r.dataset.id,label:r.querySelector('.q-label').value.trim(),type,required:r.querySelector('.q-reqc').checked};
       const ph=r.querySelector('.q-ph').value.trim(); if(ph) q.placeholder=ph;
-      if(type==='select'||type==='checkbox') q.options=r.querySelector('.q-options').value.split(/[،,\n]/).map(s=>s.trim()).filter(Boolean);
+      if(type==='select'||type==='checkbox'||type==='radio') q.options=r.querySelector('.q-options').value.split(/[،,\n]/).map(s=>s.trim()).filter(Boolean);
       return q;
     }).filter(q=>q.label);
-    return { notionUrl:$('c-notion').value.trim(), questions, scorecard };
+    return { notionUrl:$('c-notion').value.trim(), questions };
   }
   async function saveContent(){
     const data=collectContent();
@@ -566,9 +552,7 @@
 
   /* add / remove rows */
   document.querySelectorAll('.addbtn').forEach(b=>b.addEventListener('click',()=>{
-    const t=b.dataset.add;
-    if(t==='score') $('c-score').insertAdjacentHTML('beforeend',scoreRow({label:'',max:''}));
-    else if(t==='question') $('c-questions').insertAdjacentHTML('beforeend',qRow({id:'q_'+(++qSeq),type:'text',required:true}));
+    if(b.dataset.add==='question') $('c-questions').insertAdjacentHTML('beforeend',qRow({id:'q_'+(++qSeq),type:'text',required:true}));
   }));
   document.getElementById('page-content').addEventListener('click',e=>{
     const del=e.target.closest('.rep-del');
