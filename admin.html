@@ -3,948 +3,588 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex,nofollow">
-<title>لوحة التحكم — أمين</title>
+<title>لوحة التحكم — التوظيف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+  :root{
+    --bg:#0A0A0A;--bg2:#121212;--card:#161616;--line:#262626;
+    --gold:#C8A96E;--gold-soft:rgba(200,169,110,.12);
+    --text:#EDEDED;--muted:#9A9A9A;
+    --green:#3DBF7E;--yellow:#C8A96E;--red:#E05656;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Arabic',sans-serif;-webkit-font-smoothing:antialiased}
+  .gold{color:var(--gold)} .muted{color:var(--muted)}
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  /* ---------- LOGIN ---------- */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:38px 30px}
+  .login-card h1{font-size:24px;margin-bottom:6px;text-align:center}
+  .login-card p{color:var(--muted);text-align:center;margin-bottom:26px;font-size:14px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:14px;margin-bottom:7px}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);
+    font-family:inherit;font-size:15px;padding:12px 14px;border-radius:10px;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:#0A0A0A;
+    font-family:inherit;font-weight:600;font-size:15px;padding:12px 22px;border:0;border-radius:10px;cursor:pointer;transition:opacity .2s}
+  .btn:hover{opacity:.92}
+  .btn.full{width:100%}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  .btn.green{background:var(--green);color:#06140d}
+  .btn.red{background:var(--red);color:#1a0606}
+  .btn.gold{background:var(--gold)}
+  .login-err{color:var(--red);font-size:13px;text-align:center;margin-top:12px;min-height:18px}
 
-:root{
-  --bg:#080808;
-  --surface:#0F0F0F;
-  --surface2:#141414;
-  --border:#1C1C1C;
-  --border2:#252525;
-  --text:#DEDEDE;
-  --muted:#505050;
-  --muted2:#808080;
-  --accent:#C8A96E;
-  --accent-dim:rgba(200,169,110,0.1);
-  --green:#4A8C65;
-  --green-dim:rgba(74,140,101,0.1);
-  --red:#C84B4B;
-  --red-dim:rgba(200,75,75,0.08);
-  --yellow:#C8A030;
-}
+  /* ---------- APP LAYOUT ---------- */
+  #app{display:none;min-height:100vh}
+  .layout{display:flex;min-height:100vh}
+  .sidebar{
+    width:220px;flex:0 0 220px;background:var(--bg2);border-left:1px solid var(--line);
+    padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+  }
+  .brand{font-size:18px;font-weight:700;margin-bottom:4px;padding:0 8px}
+  .brand small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:2px}
+  .nav{margin-top:26px;display:flex;flex-direction:column;gap:4px}
+  .nav button{
+    text-align:right;background:transparent;border:0;color:var(--muted);font-family:inherit;font-size:15px;
+    padding:11px 14px;border-radius:10px;cursor:pointer;transition:.2s;display:flex;gap:10px;align-items:center;
+  }
+  .nav button:hover{background:var(--card);color:var(--text)}
+  .nav button.active{background:var(--gold-soft);color:var(--gold)}
+  .sidebar .logout{margin-top:auto}
 
-html,body{height:100%;overflow:hidden;}
+  .main{flex:1;padding:30px 34px;max-width:100%;overflow-x:auto}
+  .page-title{font-size:24px;font-weight:600;margin-bottom:24px}
+  .page{display:none}
+  .page.active{display:block}
 
-body{
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  background:var(--bg);color:var(--text);
-  font-size:14px;line-height:1.6;
-  display:flex;
-}
+  /* ---------- STAT CARDS ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .stat .v{font-size:32px;font-weight:700}
+  .stat .k{color:var(--muted);font-size:14px;margin-top:4px}
+  .stat.total .v{color:var(--text)}
+  .stat.pending .v{color:var(--yellow)}
+  .stat.accepted .v{color:var(--green)}
+  .stat.rejected .v{color:var(--red)}
 
-/* ── LOGIN ── */
-#loginScreen{
-  position:fixed;inset:0;
-  background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  z-index:999;
-}
+  /* ---------- TABLE ---------- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card-head{padding:16px 20px;border-bottom:1px solid var(--line);font-weight:600}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:right;padding:13px 18px;font-size:14px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:500;background:var(--bg2)}
+  tbody tr{cursor:pointer;transition:background .15s}
+  tbody tr:hover{background:var(--bg2)}
+  tbody tr:last-child td{border-bottom:0}
+  .empty{padding:40px;text-align:center;color:var(--muted)}
 
-.login-box{
-  background:var(--surface);
-  border:1px solid var(--border2);
-  border-radius:4px;
-  padding:48px 40px;
-  width:100%;max-width:380px;
-  text-align:center;
-}
+  .status-badge{font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px;white-space:nowrap;display:inline-block}
+  .s-pending{background:rgba(200,169,110,.15);color:var(--yellow)}
+  .s-accepted{background:rgba(61,191,126,.15);color:var(--green)}
+  .s-rejected{background:rgba(224,86,86,.15);color:var(--red)}
 
-.login-box h2{
-  font-size:20px;font-weight:700;
-  color:#fff;margin-bottom:6px;
-}
-.login-box p{font-size:13px;color:var(--muted2);margin-bottom:32px;}
+  .filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+  .filters button{background:var(--card);border:1px solid var(--line);color:var(--muted);font-family:inherit;
+    font-size:14px;padding:8px 16px;border-radius:100px;cursor:pointer;transition:.2s}
+  .filters button.active{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
 
-.login-field{
-  width:100%;background:var(--surface2);
-  border:1px solid var(--border2);border-radius:3px;
-  padding:12px 16px;color:var(--text);
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:14px;outline:none;margin-bottom:12px;
-  direction:ltr;text-align:left;
-  transition:border-color .2s;
-}
-.login-field:focus{border-color:var(--accent);}
+  .score-cell{font-weight:700;font-variant-numeric:tabular-nums}
+  .sc-g{color:var(--green)} .sc-y{color:var(--yellow)} .sc-r{color:var(--red)} .sc-n{color:var(--muted)}
 
-.login-btn{
-  width:100%;padding:13px;
-  background:var(--accent);color:#000;
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:14px;font-weight:700;
-  border:none;border-radius:3px;cursor:pointer;
-  transition:opacity .2s;margin-top:4px;
-}
-.login-btn:hover{opacity:.88}
-.login-err{font-size:12px;color:var(--red);margin-top:10px;display:none;}
+  /* ---------- DRAWER ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+  .overlay.show{opacity:1;pointer-events:auto}
+  .drawer{
+    position:fixed;top:0;right:0;height:100vh;width:460px;max-width:92vw;background:var(--bg2);
+    border-left:1px solid var(--line);box-shadow:-20px 0 60px rgba(0,0,0,.5);
+    transform:translateX(100%);transition:transform .28s ease;z-index:50;overflow-y:auto;
+  }
+  .drawer.show{transform:translateX(0)}
+  .drawer-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg2);z-index:2}
+  .drawer-head h2{font-size:20px}
+  .x{background:transparent;border:0;color:var(--muted);font-size:26px;cursor:pointer;line-height:1}
+  .drawer-body{padding:24px}
+  .info-row{margin-bottom:16px}
+  .info-row .lbl{font-size:13px;color:var(--muted);margin-bottom:3px}
+  .info-row .val{font-size:15px;word-break:break-word}
+  .info-row a{color:var(--gold);text-decoration:none}
+  .info-row a:hover{text-decoration:underline}
+  .divider{height:1px;background:var(--line);margin:22px 0}
 
-/* ── LAYOUT ── */
-#appShell{display:none;width:100%;height:100%;overflow:hidden;}
-#appShell.visible{display:flex;}
+  .score-edit{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
+  .score-edit .se{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+  .score-edit .se label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+  .score-edit .se input{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);
+    text-align:center;font-family:inherit;font-size:18px;font-weight:700;padding:8px;border-radius:8px}
+  .score-edit .se input:focus{outline:none;border-color:var(--gold)}
+  .total-box{text-align:center;padding:16px;border-radius:12px;margin:8px 0 18px;border:1px solid var(--line);background:var(--card)}
+  .total-box .tn{font-size:40px;font-weight:700}
+  .total-box .tl{font-size:13px;color:var(--muted)}
+  .tg{color:var(--green)} .ty{color:var(--yellow)} .tr{color:var(--red)}
+  .drawer-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}
+  .drawer-actions .btn{padding:12px 0;font-size:14px}
 
-/* SIDEBAR */
-.sidebar{
-  width:220px;min-width:220px;
-  background:var(--surface);
-  border-left:1px solid var(--border);
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-}
+  /* ---------- SETTINGS ---------- */
+  .settings-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:22px;max-width:620px}
+  .settings-card h3{font-size:17px;margin-bottom:16px}
+  .danger{border-color:rgba(224,86,86,.4)}
+  .danger h3{color:var(--red)}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);
+    border:1px solid var(--line);color:var(--text);padding:14px 22px;border-radius:12px;font-size:15px;opacity:0;
+    pointer-events:none;transition:.3s;z-index:99;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.ok{border-color:var(--green)} .toast.err{border-color:var(--red)}
 
-.sidebar-logo{
-  padding:24px 20px 20px;
-  border-bottom:1px solid var(--border);
-}
-.sidebar-logo .name{font-size:13px;font-weight:700;color:#fff;}
-.sidebar-logo .role{font-size:11px;color:var(--muted2);}
-
-.nav-group{padding:16px 12px 8px;}
-.nav-label{
-  font-size:9px;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);padding:0 8px;margin-bottom:6px;
-}
-
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 10px;border-radius:3px;
-  font-size:13px;color:var(--muted2);
-  cursor:pointer;transition:background .15s,color .15s;
-  margin-bottom:1px;
-}
-.nav-item:hover{background:var(--surface2);color:var(--text);}
-.nav-item.active{background:var(--accent-dim);color:var(--accent);}
-.nav-item .ic{width:16px;text-align:center;flex-shrink:0;}
-
-.sidebar-footer{
-  margin-top:auto;padding:16px;
-  border-top:1px solid var(--border);
-}
-.logout-btn{
-  width:100%;padding:9px;
-  background:transparent;
-  border:1px solid var(--border2);
-  border-radius:3px;
-  color:var(--muted2);
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:12px;cursor:pointer;
-  transition:border-color .2s,color .2s;
-}
-.logout-btn:hover{border-color:var(--red);color:var(--red);}
-
-/* MAIN */
-.main{
-  flex:1;overflow-y:auto;
-  background:var(--bg);
-}
-
-.topbar{
-  padding:18px 28px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg);
-  position:sticky;top:0;z-index:10;
-}
-.topbar h1{font-size:15px;font-weight:700;color:#fff;}
-.topbar-meta{font-size:12px;color:var(--muted2);}
-
-.page{display:none;padding:28px;}
-.page.active{display:block;}
-
-/* ── STATS ── */
-.stats-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:12px;margin-bottom:28px;
-}
-.stat-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:3px;padding:20px;
-}
-.stat-card .val{
-  font-size:28px;font-weight:700;color:#fff;
-  margin-bottom:4px;
-}
-.stat-card .lbl{font-size:11px;color:var(--muted2);}
-.stat-card.s-accent .val{color:var(--accent);}
-.stat-card.s-green .val{color:var(--green);}
-.stat-card.s-red .val{color:var(--red);}
-
-/* ── APPLICANTS TABLE ── */
-.table-wrap{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:3px;overflow:hidden;
-}
-
-.table-header{
-  padding:14px 20px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.table-header h3{font-size:13px;font-weight:600;color:#ccc;}
-
-.filters{display:flex;gap:6px;}
-.filter-btn{
-  padding:5px 12px;border-radius:2px;
-  border:1px solid var(--border2);background:transparent;
-  color:var(--muted2);font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:11px;cursor:pointer;transition:all .15s;
-}
-.filter-btn:hover,.filter-btn.active{
-  background:var(--accent-dim);border-color:var(--accent-border,rgba(200,169,110,.3));
-  color:var(--accent);
-}
-
-.t-head{
-  display:grid;
-  grid-template-columns:1fr 100px 80px 80px 120px 100px;
-  padding:10px 20px;
-  background:var(--surface2);
-  border-bottom:1px solid var(--border);
-}
-.t-head span{
-  font-size:10px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);
-}
-
-.t-row{
-  display:grid;
-  grid-template-columns:1fr 100px 80px 80px 120px 100px;
-  padding:14px 20px;
-  border-bottom:1px solid var(--border);
-  align-items:center;
-  cursor:pointer;transition:background .12s;
-}
-.t-row:last-child{border-bottom:none;}
-.t-row:hover{background:var(--surface2);}
-
-.t-name{font-size:13px;font-weight:600;color:#ddd;}
-.t-sub{font-size:11px;color:var(--muted2);margin-top:2px;}
-.t-cell{font-size:12px;color:var(--muted2);}
-
-.badge{
-  display:inline-block;
-  padding:3px 8px;border-radius:2px;
-  font-size:10px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;
-}
-.badge-pending{background:rgba(200,160,48,.1);color:var(--yellow);}
-.badge-accepted{background:var(--green-dim);color:var(--green);}
-.badge-rejected{background:var(--red-dim);color:var(--red);}
-.badge-review{background:var(--accent-dim);color:var(--accent);}
-
-.score-chip{
-  font-size:12px;font-weight:700;
-  color:var(--muted2);
-}
-.score-chip.high{color:var(--green);}
-.score-chip.mid{color:var(--yellow);}
-.score-chip.low{color:var(--red);}
-
-.empty-state{
-  padding:60px 20px;text-align:center;
-  color:var(--muted);font-size:13px;
-}
-
-/* ── DETAIL DRAWER ── */
-.drawer{
-  position:fixed;top:0;left:0;bottom:0;
-  width:520px;background:var(--surface);
-  border-right:1px solid var(--border2);
-  z-index:50;transform:translateX(-100%);
-  transition:transform .25s;
-  overflow-y:auto;
-  display:flex;flex-direction:column;
-}
-.drawer.open{transform:translateX(0);}
-.drawer-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.6);z-index:49;
-}
-.drawer-overlay.open{display:block;}
-
-.drawer-top{
-  padding:20px 24px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:var(--surface);z-index:1;
-}
-.drawer-top h3{font-size:15px;font-weight:700;color:#fff;}
-.close-btn{
-  width:32px;height:32px;border-radius:3px;
-  background:var(--surface2);border:1px solid var(--border2);
-  color:var(--muted2);font-size:16px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:color .15s;
-}
-.close-btn:hover{color:#fff;}
-
-.drawer-body{padding:24px;flex:1;}
-
-.d-section{margin-bottom:28px;}
-.d-label{
-  font-size:10px;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:12px;
-  padding-bottom:8px;border-bottom:1px solid var(--border);
-}
-
-.d-field{margin-bottom:14px;}
-.d-field .k{font-size:11px;color:var(--muted2);margin-bottom:3px;}
-.d-field .v{font-size:13px;color:var(--text);line-height:1.7;}
-.d-field a{color:var(--accent);text-decoration:none;font-size:13px;}
-.d-field a:hover{text-decoration:underline;}
-
-.think-box{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:3px;padding:16px;
-  font-size:13px;color:#bbb;line-height:1.8;
-}
-
-/* SCORECARD INPUT */
-.score-inputs{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.score-input-row{
-  display:grid;grid-template-columns:1fr 80px;
-  align-items:center;gap:12px;
-  padding:12px 16px;
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:3px;
-}
-.score-input-row label{font-size:13px;color:var(--muted2);}
-.score-input-row input{
-  background:var(--bg);border:1px solid var(--border2);
-  border-radius:2px;padding:6px 10px;
-  color:var(--text);font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:14px;font-weight:700;text-align:center;
-  outline:none;width:100%;direction:ltr;
-  transition:border-color .2s;
-}
-.score-input-row input:focus{border-color:var(--accent);}
-
-.total-score{
-  padding:14px 16px;
-  background:var(--accent-dim);border:1px solid rgba(200,169,110,.2);
-  border-radius:3px;
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:16px;
-}
-.total-score span:first-child{font-size:13px;color:var(--accent);}
-.total-score .num{font-size:22px;font-weight:700;color:var(--accent);}
-
-.notes-input{
-  width:100%;background:var(--surface2);
-  border:1px solid var(--border2);border-radius:3px;
-  padding:12px 16px;color:var(--text);
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:13px;outline:none;resize:vertical;min-height:80px;
-  line-height:1.7;transition:border-color .2s;
-  direction:rtl;
-}
-.notes-input:focus{border-color:var(--accent);}
-
-.action-btns{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:8px;margin-top:16px;
-}
-.action-btn{
-  padding:11px;border:1px solid var(--border2);
-  border-radius:3px;font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:12px;font-weight:700;cursor:pointer;
-  transition:all .15s;background:transparent;
-}
-.action-btn.accept{
-  border-color:rgba(74,140,101,.4);color:var(--green);
-}
-.action-btn.accept:hover{background:var(--green-dim);}
-.action-btn.reject{
-  border-color:rgba(200,75,75,.3);color:var(--red);
-}
-.action-btn.reject:hover{background:var(--red-dim);}
-.action-btn.review{
-  border-color:rgba(200,169,110,.3);color:var(--accent);
-}
-.action-btn.review:hover{background:var(--accent-dim);}
-
-/* ── SETTINGS ── */
-.settings-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:3px;padding:24px;margin-bottom:16px;
-}
-.settings-card h3{
-  font-size:13px;font-weight:600;color:#ccc;
-  margin-bottom:20px;padding-bottom:12px;
-  border-bottom:1px solid var(--border);
-}
-
-.setting-row{margin-bottom:16px;}
-.setting-row label{
-  display:block;font-size:10px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:8px;
-}
-.setting-row input,.setting-row select{
-  width:100%;background:var(--surface2);
-  border:1px solid var(--border2);border-radius:3px;
-  padding:11px 14px;color:var(--text);
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:13px;outline:none;transition:border-color .2s;
-  direction:ltr;
-}
-.setting-row input:focus,.setting-row select:focus{border-color:var(--accent);}
-.setting-row select option{background:#111;}
-
-.save-btn{
-  padding:11px 24px;background:var(--accent);color:#000;
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:13px;font-weight:700;border:none;border-radius:3px;
-  cursor:pointer;transition:opacity .2s;
-}
-.save-btn:hover{opacity:.88}
-
-.save-msg{
-  font-size:12px;color:var(--green);
-  margin-right:12px;display:none;
-}
-.save-msg.show{display:inline;}
-
-/* ── DELETE CONFIRM ── */
-.confirm-modal{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.88);z-index:200;
-  align-items:center;justify-content:center;padding:24px;
-}
-.confirm-modal.open{display:flex;}
-.confirm-box{
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:4px;padding:36px 32px;max-width:360px;width:100%;text-align:center;
-}
-.confirm-box h3{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;}
-.confirm-box p{font-size:13px;color:var(--muted2);margin-bottom:28px;line-height:1.7;}
-.confirm-btns{display:flex;gap:10px;}
-.confirm-btns button{
-  flex:1;padding:11px;border-radius:3px;
-  font-family:'IBM Plex Sans Arabic',sans-serif;
-  font-size:13px;font-weight:700;cursor:pointer;border:1px solid;
-  transition:opacity .2s;
-}
-.confirm-btns .c-cancel{
-  background:transparent;border-color:var(--border2);color:var(--muted2);
-}
-.confirm-btns .c-delete{
-  background:var(--red);border-color:var(--red);color:#fff;
-}
-
-@media(max-width:900px){
-  .stats-grid{grid-template-columns:1fr 1fr;}
-  .drawer{width:100%;}
-  .sidebar{width:180px;min-width:180px;}
-}
+  @media(max-width:860px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .sidebar{width:64px;flex:0 0 64px;padding:18px 8px}
+    .brand,.nav button span{display:none}
+    .nav button{justify-content:center}
+    .main{padding:20px 16px}
+  }
 </style>
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
-<div id="loginScreen">
-  <div class="login-box">
-    <h2>لوحة التحكم</h2>
-    <p>سجّل دخولك للمتابعة</p>
-    <input type="email" class="login-field" id="lEmail" placeholder="الإيميل">
-    <input type="password" class="login-field" id="lPass" placeholder="كلمة السر">
-    <button class="login-btn" id="loginBtn">دخول</button>
-    <p class="login-err" id="loginErr">بيانات خاطئة</p>
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-card">
+    <h1>لوحة التحكم</h1>
+    <p class="muted">دخول المشرف</p>
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password">
+    </div>
+    <button class="btn full" id="loginBtn">دخول</button>
+    <div class="login-err" id="loginErr"></div>
   </div>
 </div>
 
-<!-- ── APP ── -->
-<div id="appShell">
+<!-- APP -->
+<div id="app">
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">التوظيف<small>أمين الكداوي</small></div>
+      <nav class="nav">
+        <button class="active" data-page="dashboard"><span>📊 لوحة البيانات</span></button>
+        <button data-page="applicants"><span>👥 المتقدمون</span></button>
+        <button data-page="settings"><span>⚙️ الإعدادات</span></button>
+      </nav>
+      <button class="btn ghost logout" id="logoutBtn">تسجيل الخروج</button>
+    </aside>
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="name">أمين الكداوي</div>
-      <div class="role">لوحة التحكم</div>
-    </div>
+    <!-- MAIN -->
+    <main class="main">
 
-    <div class="nav-group">
-      <div class="nav-label">القائمة</div>
-      <div class="nav-item active" onclick="showPage('dashboard')">
-        <span class="ic">◉</span> لوحة البيانات
-      </div>
-      <div class="nav-item" onclick="showPage('applicants')">
-        <span class="ic">◈</span> المتقدمون
-        <span id="pendingBadge" style="margin-right:auto;font-size:10px;background:var(--accent);color:#000;padding:1px 6px;border-radius:10px;display:none;"></span>
-      </div>
-      <div class="nav-item" onclick="showPage('settings')">
-        <span class="ic">◎</span> الإعدادات
-      </div>
-    </div>
-
-    <div class="sidebar-footer">
-      <button class="logout-btn" onclick="doLogout()">تسجيل الخروج</button>
-    </div>
-  </div>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <h1 id="pageTitle">لوحة البيانات</h1>
-      <span class="topbar-meta" id="topbarMeta"></span>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div class="page active" id="page-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card s-accent">
-          <div class="val" id="statTotal">0</div>
-          <div class="lbl">إجمالي المتقدمين</div>
+      <!-- DASHBOARD -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-title">لوحة البيانات</div>
+        <div class="stats">
+          <div class="stat total"><div class="v" id="st-total">0</div><div class="k">إجمالي المتقدمين</div></div>
+          <div class="stat pending"><div class="v" id="st-pending">0</div><div class="k">قيد المراجعة</div></div>
+          <div class="stat accepted"><div class="v" id="st-accepted">0</div><div class="k">مقبول</div></div>
+          <div class="stat rejected"><div class="v" id="st-rejected">0</div><div class="k">مرفوض</div></div>
         </div>
-        <div class="stat-card">
-          <div class="val" id="statPending">0</div>
-          <div class="lbl">قيد المراجعة</div>
+        <div class="card">
+          <div class="card-head">آخر 5 متقدمين</div>
+          <table>
+            <thead><tr><th>الاسم</th><th>البلد / الهاتف</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+            <tbody id="recentBody"><tr><td colspan="5" class="empty">جارٍ التحميل...</td></tr></tbody>
+          </table>
         </div>
-        <div class="stat-card s-green">
-          <div class="val" id="statAccepted">0</div>
-          <div class="lbl">مقبولون</div>
-        </div>
-        <div class="stat-card s-red">
-          <div class="val" id="statRejected">0</div>
-          <div class="lbl">مرفوضون</div>
-        </div>
-      </div>
+      </section>
 
-      <div class="table-wrap">
-        <div class="table-header">
-          <h3>آخر المتقدمين</h3>
+      <!-- APPLICANTS -->
+      <section class="page" id="page-applicants">
+        <div class="page-title">المتقدمون</div>
+        <div class="filters" id="filters">
+          <button class="active" data-filter="all">الكل</button>
+          <button data-filter="pending">قيد المراجعة</button>
+          <button data-filter="accepted">مقبول</button>
+          <button data-filter="rejected">مرفوض</button>
         </div>
-        <div id="dashRecentList"></div>
-      </div>
-    </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>الاسم / الهاتف</th><th>البلد</th><th>السعر</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+            <tbody id="applicantsBody"><tr><td colspan="6" class="empty">جارٍ التحميل...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
 
-    <!-- APPLICANTS -->
-    <div class="page" id="page-applicants">
-      <div class="table-wrap">
-        <div class="table-header">
-          <h3>جميع المتقدمين</h3>
-          <div class="filters">
-            <button class="filter-btn active" onclick="filterApps('all',this)">الكل</button>
-            <button class="filter-btn" onclick="filterApps('pending',this)">قيد المراجعة</button>
-            <button class="filter-btn" onclick="filterApps('accepted',this)">مقبول</button>
-            <button class="filter-btn" onclick="filterApps('rejected',this)">مرفوض</button>
+      <!-- SETTINGS -->
+      <section class="page" id="page-settings">
+        <div class="page-title">الإعدادات</div>
+        <div class="settings-card">
+          <h3>إعدادات الفيديو</h3>
+          <div class="field">
+            <label>رابط الفيديو</label>
+            <input type="url" id="set-videoUrl" placeholder="https://...">
           </div>
+          <div class="field">
+            <label>نوع الفيديو</label>
+            <select id="set-videoType">
+              <option value="youtube">YouTube</option>
+              <option value="direct">Direct (رابط مباشر mp4)</option>
+            </select>
+          </div>
+          <button class="btn gold" id="saveSettingsBtn">حفظ الإعدادات</button>
         </div>
-        <div class="t-head">
-          <span>المتقدم</span>
-          <span>البلد</span>
-          <span>السعر</span>
-          <span>النقاط</span>
-          <span>الحالة</span>
-          <span>التاريخ</span>
-        </div>
-        <div id="appsList"></div>
-      </div>
-    </div>
 
-    <!-- SETTINGS -->
-    <div class="page" id="page-settings">
-      <div class="settings-card">
-        <h3>إعدادات الفيديو</h3>
-        <div class="setting-row">
-          <label>رابط الفيديو</label>
-          <input type="url" id="s-videoUrl" placeholder="https://youtube.com/watch?v=..." dir="ltr">
+        <div class="settings-card danger">
+          <h3>⚠️ منطقة الخطر</h3>
+          <p class="muted" style="margin-bottom:16px">حذف جميع المتقدمين نهائياً. لا يمكن التراجع.</p>
+          <button class="btn red" id="deleteAllBtn">حذف جميع المتقدمين</button>
         </div>
-        <div class="setting-row">
-          <label>نوع الفيديو</label>
-          <select id="s-videoType">
-            <option value="youtube">YouTube</option>
-            <option value="vimeo">Vimeo</option>
-            <option value="direct">رابط مباشر (MP4)</option>
-          </select>
-        </div>
-        <div style="display:flex;align-items:center;margin-top:8px;">
-          <button class="save-btn" onclick="saveConfig()">حفظ التغييرات</button>
-          <span class="save-msg" id="saveMsg">✓ تم الحفظ</span>
-        </div>
-      </div>
+      </section>
 
-      <div class="settings-card">
-        <h3>إعدادات الحساب</h3>
-        <div class="setting-row">
-          <label>كلمة السر الجديدة</label>
-          <input type="password" id="s-newPass" placeholder="اتركها فارغة إذا ما تبي تغيير">
-        </div>
-        <div style="display:flex;align-items:center;margin-top:8px;">
-          <button class="save-btn" onclick="savePass()">تغيير السر</button>
-          <span class="save-msg" id="savePassMsg">✓ تم التغيير</span>
-        </div>
-      </div>
-
-      <div class="settings-card" style="border-color:rgba(200,75,75,.2);">
-        <h3 style="color:var(--red);">منطقة الخطر</h3>
-        <p style="font-size:13px;color:var(--muted2);margin-bottom:16px;">حذف جميع بيانات المتقدمين — لا يمكن التراجع.</p>
-        <button class="save-btn" style="background:var(--red);" onclick="confirmDeleteAll()">حذف كل البيانات</button>
-      </div>
-    </div>
+    </main>
   </div>
 </div>
 
 <!-- DRAWER -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-top">
-    <h3 id="drawerName">—</h3>
-    <button class="close-btn" onclick="closeDrawer()">×</button>
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2 id="dr-name">—</h2>
+    <button class="x" id="drawerClose">×</button>
   </div>
   <div class="drawer-body" id="drawerBody"></div>
-</div>
+</aside>
 
-<!-- CONFIRM DELETE -->
-<div class="confirm-modal" id="confirmModal">
-  <div class="confirm-box">
-    <h3>تأكيد الحذف</h3>
-    <p>سيتم حذف جميع بيانات المتقدمين. هذا الإجراء لا يمكن التراجع عنه.</p>
-    <div class="confirm-btns">
-      <button class="c-cancel" onclick="document.getElementById('confirmModal').classList.remove('open')">إلغاء</button>
-      <button class="c-delete" onclick="deleteAllApps()">حذف</button>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script type="module">
-// ── FIREBASE ──
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCZhafPqlaBoapQ8df0Y_U8KzKyHKsNE-k",
-  authDomain: "hiring-9104c.firebaseapp.com",
-  projectId: "hiring-9104c",
-  storageBucket: "hiring-9104c.firebasestorage.app",
-  messagingSenderId: "300070302147",
-  appId: "1:300070302147:web:f6af240cb1f74763308d76"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCZhafPqlaBoapQ8df0Y_U8KzKyHKsNE-k",
+    authDomain: "hiring-9104c.firebaseapp.com",
+    projectId: "hiring-9104c",
+    storageBucket: "hiring-9104c.firebasestorage.app",
+    messagingSenderId: "300070302147",
+    appId: "1:300070302147:web:f6af240cb1f74763308d76"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
 
-const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
+  /* ---------- fixed admin creds ---------- */
+  const ADMIN_EMAIL = "contact.amineelka@gmail.com";
+  const ADMIN_PASS  = "1234";
 
-// ── AUTH ──
-const ADMIN = {
-  email: 'contact.amineelka@gmail.com',
-  pass: '1234'
-};
+  /* ---------- state ---------- */
+  let applicants = [];        // [{id, ...data}]
+  let currentFilter = 'all';
+  let currentId = null;
 
-function doLogin(){
-  const e=document.getElementById('lEmail').value.trim();
-  const p=document.getElementById('lPass').value.trim();
-  if(e===ADMIN.email && p===ADMIN.pass){
-    sessionStorage.setItem('admin_authed','1');
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('appShell').classList.add('visible');
-    initApp();
-  } else {
-    document.getElementById('loginErr').style.display='block';
+  /* ---------- helpers ---------- */
+  const $ = id => document.getElementById(id);
+  function toast(msg, type){
+    const t = $('toast'); t.textContent = msg;
+    t.className = 'toast show ' + (type||'');
+    setTimeout(()=>{ t.className='toast'; }, 3000);
   }
-}
-
-function doLogout(){
-  sessionStorage.removeItem('admin_authed');
-  location.reload();
-}
-
-// Check session
-if(sessionStorage.getItem('admin_authed')==='1'){
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('appShell').classList.add('visible');
-}
-
-// ── DATA ──
-async function getApps(){
-  const q = query(collection(db,'applicants'), orderBy('date','desc'));
-  const snap = await getDocs(q);
-  return snap.docs.map(d=>({id:d.id,...d.data()}));
-}
-
-async function updateApp(id, data){
-  await updateDoc(doc(db,'applicants',id), data);
-}
-
-async function getConfig(){
-  try{
-    const snap = await getDoc(doc(db,'config','settings'));
-    return snap.exists() ? snap.data() : {};
-  }catch(e){ return {}; }
-}
-
-async function saveConfigData(cfg){
-  await setDoc(doc(db,'config','settings'), cfg);
-}
-
-// ── INIT ──
-async function initApp(){
-  await loadSettings();
-  await renderDashboard();
-  updatePendingBadge();
-  setTopbarMeta();
-}
-
-function setTopbarMeta(){
-  const now = new Date();
-  document.getElementById('topbarMeta').textContent =
-    now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-}
-
-// ── PAGES ──
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item')[['dashboard','applicants','settings'].indexOf(id)].classList.add('active');
-
-  const titles={dashboard:'لوحة البيانات',applicants:'المتقدمون',settings:'الإعدادات'};
-  document.getElementById('pageTitle').textContent=titles[id];
-
-  if(id==='dashboard') renderDashboard();
-  if(id==='applicants') renderApplicants('all');
-}
-
-// ── DASHBOARD ──
-async function renderDashboard(){
-  const apps = await getApps();
-  document.getElementById('statTotal').textContent=apps.length;
-  document.getElementById('statPending').textContent=apps.filter(a=>a.status==='pending').length;
-  document.getElementById('statAccepted').textContent=apps.filter(a=>a.status==='accepted').length;
-  document.getElementById('statRejected').textContent=apps.filter(a=>a.status==='rejected').length;
-
-  const recent=apps.slice(0,5);
-  const el=document.getElementById('dashRecentList');
-  if(!recent.length){el.innerHTML='<div class="empty-state">لا يوجد متقدمون بعد</div>';return;}
-  el.innerHTML=recent.map(a=>rowHTML(a)).join('');
-}
-
-// ── APPLICANTS ──
-let currentFilter='all';
-let allAppsCache=[];
-
-async function renderApplicants(filter){
-  currentFilter=filter;
-  allAppsCache = await getApps();
-  const filtered=filter==='all'?allAppsCache:allAppsCache.filter(a=>a.status===filter);
-  const el=document.getElementById('appsList');
-  if(!filtered.length){el.innerHTML='<div class="empty-state">لا يوجد متقدمون في هذا التصنيف</div>';return;}
-  el.innerHTML=filtered.map(a=>rowHTML(a)).join('');
-}
-
-async function updatePendingBadge(){
-  const apps = await getApps();
-  const n=apps.filter(a=>a.status==='pending').length;
-  const b=document.getElementById('pendingBadge');
-  if(n>0){b.textContent=n;b.style.display='inline';}
-  else{b.style.display='none';}
-}
-
-function rowHTML(a){
-  const parts=a.name.split('—');
-  const name=parts[0]?.trim()||a.name;
-  const country=parts[1]?.trim()||'—';
-  const sc=scoreChip(a.score);
-  const date=new Date(a.date).toLocaleDateString('ar',{month:'short',day:'numeric'});
-  return `<div class="t-row" onclick="openDrawer('${a.id}')">
-    <div><div class="t-name">${esc(name)}</div><div class="t-sub">${esc(a.phone)}</div></div>
-    <div class="t-cell">${esc(country)}</div>
-    <div class="t-cell">$${esc(a.price)}</div>
-    <div class="t-cell">${sc}</div>
-    <div class="t-cell">${badgeHTML(a.status)}</div>
-    <div class="t-cell">${date}</div>
-  </div>`;
-}
-
-function scoreChip(s){
-  if(s===null||s===undefined) return '<span class="score-chip">—</span>';
-  const cls=s>=65?'high':s>=55?'mid':'low';
-  return `<span class="score-chip ${cls}">${s}</span>`;
-}
-
-function badgeHTML(status){
-  const map={pending:'badge-pending قيد المراجعة',accepted:'badge-accepted مقبول',rejected:'badge-rejected مرفوض',review:'badge-review للمراجعة'};
-  const[cls,label]=(map[status]||'badge-pending قيد المراجعة').split(' ');
-  return `<span class="badge ${cls}">${label}</span>`;
-}
-
-function updatePendingBadge(){
-  const n=getApps().filter(a=>a.status==='pending').length;
-  const b=document.getElementById('pendingBadge');
-  if(n>0){b.textContent=n;b.style.display='inline';}
-  else{b.style.display='none';}
-}
-
-// ── DRAWER ──
-let currentAppId=null;
-
-function openDrawer(id){
-  const apps=getApps();
-  const a=apps.find(x=>x.id==id);
-  if(!a) return;
-  currentAppId=id;
-  document.getElementById('drawerName').textContent=a.name;
-
-  const sc=a.score||{commitment:0,quality:0,communication:0};
-
-  document.getElementById('drawerBody').innerHTML=`
-    <div class="d-section">
-      <div class="d-label">البيانات الأساسية</div>
-      <div class="d-field"><div class="k">الاسم والبلد</div><div class="v">${esc(a.name)}</div></div>
-      <div class="d-field"><div class="k">واتساب</div><div class="v">${esc(a.phone)}</div></div>
-      <div class="d-field"><div class="k">طريقة الدفع</div><div class="v">${esc(a.payment)}</div></div>
-      <div class="d-field"><div class="k">السعر المطلوب</div><div class="v">$${esc(a.price)}/فيديو</div></div>
-    </div>
-
-    <div class="d-section">
-      <div class="d-label">الشغل والترايل</div>
-      <div class="d-field"><div class="k">البورتفوليو</div><a href="${esc(a.portfolio)}" target="_blank">فتح الرابط ↗</a></div>
-      <div class="d-field"><div class="k">الترايل</div><a href="${esc(a.trial)}" target="_blank">فتح الترايل ↗</a></div>
-    </div>
-
-    <div class="d-section">
-      <div class="d-label">إجابة سؤال التفكير</div>
-      <div class="think-box">${esc(a.think)}</div>
-    </div>
-
-    <div class="d-section">
-      <div class="d-label">Scorecard — 100 نقطة</div>
-      <div class="score-inputs">
-        <div class="score-input-row">
-          <label>الالتزام (max 40)</label>
-          <input type="number" id="sc-commitment" min="0" max="40" value="${sc.commitment||0}" oninput="calcTotal()">
-        </div>
-        <div class="score-input-row">
-          <label>الجودة (max 35)</label>
-          <input type="number" id="sc-quality" min="0" max="35" value="${sc.quality||0}" oninput="calcTotal()">
-        </div>
-        <div class="score-input-row">
-          <label>التواصل (max 25)</label>
-          <input type="number" id="sc-communication" min="0" max="25" value="${sc.communication||0}" oninput="calcTotal()">
-        </div>
-      </div>
-      <div class="total-score">
-        <span>المجموع</span>
-        <span class="num" id="totalScore">0</span>
-      </div>
-      <textarea class="notes-input" id="d-notes" placeholder="ملاحظاتك على هذا المتقدم...">${esc(a.notes||'')}</textarea>
-      <div class="action-btns">
-        <button class="action-btn accept" onclick="setStatus('accepted')">✓ قبول</button>
-        <button class="action-btn review" onclick="setStatus('review')">؟ للمراجعة</button>
-        <button class="action-btn reject" onclick="setStatus('rejected')">× رفض</button>
-      </div>
-    </div>
-  `;
-
-  calcTotal();
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawerOverlay').classList.add('open');
-}
-
-function calcTotal(){
-  const c=parseInt(document.getElementById('sc-commitment')?.value)||0;
-  const q=parseInt(document.getElementById('sc-quality')?.value)||0;
-  const co=parseInt(document.getElementById('sc-communication')?.value)||0;
-  const t=c+q+co;
-  const el=document.getElementById('totalScore');
-  if(el){
-    el.textContent=t;
-    el.style.color=t>=65?'var(--green)':t>=55?'var(--yellow)':'var(--red)';
+  function statusBadge(s){
+    if (s==='accepted') return '<span class="status-badge s-accepted">مقبول</span>';
+    if (s==='rejected') return '<span class="status-badge s-rejected">مرفوض</span>';
+    return '<span class="status-badge s-pending">قيد المراجعة</span>';
   }
-}
+  function scoreClass(v){
+    if (v==null) return 'sc-n';
+    if (v>=65) return 'sc-g'; if (v>=55) return 'sc-y'; return 'sc-r';
+  }
+  function totalClass(v){ if (v>=65) return 'tg'; if (v>=55) return 'ty'; return 'tr'; }
+  function fmtDate(iso){
+    if(!iso) return '—';
+    try{ const d=new Date(iso); return d.toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'}); }
+    catch(e){ return iso; }
+  }
+  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // best-effort country extraction from "name — country"
+  function country(name){
+    if(!name) return '—';
+    const parts = name.split(/[—\-–|،,]/);
+    return parts.length>1 ? parts[parts.length-1].trim() : '—';
+  }
 
-async function setStatus(status){
-  if(!currentAppId) return;
+  /* ---------- LOGIN ---------- */
+  function doLogin(){
+    const email = $('loginEmail').value.trim();
+    const pass  = $('loginPass').value;
+    if (email === ADMIN_EMAIL && pass === ADMIN_PASS){
+      sessionStorage.setItem('admin_authed','1');
+      showApp();
+    } else {
+      $('loginErr').textContent = 'بيانات الدخول غير صحيحة';
+    }
+  }
+  function showApp(){
+    $('login').style.display = 'none';
+    $('app').style.display = 'block';
+    loadApplicants();
+    loadSettings();
+  }
+  function logout(){
+    sessionStorage.removeItem('admin_authed');
+    location.reload();
+  }
 
-  const c=parseInt(document.getElementById('sc-commitment')?.value)||0;
-  const q=parseInt(document.getElementById('sc-quality')?.value)||0;
-  const co=parseInt(document.getElementById('sc-communication')?.value)||0;
+  /* ---------- DATA ---------- */
+  async function loadApplicants(){
+    try{
+      let snap;
+      try{
+        snap = await getDocs(query(collection(db,'applicants'), orderBy('date','desc')));
+      }catch(e){
+        snap = await getDocs(collection(db,'applicants'));
+      }
+      applicants = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      applicants.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+      renderStats();
+      renderRecent();
+      renderApplicants();
+    }catch(e){
+      console.error(e);
+      $('recentBody').innerHTML = '<tr><td colspan="5" class="empty">تعذّر تحميل البيانات</td></tr>';
+      $('applicantsBody').innerHTML = '<tr><td colspan="6" class="empty">تعذّر تحميل البيانات</td></tr>';
+    }
+  }
 
-  await updateApp(currentAppId,{
-    status,
-    scoreTotal: c+q+co,
-    score: {commitment:c,quality:q,communication:co},
-    notes: document.getElementById('d-notes')?.value||''
+  function renderStats(){
+    $('st-total').textContent    = applicants.length;
+    $('st-pending').textContent  = applicants.filter(a=>a.status==='pending').length;
+    $('st-accepted').textContent = applicants.filter(a=>a.status==='accepted').length;
+    $('st-rejected').textContent = applicants.filter(a=>a.status==='rejected').length;
+  }
+
+  function renderRecent(){
+    const rows = applicants.slice(0,5);
+    if (!rows.length){ $('recentBody').innerHTML='<tr><td colspan="5" class="empty">لا يوجد متقدمون بعد</td></tr>'; return; }
+    $('recentBody').innerHTML = rows.map(a=>{
+      const sv = a.scoreTotal;
+      return `<tr data-id="${a.id}">
+        <td>${esc(a.name)}</td>
+        <td class="muted">${esc(country(a.name))} · ${esc(a.phone)}</td>
+        <td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td>
+        <td>${statusBadge(a.status)}</td>
+        <td class="muted">${fmtDate(a.date)}</td>
+      </tr>`;
+    }).join('');
+    bindRows('recentBody');
+  }
+
+  function renderApplicants(){
+    let rows = applicants;
+    if (currentFilter!=='all') rows = rows.filter(a=>a.status===currentFilter);
+    if (!rows.length){ $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">لا يوجد متقدمون في هذه الفئة</td></tr>'; return; }
+    $('applicantsBody').innerHTML = rows.map(a=>{
+      const sv = a.scoreTotal;
+      return `<tr data-id="${a.id}">
+        <td><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></td>
+        <td class="muted">${esc(country(a.name))}</td>
+        <td>$${esc(a.price)}</td>
+        <td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td>
+        <td>${statusBadge(a.status)}</td>
+        <td class="muted">${fmtDate(a.date)}</td>
+      </tr>`;
+    }).join('');
+    bindRows('applicantsBody');
+  }
+
+  function bindRows(bodyId){
+    $(bodyId).querySelectorAll('tr[data-id]').forEach(tr=>{
+      tr.addEventListener('click', ()=> openDrawer(tr.dataset.id));
+    });
+  }
+
+  /* ---------- DRAWER ---------- */
+  function openDrawer(id){
+    const a = applicants.find(x=>x.id===id);
+    if (!a) return;
+    currentId = id;
+    $('dr-name').textContent = a.name || '—';
+
+    const commit = (a.scoreCommit!=null)?a.scoreCommit:'';
+    const quality= (a.scoreQuality!=null)?a.scoreQuality:'';
+    const comm   = (a.scoreComm!=null)?a.scoreComm:'';
+
+    $('drawerBody').innerHTML = `
+      <div class="info-row"><div class="lbl">رقم واتساب</div><div class="val">${esc(a.phone)}</div></div>
+      <div class="info-row"><div class="lbl">البلد</div><div class="val">${esc(country(a.name))}</div></div>
+      <div class="info-row"><div class="lbl">طريقة الدفع</div><div class="val">${esc(a.payment)}</div></div>
+      <div class="info-row"><div class="lbl">السعر المتوقع</div><div class="val">$${esc(a.price)} لكل فيديو</div></div>
+      <div class="info-row"><div class="lbl">البورتفوليو</div><div class="val">${a.portfolio?`<a href="${esc(a.portfolio)}" target="_blank" rel="noopener">${esc(a.portfolio)}</a>`:'—'}</div></div>
+      <div class="info-row"><div class="lbl">رابط الترايل</div><div class="val">${a.trial?`<a href="${esc(a.trial)}" target="_blank" rel="noopener">${esc(a.trial)}</a>`:'—'}</div></div>
+      <div class="info-row"><div class="lbl">على ماذا ركّز ولماذا؟</div><div class="val">${esc(a.think)}</div></div>
+
+      <div class="divider"></div>
+      <div class="lbl" style="font-size:14px;color:var(--text);margin-bottom:10px">التقييم (Scorecard)</div>
+      <div class="score-edit">
+        <div class="se"><label>الالتزام / 40</label><input type="number" id="sc-commit" min="0" max="40" value="${commit}"></div>
+        <div class="se"><label>الجودة / 35</label><input type="number" id="sc-quality" min="0" max="35" value="${quality}"></div>
+        <div class="se"><label>التواصل / 25</label><input type="number" id="sc-comm" min="0" max="25" value="${comm}"></div>
+      </div>
+      <div class="total-box">
+        <div class="tn" id="sc-total">0</div>
+        <div class="tl">المجموع من 100</div>
+      </div>
+
+      <div class="info-row"><div class="lbl">ملاحظات</div>
+        <textarea id="sc-notes" placeholder="ملاحظاتك الداخلية...">${esc(a.notes)}</textarea>
+      </div>
+
+      <div class="drawer-actions">
+        <button class="btn green" id="actAccept">قبول</button>
+        <button class="btn gold"  id="actReview">للمراجعة</button>
+        <button class="btn red"   id="actReject">رفض</button>
+      </div>
+    `;
+
+    ['sc-commit','sc-quality','sc-comm'].forEach(cid=>{
+      $(cid).addEventListener('input', recalcTotal);
+    });
+    recalcTotal();
+
+    $('actAccept').addEventListener('click', ()=> saveApplicant('accepted'));
+    $('actReview').addEventListener('click', ()=> saveApplicant('pending'));
+    $('actReject').addEventListener('click', ()=> saveApplicant('rejected'));
+
+    $('overlay').classList.add('show');
+    $('drawer').classList.add('show');
+  }
+
+  function getScores(){
+    const c = parseInt($('sc-commit').value);
+    const q = parseInt($('sc-quality').value);
+    const m = parseInt($('sc-comm').value);
+    const commit  = isNaN(c)?null:Math.min(40,Math.max(0,c));
+    const quality = isNaN(q)?null:Math.min(35,Math.max(0,q));
+    const comm    = isNaN(m)?null:Math.min(25,Math.max(0,m));
+    const any = commit!=null||quality!=null||comm!=null;
+    const total = any ? (commit||0)+(quality||0)+(comm||0) : null;
+    return { commit, quality, comm, total };
+  }
+
+  function recalcTotal(){
+    const { total } = getScores();
+    const el = $('sc-total');
+    const t = total==null?0:total;
+    el.textContent = t;
+    el.className = 'tn ' + totalClass(t);
+  }
+
+  async function saveApplicant(status){
+    if (!currentId) return;
+    const { commit, quality, comm, total } = getScores();
+    const notes = $('sc-notes').value;
+    try{
+      await updateDoc(doc(db,'applicants',currentId), {
+        status,
+        scoreCommit: commit,
+        scoreQuality: quality,
+        scoreComm: comm,
+        scoreTotal: total,
+        notes
+      });
+      // update local
+      const a = applicants.find(x=>x.id===currentId);
+      if (a){ a.status=status; a.scoreCommit=commit; a.scoreQuality=quality; a.scoreComm=comm; a.scoreTotal=total; a.notes=notes; }
+      renderStats(); renderRecent(); renderApplicants();
+      closeDrawer();
+      toast('تم الحفظ بنجاح','ok');
+    }catch(e){
+      console.error(e); toast('تعذّر الحفظ','err');
+    }
+  }
+
+  function closeDrawer(){
+    $('overlay').classList.remove('show');
+    $('drawer').classList.remove('show');
+    currentId = null;
+  }
+
+  /* ---------- SETTINGS ---------- */
+  async function loadSettings(){
+    try{
+      const snap = await getDoc(doc(db,'config','settings'));
+      if (snap.exists()){
+        const d = snap.data();
+        $('set-videoUrl').value = d.videoUrl || '';
+        $('set-videoType').value = d.videoType || 'youtube';
+      }
+    }catch(e){ console.error(e); }
+  }
+
+  async function saveSettings(){
+    const videoUrl  = $('set-videoUrl').value.trim();
+    const videoType = $('set-videoType').value;
+    try{
+      await setDoc(doc(db,'config','settings'), { videoUrl, videoType }, { merge:true });
+      toast('تم حفظ الإعدادات','ok');
+    }catch(e){ console.error(e); toast('تعذّر حفظ الإعدادات','err'); }
+  }
+
+  async function deleteAll(){
+    if (!confirm('هل أنت متأكد من حذف جميع المتقدمين نهائياً؟ لا يمكن التراجع.')) return;
+    if (!confirm('تأكيد أخير: سيتم حذف كل البيانات.')) return;
+    try{
+      const snap = await getDocs(collection(db,'applicants'));
+      await Promise.all(snap.docs.map(d=> deleteDoc(doc(db,'applicants',d.id))));
+      applicants = [];
+      renderStats(); renderRecent(); renderApplicants();
+      toast('تم حذف جميع المتقدمين','ok');
+    }catch(e){ console.error(e); toast('تعذّر الحذف','err'); }
+  }
+
+  /* ---------- NAV ---------- */
+  function switchPage(page){
+    document.querySelectorAll('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.page===page));
+    document.querySelectorAll('.page').forEach(p=> p.classList.toggle('active', p.id==='page-'+page));
+  }
+
+  /* ---------- WIRE UP ---------- */
+  $('loginBtn').addEventListener('click', doLogin);
+  $('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  $('loginEmail').addEventListener('keydown', e=>{ if(e.key==='Enter') $('loginPass').focus(); });
+  $('logoutBtn').addEventListener('click', logout);
+
+  document.querySelectorAll('.nav button').forEach(b=>{
+    b.addEventListener('click', ()=> switchPage(b.dataset.page));
+  });
+  document.querySelectorAll('#filters button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      currentFilter = b.dataset.filter;
+      document.querySelectorAll('#filters button').forEach(x=> x.classList.toggle('active', x===b));
+      renderApplicants();
+    });
   });
 
-  closeDrawer();
-  await renderDashboard();
-  await renderApplicants(currentFilter);
-  await updatePendingBadge();
-}
+  $('drawerClose').addEventListener('click', closeDrawer);
+  $('overlay').addEventListener('click', closeDrawer);
+  $('saveSettingsBtn').addEventListener('click', saveSettings);
+  $('deleteAllBtn').addEventListener('click', deleteAll);
 
-function closeDrawer(){
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('drawerOverlay').classList.remove('open');
-  currentAppId=null;
-}
+  // expose (in case any inline handler is added later)
+  window.doLogin = doLogin;
+  window.logout = logout;
+  window.switchPage = switchPage;
+  window.saveSettings = saveSettings;
+  window.deleteAll = deleteAll;
 
-// ── SETTINGS ──
-async function loadSettings(){
-  const cfg = await getConfig();
-  document.getElementById('s-videoUrl').value=cfg.videoUrl||'';
-  document.getElementById('s-videoType').value=cfg.videoType||'youtube';
-}
-
-async function saveConfig(){
-  const cfg={
-    videoUrl:document.getElementById('s-videoUrl').value.trim(),
-    videoType:document.getElementById('s-videoType').value
-  };
-  await saveConfigData(cfg);
-  const msg=document.getElementById('saveMsg');
-  msg.classList.add('show');
-  setTimeout(()=>msg.classList.remove('show'),2500);
-}
-
-function savePass(){
-  // Password is hardcoded - this field is disabled in this version
-  alert('لتغيير كلمة السر، تواصل مع المطور');
-}
-
-function confirmDeleteAll(){
-  document.getElementById('confirmModal').classList.add('open');
-}
-
-async function deleteAllApps(){
-  const apps = await getApps();
-  for(const a of apps){
-    await deleteDoc(doc(db,'applicants',a.id));
-  }
-  document.getElementById('confirmModal').classList.remove('open');
-  await renderDashboard();
-  await renderApplicants('all');
-  await updatePendingBadge();
-}
-
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-// Expose to window for onclick handlers
-window.doLogin=doLogin;
-window.doLogout=doLogout;
-window.showPage=showPage;
-window.filterApps=filterApps;
-window.openDrawer=openDrawer;
-window.closeDrawer=closeDrawer;
-window.calcTotal=calcTotal;
-window.setStatus=setStatus;
-window.saveConfig=saveConfig;
-window.savePass=savePass;
-window.confirmDeleteAll=confirmDeleteAll;
-window.deleteAllApps=deleteAllApps;
-
-// Event listeners
-document.getElementById('loginBtn')?.addEventListener('click', doLogin);
-document.getElementById('lPass')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('lEmail')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-
-// Init if already logged in
-if(sessionStorage.getItem('admin_authed')==='1') initApp();
+  /* ---------- BOOT ---------- */
+  if (sessionStorage.getItem('admin_authed')==='1'){ showApp(); }
 </script>
 </body>
 </html>
