@@ -35,14 +35,15 @@
     backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%);border-radius:24px}
 
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-family:inherit;font-weight:600;font-size:15px;
-    padding:13px 22px;border:0;border-radius:14px;cursor:pointer;transition:transform .12s,box-shadow .25s;box-shadow:0 12px 26px rgba(22,137,245,.26)}
-  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)} .btn:active{transform:translateY(0)}
-  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+    background:linear-gradient(180deg,#5cb4ff 0%,#1689f5 52%,#0f78e6 100%);color:#fff;font-family:inherit;font-weight:600;font-size:15px;
+    padding:13px 22px;border:1px solid rgba(255,255,255,.35);border-radius:14px;cursor:pointer;transition:transform .12s,box-shadow .25s,filter .2s;
+    box-shadow:0 12px 26px rgba(22,137,245,.28), inset 0 2px 2px rgba(255,255,255,.55), inset 0 -3px 6px rgba(8,70,150,.38)}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 16px 34px rgba(22,137,245,.4), inset 0 2px 2px rgba(255,255,255,.6), inset 0 -3px 6px rgba(8,70,150,.38)} .btn:active{transform:translateY(0)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;filter:none}
   .btn.full{width:100%}
-  .btn.ghost{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);color:var(--ink);box-shadow:var(--soft-shadow)}
-  .btn.green{background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));box-shadow:0 12px 26px rgba(15,156,108,.26)}
-  .btn.red{background:linear-gradient(135deg,#f08a8a,var(--red-ink));box-shadow:0 12px 26px rgba(192,57,43,.22)}
+  .btn.ghost{background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);color:var(--ink);box-shadow:var(--soft-shadow)}
+  .btn.green{background:linear-gradient(180deg,#a7f0cf 0%,#3fbf8e 52%,#0f9c6c 100%);border-color:rgba(255,255,255,.4);box-shadow:0 12px 26px rgba(15,156,108,.28), inset 0 2px 2px rgba(255,255,255,.55), inset 0 -3px 6px rgba(8,110,75,.38)}
+  .btn.red{background:linear-gradient(180deg,#f6a3a3 0%,#e05656 52%,#c0392b 100%);border-color:rgba(255,255,255,.35);box-shadow:0 12px 26px rgba(192,57,43,.24), inset 0 2px 2px rgba(255,255,255,.5), inset 0 -3px 6px rgba(120,30,20,.38)}
   .btn.sm{padding:9px 16px;font-size:14px;border-radius:11px}
   .btn.danger-ghost{background:rgba(254,242,242,.75);border:1px solid rgba(254,202,202,.85);color:var(--red-ink);box-shadow:none;width:100%}
 
@@ -298,7 +299,7 @@
       {id:"name",label:"الاسم الكامل، البلد والمدينة",placeholder:"مثال: أحمد العلي — المغرب، الدار البيضاء",type:"text",required:true},
       {id:"phone",label:"رقم واتساب",placeholder:"+212 6 00 00 00 00",type:"text",required:true},
       {id:"portfolio",label:"رابط البورتفوليو",placeholder:"https://...",type:"url",required:true},
-      {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Figma","After Effects","Premiere Pro","DaVinci Resolve"],required:true},
+      {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Premiere Pro","After Effects","Figma","DaVinci Resolve"],required:true},
       {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
       {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},

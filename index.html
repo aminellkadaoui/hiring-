@@ -40,9 +40,17 @@
     box-shadow:var(--soft-shadow),inset 0 1px 0 rgba(255,255,255,1);
     backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%);border-radius:28px}
 
+  /* sticky glass navbar */
+  .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:center;gap:11px;padding:13px 20px;
+    background:rgba(247,252,255,.55);border-bottom:1px solid rgba(255,255,255,.6);
+    backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
+  .tb-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:17px;
+    background:linear-gradient(135deg,var(--blue),var(--blue-2));box-shadow:0 8px 18px rgba(22,137,245,.3)}
+  .tb-brand{font-weight:700;font-size:16px} .tb-sub{color:var(--muted);font-weight:500;font-size:13px}
+
   /* TIMELINE RAIL */
   .rail{position:relative}
-  .rail .track{position:sticky;top:48px;display:flex;flex-direction:column;align-items:center;padding-top:8px}
+  .rail .track{position:sticky;top:78px;display:flex;flex-direction:column;align-items:center;padding-top:8px}
   .node{display:flex;flex-direction:column;align-items:center;gap:6px}
   .node .tc{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.5px;transition:color .4s}
   .node .knob{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #cfe3f6;display:grid;place-items:center;transition:.4s}
@@ -58,8 +66,8 @@
   .rail .line.filled .fill{height:100%}
 
   /* STAGES */
-  .flow{padding:48px 0 40px}
-  section.stage{margin-bottom:30px;scroll-margin-top:24px}
+  .flow{padding:36px 0 40px}
+  section.stage{margin-bottom:30px;scroll-margin-top:80px}
   .stage-card{padding:32px 34px;position:relative;transition:opacity .4s,filter .4s}
   .stage-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
   .stage-head .tag{font-family:var(--mono);font-size:12px;color:var(--blue-2);background:rgba(66,165,255,.1);padding:4px 10px;border-radius:8px;letter-spacing:.5px}
@@ -73,12 +81,20 @@
   /* video */
   .video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:#0c1620;border:1px solid rgba(255,255,255,.6);box-shadow:var(--soft-shadow)}
   .video-frame iframe,.video-frame video{position:absolute;inset:0;width:100%;height:100%;border:0}
-  .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;color:#eaf4ff;
-    background:radial-gradient(circle at 50% 45%,rgba(66,165,255,.25),transparent 60%);text-align:center;padding:18px}
-  .play-ring{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:26px;
-    background:linear-gradient(135deg,var(--blue),var(--blue-2));box-shadow:0 16px 40px rgba(22,137,245,.5);transition:transform .2s}
-  .video-ph:hover .play-ring{transform:scale(1.08)}
-  .video-ph span{font-size:14px;font-weight:600}
+  .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;color:#eaf4ff;
+    background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.32),transparent 62%);text-align:center;padding:18px;transition:background .25s}
+  .video-ph:hover{background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.42),transparent 64%)}
+  .play-ring{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:30px;padding-right:4px;
+    background:radial-gradient(120% 120% at 50% 22%,#7cc1ff 0%,#1689f5 58%,#0a73fd 100%);border:2px solid rgba(255,255,255,.55);
+    box-shadow:0 18px 44px rgba(22,137,245,.55), inset 0 3px 4px rgba(255,255,255,.65), inset 0 -4px 9px rgba(8,60,150,.45);
+    transition:transform .2s;animation:pulseGlow 2.2s ease-in-out infinite}
+  .video-ph:hover .play-ring{transform:scale(1.09)}
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 18px 44px rgba(22,137,245,.5),0 0 0 0 rgba(120,190,255,.5), inset 0 3px 4px rgba(255,255,255,.65), inset 0 -4px 9px rgba(8,60,150,.45)}
+    55%{box-shadow:0 18px 44px rgba(22,137,245,.6),0 0 0 16px rgba(120,190,255,0), inset 0 3px 4px rgba(255,255,255,.65), inset 0 -4px 9px rgba(8,60,150,.45)}
+  }
+  .video-ph span{font-size:16px;font-weight:700;letter-spacing:.3px}
+  .video-ph small{font-size:12.5px;color:#cfe4ff;font-weight:500;margin-top:-8px;font-family:var(--mono)}
   .scrubber{margin-top:18px;display:flex;align-items:center;gap:14px}
   .scrub-track{flex:1;height:8px;border-radius:999px;background:#e6eef6;position:relative}
   .scrub-fill{position:absolute;inset:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--mint-2),var(--blue-2));transition:width .25s}
@@ -93,6 +109,7 @@
   .field textarea{min-height:100px;resize:vertical}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
+  /* horizontal chips — for text-only options */
   .choice{display:flex;flex-wrap:wrap;gap:11px}
   .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:10px;padding:12px 17px;border-radius:14px;background:rgba(255,255,255,.55);
     border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14.5px;font-weight:500;transition:.15s;user-select:none;color:var(--ink);line-height:1.1}
@@ -105,17 +122,35 @@
   .chip.on .tick{background:var(--blue-2);border-color:var(--blue-2)}
   .chip.on .tick i{opacity:1;transform:scale(1)}
   .chip .lbl{white-space:nowrap}
-  .opt-logo{width:20px;height:20px;object-fit:contain;flex:0 0 20px;display:block}
-  .opt-ic{display:grid;place-items:center;width:20px;height:20px;flex:0 0 20px;color:var(--blue-2);font-size:18px}
+
+  /* vertical icon cards — uniform size, icon on top, label below, tick fixed top */
+  .cards{display:flex;flex-wrap:wrap;gap:13px}
+  .opt-card{position:relative;flex:0 0 auto;width:122px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;
+    padding:16px 10px;border-radius:18px;background:rgba(255,255,255,.62);border:1.5px solid rgba(255,255,255,.92);cursor:pointer;transition:.15s;box-shadow:var(--soft-shadow);text-align:center}
+  .opt-card:hover{border-color:rgba(66,165,255,.5);background:rgba(255,255,255,.9);transform:translateY(-2px)}
+  .opt-card input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+  .opt-tick{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:6px;border:2px solid #cdd9e6;background:#fff;display:grid;place-items:center;color:#fff;font-size:11px;transition:.15s}
+  .opt-card.radio .opt-tick{border-radius:50%}
+  .opt-tick i{opacity:0;transform:scale(.5);transition:.15s}
+  .opt-logo-wrap{width:34px;height:34px;display:grid;place-items:center;flex:0 0 34px}
+  .opt-logo-wrap img{width:32px;height:32px;object-fit:contain;display:block}
+  .opt-logo-wrap i{font-size:30px;color:var(--blue-2)}
+  .opt-lbl{font-size:13px;font-weight:600;line-height:1.25;color:var(--ink)}
+  .opt-card.on{border-color:var(--blue-2);background:rgba(66,165,255,.12);box-shadow:0 0 0 3px rgba(66,165,255,.14),var(--soft-shadow)}
+  .opt-card.on .opt-tick{background:var(--blue-2);border-color:var(--blue-2)}
+  .opt-card.on .opt-tick i{opacity:1;transform:scale(1)}
+  .opt-card.on .opt-lbl{color:var(--blue-2)}
   .other-in{margin-top:12px}
 
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;
-    background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-family:inherit;font-weight:600;font-size:16px;
-    padding:15px 30px;border:0;border-radius:999px;cursor:pointer;transition:transform .12s,box-shadow .25s;box-shadow:0 14px 30px rgba(22,137,245,.28);text-decoration:none}
-  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    background:linear-gradient(180deg,#5cb4ff 0%,#1689f5 52%,#0f78e6 100%);color:#fff;font-family:inherit;font-weight:600;font-size:16px;
+    padding:15px 30px;border:1px solid rgba(255,255,255,.35);border-radius:999px;cursor:pointer;transition:transform .12s,box-shadow .25s,filter .2s;text-decoration:none;
+    box-shadow:0 14px 30px rgba(22,137,245,.32), inset 0 2px 2px rgba(255,255,255,.6), inset 0 -3px 7px rgba(8,70,150,.4)}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 18px 40px rgba(22,137,245,.42), inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 7px rgba(8,70,150,.4)}
   .btn:active{transform:translateY(0)}
-  .btn:disabled{background:#dfe8f1;color:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
-  .btn.green{background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));box-shadow:0 12px 26px rgba(15,156,108,.28)}
+  .btn:disabled{background:#e2eaf2;color:var(--muted);cursor:not-allowed;border-color:rgba(255,255,255,.6);box-shadow:inset 0 1px 2px rgba(255,255,255,.8);transform:none;filter:none}
+  .btn.green{background:linear-gradient(180deg,#a7f0cf 0%,#3fbf8e 52%,#0f9c6c 100%);border-color:rgba(255,255,255,.4);
+    box-shadow:0 14px 30px rgba(15,156,108,.3), inset 0 2px 2px rgba(255,255,255,.6), inset 0 -3px 7px rgba(8,110,75,.4)}
   .btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid rgba(255,255,255,.9);box-shadow:var(--soft-shadow)}
   .btn.outline{background:#fff;color:var(--blue-2);border:1px solid var(--blue-2);box-shadow:var(--soft-shadow);max-width:360px;margin:0 auto}
   .btn.outline:hover{background:rgba(66,165,255,.06)}
@@ -181,6 +216,12 @@
 
 <div class="aurora"><div class="blob blob-a"></div><div class="blob blob-b"></div></div>
 
+<header class="topbar">
+  <span class="tb-mark"><i class="ph-fill ph-scissors"></i></span>
+  <span class="tb-brand">التوظيف</span>
+  <span class="tb-sub">· أمين الكداوي</span>
+</header>
+
 <div class="stage-wrap flow">
 
   <div class="rail">
@@ -204,7 +245,8 @@
           <div class="video-frame" id="videoBox">
             <div class="video-ph" id="videoPh">
               <div class="play-ring"><i class="ph-fill ph-play"></i></div>
-              <span>اضغط للتشغيل</span>
+              <span>شاهد الفيديو الآن</span>
+              <small>أقل من دقيقتين</small>
             </div>
           </div>
           <div class="scrubber">
@@ -265,7 +307,7 @@
       {id:"name",label:"الاسم الكامل، البلد والمدينة",placeholder:"مثال: أحمد العلي — المغرب، الدار البيضاء",type:"text",required:true},
       {id:"phone",label:"رقم واتساب",placeholder:"+212 6 00 00 00 00",type:"text",required:true},
       {id:"portfolio",label:"رابط البورتفوليو",placeholder:"https://...",type:"url",required:true},
-      {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Figma","After Effects","Premiere Pro","DaVinci Resolve"],required:true},
+      {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Premiere Pro","After Effects","Figma","DaVinci Resolve"],required:true},
       {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
       {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
@@ -286,11 +328,12 @@
   };
   function optIcon(label){
     const k=String(label).trim().toLowerCase();
-    if(LOGO[k]) return '<img class="opt-logo" src="logos/'+LOGO[k]+'.svg" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
-    if(k.includes('بنك')) return '<span class="opt-ic"><i class="ph-bold ph-bank"></i></span>';
-    if(k==='أخرى') return '<span class="opt-ic"><i class="ph-bold ph-dots-three-outline"></i></span>';
-    return '';
+    if(LOGO[k]) return '<img src="logos/'+LOGO[k]+'.svg" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+    if(k.includes('بنك')) return '<i class="ph-bold ph-bank"></i>';
+    if(k==='أخرى') return '<i class="ph-bold ph-dots-three-outline"></i>';
+    return '<i class="ph-bold ph-circle"></i>';
   }
+  function hasIcons(opts){ return (opts||[]).some(o=>{ const k=String(o).trim().toLowerCase(); return LOGO[k]||k.includes('بنك')||k==='أخرى'; }); }
 
   function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   function toast(msg,type){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3200); }
@@ -299,22 +342,24 @@
     document.getElementById('applyForm').innerHTML=(c.questions||[]).map(q=>{
       const id='f_'+q.id, ph=esc(q.placeholder||'');
       let input;
-      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span>'+optIcon(o)+'<span class="lbl">'+esc(o)+'</span></label>';
+      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">'+esc(o)+'</span></label>';
+      const card=(o,kind)=>'<label class="opt-card'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap">'+optIcon(o)+'</span><span class="opt-lbl">'+esc(o)+'</span></label>';
       if(q.type==='textarea') input='<textarea id="'+id+'" placeholder="'+ph+'"></textarea>';
       else if(q.type==='select') input='<select id="'+id+'"><option value="">اختر...</option>'+(q.options||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
-      else if(q.type==='checkbox'){
-        input='<div class="choice">'+(q.options||[]).map(o=>chip(o,'checkbox')).join('')+'</div>';
-        if((q.options||[]).includes('أخرى')) input+='<input type="text" class="other-in" id="'+id+'_other" placeholder="اذكر الطريقة الأخرى..." style="display:none">';
+      else if(q.type==='checkbox'||q.type==='radio'){
+        const useCards=hasIcons(q.options);
+        input='<div class="'+(useCards?'cards':'choice')+'">'+(q.options||[]).map(o=>useCards?card(o,q.type):chip(o,q.type)).join('')+'</div>';
+        if(q.type==='checkbox' && (q.options||[]).includes('أخرى')) input+='<input type="text" class="other-in" id="'+id+'_other" placeholder="اذكر الطريقة الأخرى..." style="display:none">';
       }
-      else if(q.type==='radio') input='<div class="choice">'+(q.options||[]).map(o=>chip(o,'radio')).join('')+'</div>';
       else input='<input type="'+esc(q.type||'text')+'" id="'+id+'" placeholder="'+ph+'"'+(q.type==='number'?' min="0"':'')+'>';
       return '<div class="field" data-qid="'+esc(q.id)+'"><label>'+esc(q.label)+'</label>'+input+'</div>';
     }).join('');
-    document.querySelectorAll('.chip input').forEach(inp=>inp.addEventListener('change',()=>{
+    document.querySelectorAll('.chip input, .opt-card input').forEach(inp=>inp.addEventListener('change',()=>{
+      const sel='.chip,.opt-card';
       if(inp.type==='radio'){
-        document.querySelectorAll('input[name="'+inp.name+'"]').forEach(o=>o.closest('.chip').classList.toggle('on',o.checked));
+        document.querySelectorAll('input[name="'+inp.name+'"]').forEach(o=>{ const c=o.closest(sel); if(c) c.classList.toggle('on',o.checked); });
       } else {
-        inp.closest('.chip').classList.toggle('on',inp.checked);
+        const c=inp.closest(sel); if(c) c.classList.toggle('on',inp.checked);
         if(inp.value==='أخرى'){ const ot=document.getElementById(inp.name+'_other'); if(ot) ot.style.display=inp.checked?'block':'none'; }
       }
     }));

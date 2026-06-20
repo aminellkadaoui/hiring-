@@ -1,10 +1,20 @@
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="15" fill="#0c0c0d"/>
-  <g style="mix-blend-mode:screen">
-    <circle cx="26" cy="25" r="12.5" fill="#ff2e63"/>
-    <circle cx="38" cy="25" r="12.5" fill="#ffb02e"/>
-    <circle cx="26" cy="38" r="12.5" fill="#23c4f8"/>
-    <circle cx="38" cy="38" r="12.5" fill="#7a5cff"/>
-    <circle cx="32" cy="32" r="9" fill="#15e6b4"/>
-  </g>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dv-rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2bd07b"/>
+      <stop offset=".3" stop-color="#22a7f0"/>
+      <stop offset=".55" stop-color="#7a5cff"/>
+      <stop offset=".8" stop-color="#ff3b6b"/>
+      <stop offset="1" stop-color="#ffd23b"/>
+    </linearGradient>
+    <linearGradient id="dv-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe0ff"/><stop offset="1" stop-color="#1f9bff"/></linearGradient>
+    <linearGradient id="dv-r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a86"/><stop offset="1" stop-color="#ef2d4f"/></linearGradient>
+    <linearGradient id="dv-y" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef04a"/><stop offset="1" stop-color="#9bd72e"/></linearGradient>
+    <path id="dv-drop" d="M50 53 C44.5 49.5 41 45 41 38 a9 9 0 1 1 18 0 c0 7 -3.5 11.5 -9 15 Z"/>
+  </defs>
+  <rect x="2" y="2" width="96" height="96" rx="25" fill="url(#dv-rim)"/>
+  <rect x="6" y="6" width="88" height="88" rx="21" fill="#27313e"/>
+  <use href="#dv-drop" fill="url(#dv-b)"/>
+  <use href="#dv-drop" fill="url(#dv-r)" transform="rotate(120 50 50)"/>
+  <use href="#dv-drop" fill="url(#dv-y)" transform="rotate(240 50 50)"/>
 </svg>
