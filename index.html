@@ -93,10 +93,10 @@
   .field textarea{min-height:100px;resize:vertical}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
-  .choice{display:flex;flex-wrap:wrap;gap:10px}
-  .chip{display:inline-flex;align-items:center;gap:10px;padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.55);
-    border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14px;font-weight:500;transition:.15s;user-select:none;position:relative;color:var(--ink)}
-  .chip:hover{border-color:rgba(66,165,255,.45);background:rgba(255,255,255,.75)}
+  .choice{display:flex;flex-wrap:wrap;gap:11px}
+  .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:10px;padding:12px 17px;border-radius:14px;background:rgba(255,255,255,.55);
+    border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14.5px;font-weight:500;transition:.15s;user-select:none;color:var(--ink);line-height:1.1}
+  .chip:hover{border-color:rgba(66,165,255,.45);background:rgba(255,255,255,.82)}
   .chip input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
   .chip .tick{width:20px;height:20px;border-radius:7px;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 20px;color:#fff;font-size:11px;transition:.15s}
   .chip.radio .tick{border-radius:50%}
@@ -104,8 +104,9 @@
   .chip.on{border-color:var(--blue-2);background:rgba(66,165,255,.1);color:var(--blue-2);font-weight:600}
   .chip.on .tick{background:var(--blue-2);border-color:var(--blue-2)}
   .chip.on .tick i{opacity:1;transform:scale(1)}
-  .opt-logo{width:19px;height:19px;object-fit:contain;flex:0 0 19px}
-  .chip>i.ph-bold{font-size:18px;color:var(--blue-2);flex:0 0 auto}
+  .chip .lbl{white-space:nowrap}
+  .opt-logo{width:20px;height:20px;object-fit:contain;flex:0 0 20px;display:block}
+  .opt-ic{display:grid;place-items:center;width:20px;height:20px;flex:0 0 20px;color:var(--blue-2);font-size:18px}
   .other-in{margin-top:12px}
 
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;
@@ -266,7 +267,7 @@
       {id:"portfolio",label:"رابط البورتفوليو",placeholder:"https://...",type:"url",required:true},
       {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Figma","After Effects","Premiere Pro","DaVinci Resolve"],required:true},
       {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
-      {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Wise","Binance","بنك محلي","أخرى"],required:true},
+      {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
       {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"radio",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
       {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"radio",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
@@ -279,15 +280,15 @@
   let appDocId = null;
 
   const LOGO = {
-    'figma':'figma','after effects':'adobeaftereffects','premiere pro':'adobepremierepro','premiere':'adobepremierepro',
-    'davinci resolve':'davinciresolve','davinci':'davinciresolve',
-    'paypal':'paypal','wise':'wise','binance':'binance'
+    'figma':'figma','after effects':'aftereffects','premiere pro':'premiere','premiere':'premiere',
+    'davinci resolve':'davinci','davinci':'davinci','davinci resolve studio':'davinci',
+    'paypal':'paypal','binance':'binance','notion':'notion'
   };
   function optIcon(label){
     const k=String(label).trim().toLowerCase();
-    if(LOGO[k]) return '<img class="opt-logo" src="https://cdn.simpleicons.org/'+LOGO[k]+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
-    if(k.includes('بنك')) return '<i class="ph-bold ph-bank"></i>';
-    if(k==='أخرى') return '<i class="ph-bold ph-dots-three-outline"></i>';
+    if(LOGO[k]) return '<img class="opt-logo" src="logos/'+LOGO[k]+'.svg" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+    if(k.includes('بنك')) return '<span class="opt-ic"><i class="ph-bold ph-bank"></i></span>';
+    if(k==='أخرى') return '<span class="opt-ic"><i class="ph-bold ph-dots-three-outline"></i></span>';
     return '';
   }
 
@@ -298,7 +299,7 @@
     document.getElementById('applyForm').innerHTML=(c.questions||[]).map(q=>{
       const id='f_'+q.id, ph=esc(q.placeholder||'');
       let input;
-      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span>'+optIcon(o)+'<span>'+esc(o)+'</span></label>';
+      const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span>'+optIcon(o)+'<span class="lbl">'+esc(o)+'</span></label>';
       if(q.type==='textarea') input='<textarea id="'+id+'" placeholder="'+ph+'"></textarea>';
       else if(q.type==='select') input='<select id="'+id+'"><option value="">اختر...</option>'+(q.options||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
       else if(q.type==='checkbox'){
