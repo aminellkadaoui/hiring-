@@ -591,17 +591,34 @@ footer p{font-size:11px;color:var(--muted);line-height:2;}
   </div>
 </div>
 
-<script>
-// ── CONFIG: loaded from admin ──
-let CONFIG = {
-  videoUrl: '',
-  videoType: 'youtube' // youtube | vimeo | direct
+<script type="module">
+// ── FIREBASE ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCZhafPqlaBoapQ8df0Y_U8KzKyHKsNE-k",
+  authDomain: "hiring-9104c.firebaseapp.com",
+  projectId: "hiring-9104c",
+  storageBucket: "hiring-9104c.firebasestorage.app",
+  messagingSenderId: "300070302147",
+  appId: "1:300070302147:web:f6af240cb1f74763308d76"
 };
 
-// Load config from localStorage (set by admin panel)
-function loadConfig(){
-  const saved = localStorage.getItem('funnel_config');
-  if(saved){ try{ CONFIG = {...CONFIG,...JSON.parse(saved)}; }catch(e){} }
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ── CONFIG: loaded from Firebase ──
+let CONFIG = {
+  videoUrl: '',
+  videoType: 'youtube'
+};
+
+async function loadConfig(){
+  try{
+    const snap = await getDoc(doc(db,'config','settings'));
+    if(snap.exists()) CONFIG = {...CONFIG,...snap.data()};
+  }catch(e){}
   applyVideoUrl();
 }
 
@@ -755,21 +772,25 @@ async function submitForm(){
     return;
   }
 
-  const app={
-    id: Date.now(),
-    date: new Date().toISOString(),
-    status: 'pending',
-    name, phone, payment, price, portfolio, trial, think,
-    score: null, notes: ''
-  };
-
-  // Save to localStorage (admin reads from same origin)
-  const apps = JSON.parse(localStorage.getItem('funnel_apps')||'[]');
-  apps.unshift(app);
-  localStorage.setItem('funnel_apps', JSON.stringify(apps));
-
-  document.getElementById('doneModal').classList.add('open');
+  try{
+    await addDoc(collection(db,'applicants'),{
+      date: new Date().toISOString(),
+      status: 'pending',
+      name, phone, payment, price, portfolio, trial, think,
+      scoreTotal: null, notes: ''
+    });
+    document.getElementById('doneModal').classList.add('open');
+  }catch(e){
+    alert('حدث خطأ — حاول مرة أخرى');
+    console.error(e);
+  }
 }
+
+// Expose to window
+window.startVideo=startVideo;
+window.unlockTrial=unlockTrial;
+window.unlockForm=unlockForm;
+window.submitForm=submitForm;
 
 // Init
 loadConfig();
