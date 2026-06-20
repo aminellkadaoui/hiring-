@@ -118,6 +118,12 @@
   .btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid rgba(255,255,255,.9);box-shadow:var(--soft-shadow)}
   .btn.outline{background:#fff;color:var(--blue-2);border:1px solid var(--blue-2);box-shadow:var(--soft-shadow);max-width:360px;margin:0 auto}
   .btn.outline:hover{background:rgba(66,165,255,.06)}
+  .btn.shine{position:relative;overflow:hidden}
+  .btn.shine::after{content:"";position:absolute;top:0;left:-65%;width:45%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-22deg);animation:sweep 2.8s infinite}
+  @keyframes sweep{0%{left:-65%}60%,100%{left:140%}}
+  .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#e05656!important;box-shadow:0 0 0 3px rgba(224,86,86,.16)!important}
+  .field.invalid .chip{border-color:rgba(224,86,86,.5)}
+  .field.invalid label{color:#c0392b}
 
   /* trial / consent */
   .trial-intro{padding:22px;border-radius:20px;margin-bottom:22px;text-align:center;
@@ -301,7 +307,7 @@
       }
       else if(q.type==='radio') input='<div class="choice">'+(q.options||[]).map(o=>chip(o,'radio')).join('')+'</div>';
       else input='<input type="'+esc(q.type||'text')+'" id="'+id+'" placeholder="'+ph+'"'+(q.type==='number'?' min="0"':'')+'>';
-      return '<div class="field"><label>'+esc(q.label)+'</label>'+input+'</div>';
+      return '<div class="field" data-qid="'+esc(q.id)+'"><label>'+esc(q.label)+'</label>'+input+'</div>';
     }).join('');
     document.querySelectorAll('.chip input').forEach(inp=>inp.addEventListener('change',()=>{
       if(inp.type==='radio'){
@@ -367,8 +373,10 @@
   }
 
   /* ---------- submit form ---------- */
-  async function submitForm(){
-    const answers={}; let missing=false;
+  function isUrl(v){ try{ const u=new URL(v); return /^https?:$/.test(u.protocol); }catch(e){ return false; } }
+  let appDocPromise=null;
+  function submitForm(){
+    const answers={}; let firstBad=null;
     (content.questions||[]).forEach(q=>{
       let val;
       if(q.type==='checkbox'){
@@ -378,21 +386,26 @@
       } else if(q.type==='radio'){ const r=document.querySelector('input[name="f_'+q.id+'"]:checked'); val=r?r.value:''; }
       else { const el=document.getElementById('f_'+q.id); val=el?String(el.value).trim():''; }
       answers[q.id]=val;
-      if(q.required && !val) missing=true;
+      const field=document.querySelector('.field[data-qid="'+q.id+'"]');
+      let bad=false;
+      if(q.required && !val) bad=true;
+      else if(q.type==='url' && val && !isUrl(val)) bad=true;
+      if(field) field.classList.toggle('invalid',bad);
+      if(bad && !firstBad) firstBad=field;
     });
-    if(missing){ toast('يرجى تعبئة جميع الحقول المطلوبة','err'); return; }
-    const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='جارٍ الإرسال...';
-    try{
-      const ref=await addDoc(collection(db,'applicants'), Object.assign({date:new Date().toISOString(),status:'pending',scoreTotal:null,notes:'',trialConsent:null},answers));
-      appDocId=ref.id;
-      unlockTrial();
-    }catch(e){ console.error(e); toast('حدث خطأ أثناء الإرسال — حاول مجدداً','err'); btn.disabled=false; btn.textContent='إرسال ومتابعة'; }
+    if(firstBad){ toast('تحقّق من الحقول المظلّلة بالأحمر','err'); if(firstBad.scrollIntoView) firstBad.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    // أرسل في الخلفية وتابع فوراً — لا انتظار
+    appDocId=null;
+    appDocPromise=addDoc(collection(db,'applicants'), Object.assign({date:new Date().toISOString(),status:'pending',rating:null,notes:'',trialConsent:null},answers))
+      .then(ref=>{ appDocId=ref.id; }).catch(e=>{ console.error('save failed',e); });
+    unlockTrial();
   }
+  async function ensureDoc(){ if(appDocId) return appDocId; if(appDocPromise){ try{ await appDocPromise; }catch(e){} } return appDocId; }
 
   /* ---------- trial stage ---------- */
   function renderTrial(){
     let h='<div class="trial-intro"><div class="t-h">موضوع الترايل وتفاصيله الكاملة على صفحة Notion</div>';
-    if(content.notionUrl) h+='<a class="btn outline" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> فتح تفاصيل الترايل</a>';
+    if(content.notionUrl) h+='<a class="btn shine" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> افتح تفاصيل الترايل الآن <i class="ph-bold ph-arrow-left"></i></a>';
     else h+='<p class="muted">سنشارك تفاصيل الترايل معك قريباً.</p>';
     h+='</div>';
     h+='<div class="consent"><p class="consent-q">هل توافق على تنفيذ هذا الترايل؟</p>'+
@@ -417,19 +430,20 @@
   }
   function trialDone(title,sub){
     document.getElementById('trialWrap').innerHTML='<div class="success"><div class="check"><i class="ph-bold ph-check"></i></div><h2>'+title+'</h2><p class="muted">'+sub+'</p>'+
-      (content.notionUrl?'<a class="btn outline" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> تفاصيل الترايل</a>':'')+'</div>';
+      (content.notionUrl?'<a class="btn shine" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> افتح تفاصيل الترايل</a>':'')+'</div>';
     setNode('tl-3','done'); fillLine('ln-3'); setNode('tl-done','done');
   }
   async function agreeTrial(){
-    try{ if(appDocId) await updateDoc(doc(db,'applicants',appDocId),{trialConsent:'agreed'}); }catch(e){ console.error(e); }
     trialDone('رائع — بالتوفيق في الترايل!','نتطلّع لمشاهدة عملك. التفاصيل الكاملة على صفحة Notion.');
+    const id=await ensureDoc();
+    try{ if(id) await updateDoc(doc(db,'applicants',id),{trialConsent:'agreed'}); }catch(e){ console.error(e); }
   }
   async function sendDecline(){
     const reason=document.getElementById('declineReason').value.trim();
     if(!reason){ toast('اكتب السبب أولاً','err'); return; }
-    const btn=document.getElementById('sendDeclineBtn'); btn.disabled=true; btn.textContent='جارٍ الإرسال...';
-    try{ if(appDocId) await updateDoc(doc(db,'applicants',appDocId),{trialConsent:'declined',declineReason:reason}); }catch(e){ console.error(e); }
     trialDone('شكراً على صراحتك','سجّلنا ملاحظتك، وقد نتواصل معك مستقبلاً.');
+    const id=await ensureDoc();
+    try{ if(id) await updateDoc(doc(db,'applicants',id),{trialConsent:'declined',declineReason:reason}); }catch(e){ console.error(e); }
   }
 
   /* ---------- load ---------- */
@@ -437,6 +451,10 @@
     try{ const s=await getDoc(doc(db,'config','settings')); if(s.exists()) videoUrl=s.data().videoUrl||''; }catch(e){ console.error(e); }
     try{ const c=await getDoc(doc(db,'config','content')); if(c.exists()){ content=Object.assign({},DEFAULT_CONTENT,c.data()); renderForm(content); } }catch(e){ console.error(e); }
   }
+
+  const formEl=document.getElementById('applyForm');
+  formEl.addEventListener('input',e=>{ const f=e.target.closest('.field'); if(f) f.classList.remove('invalid'); });
+  formEl.addEventListener('change',e=>{ const f=e.target.closest('.field'); if(f) f.classList.remove('invalid'); });
 
   document.getElementById('stage2').classList.add('locked');
   document.getElementById('stage3').classList.add('locked');
