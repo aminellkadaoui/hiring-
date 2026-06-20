@@ -257,53 +257,26 @@
       <!-- CONTENT (god-mode) -->
       <section class="page" id="page-content">
         <div class="page-title"><i class="ph-bold ph-sliders-horizontal blue"></i> محتوى الصفحة</div>
-        <div class="page-sub">تحكّم كامل بما يظهر في صفحة التقديم. عدّل ثم اضغط حفظ في الأسفل.</div>
+        <div class="page-sub">تحكّم كامل بأسئلة الفورم والمحتوى. عدّل ثم اضغط حفظ في الأسفل.</div>
 
         <div class="glass settings-card">
-          <h3><i class="ph-bold ph-seal-check blue"></i> نص الترايل</h3>
-          <div class="hint">العنوان البارز أعلى تعليمات الترايل.</div>
-          <div class="field"><label>العنوان الرئيسي</label><input class="in" id="c-trialIntro"></div>
-          <div class="field" style="margin-bottom:0"><label>السطر الفرعي</label><input class="in" id="c-trialIntroSub"></div>
-        </div>
-
-        <div class="glass settings-card">
-          <h3><i class="ph-bold ph-list-checks blue"></i> المواصفات</h3>
-          <div class="hint">شروط الترايل (نقطة لكل سطر).</div>
-          <div id="c-specs"></div>
-          <button class="btn ghost sm addbtn" data-add="specs"><i class="ph-bold ph-plus"></i> إضافة مواصفة</button>
-        </div>
-
-        <div class="glass settings-card">
-          <h3><i class="ph-bold ph-gauge blue"></i> Scorecard التقييم</h3>
-          <div class="hint">معايير التقييم ودرجتها القصوى.</div>
-          <div id="c-score"></div>
-          <button class="btn ghost sm addbtn" data-add="score"><i class="ph-bold ph-plus"></i> إضافة معيار</button>
-        </div>
-
-        <div class="glass settings-card">
-          <h3><i class="ph-bold ph-flag-checkered blue"></i> عتبات القرار</h3>
-          <div class="hint">اللون: g أخضر (قبول) · y أزرق (وسط) · r أحمر (رفض).</div>
-          <div id="c-thr"></div>
-          <button class="btn ghost sm addbtn" data-add="thr"><i class="ph-bold ph-plus"></i> إضافة عتبة</button>
+          <h3><i class="ph-bold ph-link blue"></i> رابط تفاصيل الترايل (Notion)</h3>
+          <div class="hint">يظهر للمتقدم كزر بعد إرسال الفورم. اتركه فارغاً لإخفائه.</div>
+          <div class="field" style="margin-bottom:0"><label>رابط Notion</label><input class="in" id="c-notion" placeholder="https://www.notion.so/..."></div>
         </div>
 
         <div class="glass settings-card">
           <h3><i class="ph-bold ph-text-columns blue"></i> أسئلة الفورم</h3>
-          <div class="hint">أضف أو احذف أو عدّل أسئلة التقديم. الحقول name / phone / price تُستخدم في الجدول.</div>
+          <div class="hint">أضف / احذف / عدّل أسئلة التقديم. الحقول name / phone / price تُستخدم في الجدول.</div>
           <div id="c-questions"></div>
           <button class="btn ghost sm addbtn" data-add="question"><i class="ph-bold ph-plus"></i> سؤال جديد</button>
         </div>
 
         <div class="glass settings-card">
-          <h3><i class="ph-bold ph-x-circle" style="color:var(--red-ink)"></i> قائمة "ليس لك إذا"</h3>
-          <div id="c-nfy"></div>
-          <button class="btn ghost sm addbtn" data-add="nfy"><i class="ph-bold ph-plus"></i> إضافة بند</button>
-        </div>
-
-        <div class="glass settings-card">
-          <h3><i class="ph-bold ph-check-circle" style="color:var(--mint-ink)"></i> قائمة "ما ستحصل عليه"</h3>
-          <div id="c-wyg"></div>
-          <button class="btn ghost sm addbtn" data-add="wyg"><i class="ph-bold ph-plus"></i> إضافة بند</button>
+          <h3><i class="ph-bold ph-gauge blue"></i> Scorecard التقييم</h3>
+          <div class="hint">معايير تقييم المتقدمين ودرجتها القصوى (تُستخدم في صفحة المتقدمين).</div>
+          <div id="c-score"></div>
+          <button class="btn ghost sm addbtn" data-add="score"><i class="ph-bold ph-plus"></i> إضافة معيار</button>
         </div>
 
         <div class="save-bar"><button class="btn full" id="saveContentBtn"><i class="ph-bold ph-floppy-disk"></i> حفظ كل المحتوى</button></div>
@@ -360,22 +333,21 @@
   const ADMIN_PASS  = "1234";
 
   const DEFAULT_CONTENT = {
-    trialIntro: "الترايل فيديو حقيقي — مهلة 48 ساعة — ويُدفع لو اعتُمد.",
-    trialIntroSub: "ليس اختباراً وهمياً. شغل حقيقي بأجر حقيقي عند الاعتماد.",
-    specs: ["التسليم عبر Frame.io فقط — لا روابط أخرى.","تسمية الملف: 01 - Client - VideoName - V1.mp4","لا موسيقى في الترايل.","Hook واضح في أول 3 ثواني — يمسك المشاهد فوراً."],
-    scorecard: [{label:"الالتزام",max:40},{label:"الجودة",max:35},{label:"التواصل",max:25}],
-    thresholds: [{pill:"65+",cls:"g",text:"قبول مباشر"},{pill:"55–64",cls:"y",text:"نتواصل معك لمزيد من النقاش"},{pill:"< 55",cls:"r",text:"رفض"}],
+    notionUrl: "",
     questions: [
-      {id:"name",label:"الاسم الكامل والبلد",placeholder:"مثال: أحمد العلي — المغرب",type:"text",required:true},
+      {id:"name",label:"الاسم الكامل، البلد والمدينة",placeholder:"مثال: أحمد العلي — المغرب، الدار البيضاء",type:"text",required:true},
       {id:"phone",label:"رقم واتساب",placeholder:"+212 6 00 00 00 00",type:"text",required:true},
-      {id:"payment",label:"طريقة الدفع المفضلة",type:"select",options:["PayPal","Wise","بنك محلي","أخرى"],required:true},
-      {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
       {id:"portfolio",label:"رابط البورتفوليو",placeholder:"https://...",type:"url",required:true},
-      {id:"trial",label:"رابط الترايل المنجز (Frame.io أو Drive)",placeholder:"https://...",type:"url",required:true},
-      {id:"think",label:"على ماذا ركّزت أكثر في الترايل ولماذا؟",placeholder:"اشرح قرارك...",type:"textarea",required:true}
+      {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Figma","After Effects","Premiere Pro","DaVinci Resolve"],required:true},
+      {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
+      {id:"payment",label:"طريقة الدفع المفضلة",type:"select",options:["PayPal","Wise","بنك محلي","أخرى"],required:true},
+      {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
+      {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"select",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
+      {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"select",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
+      {id:"ideal",label:"كيف يبدو العمل المثالي بالنسبة لك؟",placeholder:"اشرح باختصار...",type:"textarea",required:true},
+      {id:"why",label:"لماذا تريد العمل معنا؟",placeholder:"اشرح باختصار...",type:"textarea",required:true}
     ],
-    notForYou: ["تبحث عن دخل جانبي بدون التزام.","تختفي لما تواجهك مشكلة.","تأخذ الملاحظات كهجوم شخصي.","ما عندك بورتفوليو حقيقي.","تقبل مشاريع أكثر مما تستطيع تسليمه."],
-    whatYouGet: ["Workflow جاهز ومجرّب.","أجر يرتفع تلقائياً مع الأداء.","Feedback مكتوب على كل فيديو.","علاقة عمل طويلة المدى."]
+    scorecard: [{label:"الالتزام",max:40},{label:"الجودة",max:35},{label:"التواصل",max:25}]
   };
 
   let applicants = [];
@@ -546,8 +518,8 @@
       <div class="q-grid">
         <input class="in q-label" placeholder="نص السؤال" value="${esc(q.label||'')}">
         <input class="in q-ph" placeholder="نص توضيحي (placeholder)" value="${esc(q.placeholder||'')}">
-        <select class="in q-type">${typeOpt('text','نص')}${typeOpt('number','رقم')}${typeOpt('url','رابط')}${typeOpt('textarea','نص طويل')}${typeOpt('select','قائمة')}</select>
-        <input class="in q-options" placeholder="خيارات القائمة (مفصولة بفاصلة)" value="${esc(opts)}">
+        <select class="in q-type">${typeOpt('text','نص')}${typeOpt('number','رقم')}${typeOpt('url','رابط')}${typeOpt('textarea','نص طويل')}${typeOpt('select','قائمة')}${typeOpt('checkbox','اختيار متعدد')}</select>
+        <input class="in q-options" placeholder="الخيارات (للقائمة/الاختيار المتعدد) مفصولة بفاصلة" value="${esc(opts)}">
       </div>
       <div class="q-foot">
         <label class="q-req"><input type="checkbox" class="q-reqc"${q.required?' checked':''}> مطلوب</label>
@@ -558,33 +530,21 @@
   }
   function renderContentEditors(){
     const c=content;
-    $('c-trialIntro').value=c.trialIntro||'';
-    $('c-trialIntroSub').value=c.trialIntroSub||'';
-    $('c-specs').innerHTML=(c.specs||[]).map(textRow).join('');
+    $('c-notion').value=c.notionUrl||'';
     $('c-score').innerHTML=(c.scorecard||[]).map(scoreRow).join('');
-    $('c-thr').innerHTML=(c.thresholds||[]).map(thrRow).join('');
     qSeq=0;
     $('c-questions').innerHTML=(c.questions||[]).map(qRow).join('');
-    $('c-nfy').innerHTML=(c.notForYou||[]).map(textRow).join('');
-    $('c-wyg').innerHTML=(c.whatYouGet||[]).map(textRow).join('');
   }
   function collectContent(){
-    const txt=sel=>[...document.querySelectorAll(sel+' .rep-in')].map(i=>i.value.trim()).filter(Boolean);
     const scorecard=[...document.querySelectorAll('#c-score .score-row')].map(r=>({label:r.querySelector('.sc-label').value.trim(),max:parseInt(r.querySelector('.sc-max').value)||0})).filter(s=>s.label);
-    const thresholds=[...document.querySelectorAll('#c-thr .thr-row')].map(r=>({pill:r.querySelector('.thr-pill').value.trim(),cls:r.querySelector('.thr-cls').value,text:r.querySelector('.thr-text').value.trim()})).filter(t=>t.pill||t.text);
     const questions=[...document.querySelectorAll('#c-questions .q-row')].map(r=>{
       const type=r.querySelector('.q-type').value;
       const q={id:r.dataset.id,label:r.querySelector('.q-label').value.trim(),type,required:r.querySelector('.q-reqc').checked};
       const ph=r.querySelector('.q-ph').value.trim(); if(ph) q.placeholder=ph;
-      if(type==='select') q.options=r.querySelector('.q-options').value.split(/[،,\n]/).map(s=>s.trim()).filter(Boolean);
+      if(type==='select'||type==='checkbox') q.options=r.querySelector('.q-options').value.split(/[،,\n]/).map(s=>s.trim()).filter(Boolean);
       return q;
     }).filter(q=>q.label);
-    return {
-      trialIntro:$('c-trialIntro').value.trim(),
-      trialIntroSub:$('c-trialIntroSub').value.trim(),
-      specs:txt('#c-specs'), scorecard, thresholds, questions,
-      notForYou:txt('#c-nfy'), whatYouGet:txt('#c-wyg')
-    };
+    return { notionUrl:$('c-notion').value.trim(), questions, scorecard };
   }
   async function saveContent(){
     const data=collectContent();
@@ -601,11 +561,7 @@
   /* add / remove rows */
   document.querySelectorAll('.addbtn').forEach(b=>b.addEventListener('click',()=>{
     const t=b.dataset.add;
-    if(t==='specs') $('c-specs').insertAdjacentHTML('beforeend',textRow(''));
-    else if(t==='nfy') $('c-nfy').insertAdjacentHTML('beforeend',textRow(''));
-    else if(t==='wyg') $('c-wyg').insertAdjacentHTML('beforeend',textRow(''));
-    else if(t==='score') $('c-score').insertAdjacentHTML('beforeend',scoreRow({label:'',max:''}));
-    else if(t==='thr') $('c-thr').insertAdjacentHTML('beforeend',thrRow({cls:'y'}));
+    if(t==='score') $('c-score').insertAdjacentHTML('beforeend',scoreRow({label:'',max:''}));
     else if(t==='question') $('c-questions').insertAdjacentHTML('beforeend',qRow({id:'q_'+(++qSeq),type:'text',required:true}));
   }));
   document.getElementById('page-content').addEventListener('click',e=>{
