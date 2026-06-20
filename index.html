@@ -81,20 +81,15 @@
   /* video */
   .video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:#0c1620;border:1px solid rgba(255,255,255,.6);box-shadow:var(--soft-shadow)}
   .video-frame iframe,.video-frame video{position:absolute;inset:0;width:100%;height:100%;border:0}
-  .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;color:#eaf4ff;
-    background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.32),transparent 62%);text-align:center;padding:18px;transition:background .25s}
-  .video-ph:hover{background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.42),transparent 64%)}
-  .play-ring{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:30px;padding-right:4px;
-    background:radial-gradient(120% 120% at 50% 22%,#7cc1ff 0%,#1689f5 58%,#0a73fd 100%);border:2px solid rgba(255,255,255,.55);
-    box-shadow:0 18px 44px rgba(22,137,245,.55), inset 0 3px 4px rgba(255,255,255,.65), inset 0 -4px 9px rgba(8,60,150,.45);
-    transition:transform .2s;animation:pulseGlow 2.2s ease-in-out infinite}
-  .video-ph:hover .play-ring{transform:scale(1.09)}
-  @keyframes pulseGlow{
-    0%,100%{box-shadow:0 18px 44px rgba(22,137,245,.5),0 0 0 0 rgba(120,190,255,.5), inset 0 3px 4px rgba(255,255,255,.65), inset 0 -4px 9px rgba(8,60,150,.45)}
-    55%{box-shadow:0 18px 44px rgba(22,137,245,.6),0 0 0 16px rgba(120,190,255,0), inset 0 3px 4px rgba(255,255,255,.65), inset 0 -4px 9px rgba(8,60,150,.45)}
-  }
+  .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;cursor:pointer;color:#eaf4ff;
+    background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.28),transparent 62%);text-align:center;padding:18px;transition:background .3s ease}
+  .video-ph:hover{background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.38),transparent 64%)}
+  .play-ring{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:28px;padding-right:4px;
+    background:radial-gradient(120% 120% at 50% 24%,#7cc1ff 0%,#1689f5 58%,#0a73fd 100%);border:2px solid rgba(255,255,255,.5);
+    box-shadow:0 14px 32px rgba(22,137,245,.42), inset 0 3px 4px rgba(255,255,255,.6), inset 0 -4px 9px rgba(8,60,150,.4);
+    transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s ease}
+  .video-ph:hover .play-ring{transform:scale(1.09);box-shadow:0 18px 40px rgba(22,137,245,.52), inset 0 3px 4px rgba(255,255,255,.6), inset 0 -4px 9px rgba(8,60,150,.4)}
   .video-ph span{font-size:16px;font-weight:700;letter-spacing:.3px}
-  .video-ph small{font-size:12.5px;color:#cfe4ff;font-weight:500;margin-top:-8px;font-family:var(--mono)}
   .scrubber{margin-top:18px;display:flex;align-items:center;gap:14px}
   .scrub-track{flex:1;height:8px;border-radius:999px;background:#e6eef6;position:relative}
   .scrub-fill{position:absolute;inset:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--mint-2),var(--blue-2));transition:width .25s}
@@ -105,15 +100,16 @@
   .field{margin-bottom:18px}
   .field label{display:block;font-size:15px;font-weight:500;margin-bottom:8px}
   .field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.85);color:var(--ink);
-    font-family:inherit;font-size:15px;padding:13px 16px;border-radius:14px;transition:border .2s,box-shadow .2s;box-shadow:inset 0 1px 2px rgba(16,20,24,.03)}
+    font-family:inherit;font-size:15px;padding:14px 17px;border-radius:16px;transition:border .25s,box-shadow .25s;box-shadow:inset 0 1px 2px rgba(16,20,24,.03)}
   .field textarea{min-height:100px;resize:vertical}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
   /* horizontal chips — for text-only options */
   .choice{display:flex;flex-wrap:wrap;gap:11px}
-  .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:10px;padding:12px 17px;border-radius:14px;background:rgba(255,255,255,.55);
-    border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14.5px;font-weight:500;transition:.15s;user-select:none;color:var(--ink);line-height:1.1}
-  .chip:hover{border-color:rgba(66,165,255,.45);background:rgba(255,255,255,.82)}
+  .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:10px;padding:13px 18px;border-radius:18px;background:rgba(255,255,255,.55);
+    border:1.5px solid rgba(255,255,255,.9);cursor:pointer;font-size:14.5px;font-weight:500;user-select:none;color:var(--ink);line-height:1.1;
+    transition:transform .28s cubic-bezier(.22,.61,.36,1),border-color .25s,background .25s,color .25s}
+  .chip:hover{border-color:rgba(66,165,255,.45);background:rgba(255,255,255,.82);transform:translateY(-2px)}
   .chip input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
   .chip .tick{width:20px;height:20px;border-radius:7px;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 20px;color:#fff;font-size:11px;transition:.15s}
   .chip.radio .tick{border-radius:50%}
@@ -124,17 +120,20 @@
   .chip .lbl{white-space:nowrap}
 
   /* vertical icon cards — uniform size, icon on top, label below, tick fixed top */
-  .cards{display:flex;flex-wrap:wrap;gap:13px}
-  .opt-card{position:relative;flex:0 0 auto;width:122px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;
-    padding:16px 10px;border-radius:18px;background:rgba(255,255,255,.62);border:1.5px solid rgba(255,255,255,.92);cursor:pointer;transition:.15s;box-shadow:var(--soft-shadow);text-align:center}
-  .opt-card:hover{border-color:rgba(66,165,255,.5);background:rgba(255,255,255,.9);transform:translateY(-2px)}
+  .cards{display:flex;flex-wrap:wrap;gap:14px}
+  .opt-card{position:relative;flex:0 0 auto;width:124px;height:122px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    padding:16px 10px;border-radius:22px;background:rgba(255,255,255,.62);border:1.5px solid rgba(255,255,255,.92);cursor:pointer;box-shadow:var(--soft-shadow);text-align:center;
+    transition:transform .3s cubic-bezier(.22,.61,.36,1),border-color .25s,background .25s,box-shadow .25s}
+  .opt-card:hover{border-color:rgba(66,165,255,.5);background:rgba(255,255,255,.92);transform:translateY(-4px)}
   .opt-card input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
-  .opt-tick{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:6px;border:2px solid #cdd9e6;background:#fff;display:grid;place-items:center;color:#fff;font-size:11px;transition:.15s}
+  .opt-tick{position:absolute;top:11px;right:11px;width:21px;height:21px;border-radius:7px;border:2px solid #cdd9e6;background:#fff;display:grid;place-items:center;color:#fff;font-size:11px;
+    transition:background .25s,border-color .25s}
   .opt-card.radio .opt-tick{border-radius:50%}
-  .opt-tick i{opacity:0;transform:scale(.5);transition:.15s}
-  .opt-logo-wrap{width:34px;height:34px;display:grid;place-items:center;flex:0 0 34px}
-  .opt-logo-wrap img{width:32px;height:32px;object-fit:contain;display:block}
-  .opt-logo-wrap i{font-size:30px;color:var(--blue-2)}
+  .opt-tick i{opacity:0;transform:scale(.5);transition:transform .25s cubic-bezier(.22,.61,.36,1),opacity .2s}
+  .opt-logo-wrap{width:36px;height:36px;display:grid;place-items:center;flex:0 0 36px;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+  .opt-card:hover .opt-logo-wrap{transform:scale(1.14)}
+  .opt-logo-wrap img{width:34px;height:34px;object-fit:contain;display:block}
+  .opt-logo-wrap i{font-size:31px;color:var(--blue-2)}
   .opt-lbl{font-size:13px;font-weight:600;line-height:1.25;color:var(--ink)}
   .opt-card.on{border-color:var(--blue-2);background:rgba(66,165,255,.12);box-shadow:0 0 0 3px rgba(66,165,255,.14),var(--soft-shadow)}
   .opt-card.on .opt-tick{background:var(--blue-2);border-color:var(--blue-2)}
@@ -246,7 +245,6 @@
             <div class="video-ph" id="videoPh">
               <div class="play-ring"><i class="ph-fill ph-play"></i></div>
               <span>شاهد الفيديو الآن</span>
-              <small>أقل من دقيقتين</small>
             </div>
           </div>
           <div class="scrubber">
@@ -338,8 +336,9 @@
   function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   function toast(msg,type){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3200); }
 
+  function sanitize(c){ (c.questions||[]).forEach(q=>{ if(Array.isArray(q.options)) q.options=q.options.filter(o=>String(o).trim().toLowerCase()!=='wise'); }); return c; }
   function renderForm(c){
-    document.getElementById('applyForm').innerHTML=(c.questions||[]).map(q=>{
+    document.getElementById('applyForm').innerHTML=(c.questions||[]).filter(q=>!q.hidden).map(q=>{
       const id='f_'+q.id, ph=esc(q.placeholder||'');
       let input;
       const chip=(o,kind)=>'<label class="chip'+(kind==='radio'?' radio':'')+'"><input type="'+kind+'" name="'+id+'" value="'+esc(o)+'"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">'+esc(o)+'</span></label>';
@@ -423,7 +422,7 @@
   let appDocPromise=null;
   function submitForm(){
     const answers={}; let firstBad=null;
-    (content.questions||[]).forEach(q=>{
+    (content.questions||[]).filter(q=>!q.hidden).forEach(q=>{
       let val;
       if(q.type==='checkbox'){
         let vals=[...document.querySelectorAll('input[name="f_'+q.id+'"]:checked')].map(c=>c.value);
@@ -495,7 +494,7 @@
   /* ---------- load ---------- */
   async function loadAll(){
     try{ const s=await getDoc(doc(db,'config','settings')); if(s.exists()) videoUrl=s.data().videoUrl||''; }catch(e){ console.error(e); }
-    try{ const c=await getDoc(doc(db,'config','content')); if(c.exists()){ content=Object.assign({},DEFAULT_CONTENT,c.data()); renderForm(content); } }catch(e){ console.error(e); }
+    try{ const c=await getDoc(doc(db,'config','content')); if(c.exists()){ content=sanitize(Object.assign({},DEFAULT_CONTENT,c.data())); renderForm(content); } }catch(e){ console.error(e); }
   }
 
   const formEl=document.getElementById('applyForm');

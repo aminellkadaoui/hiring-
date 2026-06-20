@@ -155,6 +155,10 @@
   .q-id{font-family:var(--mono);font-size:11px;color:var(--muted);background:rgba(16,20,24,.05);padding:3px 8px;border-radius:6px}
   .rep-del{width:40px;height:40px;display:grid;place-items:center;background:rgba(254,202,202,.4);border:1px solid rgba(254,202,202,.8);color:var(--red-ink);border-radius:11px;cursor:pointer;font-size:16px;transition:.2s}
   .rep-del:hover{background:rgba(254,202,202,.7)}
+  .q-eye{width:40px;height:40px;display:grid;place-items:center;background:rgba(66,165,255,.1);border:1px solid rgba(66,165,255,.28);color:var(--blue-2);border-radius:11px;cursor:pointer;font-size:17px;transition:.2s}
+  .q-eye:hover{background:rgba(66,165,255,.2)}
+  .q-row.q-hidden{opacity:.5}
+  .q-row.q-hidden .q-eye{background:rgba(16,20,24,.06);border-color:rgba(16,20,24,.14);color:var(--muted)}
   .save-bar{position:sticky;bottom:0;padding:14px 0;margin-top:6px}
 
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(40px);z-index:99;background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95);color:var(--ink);padding:13px 22px;border-radius:16px;font-size:15px;font-weight:500;opacity:0;pointer-events:none;box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:.3s;max-width:90vw;text-align:center}
@@ -254,7 +258,7 @@
 
         <div class="glass settings-card">
           <h3><i class="ph-bold ph-text-columns blue"></i> أسئلة الفورم</h3>
-          <div class="hint">أضف / احذف / عدّل. الأنواع: نص، رقم، رابط، نص طويل، قائمة، اختيار متعدد، اختيار واحد. الحقول name / phone / price تُستخدم في الجدول والتصدير.</div>
+          <div class="hint">أضف / عدّل، واضغط أيقونة <i class="ph-bold ph-eye"></i> لإخفاء سؤال من الفورم دون حذفه. الأنواع: نص، رقم، رابط، نص طويل، قائمة، اختيار متعدد، اختيار واحد. الحقول name / phone / price تُستخدم في الجدول والتصدير.</div>
           <div id="c-questions"></div>
           <button class="btn ghost sm addbtn" id="addQ"><i class="ph-bold ph-plus"></i> سؤال جديد</button>
         </div>
@@ -323,6 +327,7 @@
   function ratingBadge(r){ return r?('<span class="status-badge '+ratingCls(r)+'">'+esc(r)+'</span>'):'<span class="muted">—</span>'; }
   function fmtDate(iso){ if(!iso) return '—'; try{ return new Date(iso).toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'}); }catch(e){ return iso; } }
   function country(name){ if(!name) return '—'; const p=name.split(/[—\-–|،,]/); return p.length>1?p[p.length-1].trim():'—'; }
+  function sanitize(c){ (c.questions||[]).forEach(q=>{ if(Array.isArray(q.options)) q.options=q.options.filter(o=>String(o).trim().toLowerCase()!=='wise'); }); return c; }
 
   /* LOGIN */
   function doLogin(){
@@ -472,14 +477,15 @@
   /* CONFIG */
   async function loadConfig(){
     try{ const s=await getDoc(doc(db,'config','settings')); if(s.exists()) $('set-videoUrl').value=s.data().videoUrl||''; }catch(e){ console.error(e); }
-    try{ const c=await getDoc(doc(db,'config','content')); content=c.exists()?Object.assign({},DEFAULT_CONTENT,c.data()):DEFAULT_CONTENT; }catch(e){ console.error(e); content=DEFAULT_CONTENT; }
+    try{ const c=await getDoc(doc(db,'config','content')); content=sanitize(c.exists()?Object.assign({},DEFAULT_CONTENT,c.data()):DEFAULT_CONTENT); }catch(e){ console.error(e); content=DEFAULT_CONTENT; }
     renderEditors();
   }
   function qRow(q){
     const id=q.id||('q_'+(++qSeq));
+    const hidden=!!q.hidden;
     const typeOpt=(v,lbl)=>`<option value="${v}"${(q.type||'text')===v?' selected':''}>${lbl}</option>`;
     const opts=(q.options||[]).join('، ');
-    return `<div class="q-row" data-id="${esc(id)}">
+    return `<div class="q-row${hidden?' q-hidden':''}" data-id="${esc(id)}">
       <div class="q-grid">
         <input class="in q-label" placeholder="نص السؤال" value="${esc(q.label||'')}">
         <input class="in q-ph" placeholder="نص توضيحي (placeholder)" value="${esc(q.placeholder||'')}">
@@ -489,7 +495,7 @@
       <div class="q-foot">
         <label class="q-req"><input type="checkbox" class="q-reqc"${q.required?' checked':''}> مطلوب</label>
         <span class="q-id">id: ${esc(id)}</span>
-        <button type="button" class="rep-del" title="حذف السؤال">✕</button>
+        <button type="button" class="q-eye" title="إخفاء / إظهار السؤال في الفورم"><i class="ph-bold ${hidden?'ph-eye-slash':'ph-eye'}"></i></button>
       </div></div>`;
   }
   function renderEditors(){
@@ -500,7 +506,7 @@
   function collectContent(){
     const questions=[...document.querySelectorAll('#c-questions .q-row')].map(r=>{
       const type=r.querySelector('.q-type').value;
-      const q={id:r.dataset.id,label:r.querySelector('.q-label').value.trim(),type,required:r.querySelector('.q-reqc').checked};
+      const q={id:r.dataset.id,label:r.querySelector('.q-label').value.trim(),type,required:r.querySelector('.q-reqc').checked,hidden:r.classList.contains('q-hidden')};
       const ph=r.querySelector('.q-ph').value.trim(); if(ph) q.placeholder=ph;
       if(type==='select'||type==='checkbox'||type==='radio') q.options=r.querySelector('.q-options').value.split(/[،,\n]/).map(s=>s.trim()).filter(Boolean);
       return q;
@@ -545,7 +551,7 @@
   $('exportBtn').addEventListener('click',exportCSV);
   $('saveAllBtn').addEventListener('click',saveAll);
   $('addQ').addEventListener('click',()=>$('c-questions').insertAdjacentHTML('beforeend',qRow({id:'q_'+(++qSeq),type:'text',required:true})));
-  $('c-questions').addEventListener('click',e=>{ const d=e.target.closest('.rep-del'); if(d){ const r=d.closest('.q-row'); if(r) r.remove(); } });
+  $('c-questions').addEventListener('click',e=>{ const eye=e.target.closest('.q-eye'); if(eye){ const r=eye.closest('.q-row'); const h=r.classList.toggle('q-hidden'); eye.querySelector('i').className='ph-bold '+(h?'ph-eye-slash':'ph-eye'); } });
 
   window.doLogin=doLogin; window.logout=logout;
 
