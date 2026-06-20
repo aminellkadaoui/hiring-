@@ -452,9 +452,9 @@ body{
   <div class="login-box">
     <h2>لوحة التحكم</h2>
     <p>سجّل دخولك للمتابعة</p>
-    <input type="email" class="login-field" id="lEmail" placeholder="الإيميل" onkeydown="if(event.key==='Enter')doLogin()">
-    <input type="password" class="login-field" id="lPass" placeholder="كلمة السر" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">دخول</button>
+    <input type="email" class="login-field" id="lEmail" placeholder="الإيميل">
+    <input type="password" class="login-field" id="lPass" placeholder="كلمة السر">
+    <button class="login-btn" id="loginBtn">دخول</button>
     <p class="login-err" id="loginErr">بيانات خاطئة</p>
   </div>
 </div>
@@ -937,6 +937,11 @@ window.saveConfig=saveConfig;
 window.savePass=savePass;
 window.confirmDeleteAll=confirmDeleteAll;
 window.deleteAllApps=deleteAllApps;
+
+// Event listeners
+document.getElementById('loginBtn')?.addEventListener('click', doLogin);
+document.getElementById('lPass')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('lEmail')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 
 // Init if already logged in
 if(sessionStorage.getItem('admin_authed')==='1') initApp();
