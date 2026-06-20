@@ -43,7 +43,7 @@
   /* TIMELINE RAIL */
   .rail{position:relative}
   .rail .track{position:sticky;top:48px;display:flex;flex-direction:column;align-items:center;padding-top:8px}
-  .node{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
+  .node{display:flex;flex-direction:column;align-items:center;gap:6px}
   .node .tc{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.5px;transition:color .4s}
   .node .knob{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #cfe3f6;display:grid;place-items:center;transition:.4s}
   .node .knob i{font-size:11px;color:#cfe3f6;transition:.4s}
@@ -53,7 +53,7 @@
   .node.done .knob{background:linear-gradient(135deg,var(--mint),var(--mint-2));border-color:var(--mint-2)}
   .node.done .knob i{color:#0d5c41}
   .node.done .tc{color:var(--mint-ink)}
-  .rail .line{width:2px;height:130px;background:linear-gradient(to bottom,#dce9f6,#e7f3ee);position:relative;overflow:hidden}
+  .rail .line{width:2px;height:120px;background:linear-gradient(to bottom,#dce9f6,#e7f3ee);position:relative;overflow:hidden}
   .rail .line .fill{position:absolute;inset:0;height:0;background:linear-gradient(to bottom,var(--blue-2),var(--mint-2));transition:height .5s ease}
   .rail .line.filled .fill{height:100%}
 
@@ -94,9 +94,12 @@
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
   .checks{display:flex;flex-wrap:wrap;gap:10px}
-  .check-opt{display:flex;align-items:center;gap:8px;padding:11px 15px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);cursor:pointer;font-size:14px;font-weight:500;transition:.15s;user-select:none}
+  .check-opt{display:flex;align-items:center;gap:9px;padding:11px 15px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);cursor:pointer;font-size:14px;font-weight:500;transition:.15s;user-select:none}
   .check-opt input{width:17px;height:17px;accent-color:var(--blue-2)}
   .check-opt.on{border-color:var(--blue-2);background:rgba(66,165,255,.1);color:var(--blue-2)}
+  .opt-logo{width:19px;height:19px;object-fit:contain;flex:0 0 19px}
+  .check-opt>i{font-size:18px;color:var(--blue-2)}
+  .other-in{margin-top:10px}
 
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;
     background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-family:inherit;font-weight:600;font-size:16px;
@@ -104,12 +107,26 @@
   .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
   .btn:active{transform:translateY(0)}
   .btn:disabled{background:#dfe8f1;color:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
+  .btn.green{background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));box-shadow:0 12px 26px rgba(15,156,108,.28)}
+  .btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid rgba(255,255,255,.9);box-shadow:var(--soft-shadow)}
+  .btn.outline{background:#fff;color:var(--blue-2);border:1px solid var(--blue-2);box-shadow:var(--soft-shadow);max-width:360px;margin:0 auto}
+  .btn.outline:hover{background:rgba(66,165,255,.06)}
+
+  /* trial / consent */
+  .trial-intro{padding:22px;border-radius:20px;margin-bottom:22px;text-align:center;
+    background:linear-gradient(135deg,rgba(66,165,255,.08),rgba(142,232,200,.12));border:1px solid rgba(66,165,255,.18)}
+  .trial-intro .t-h{font-size:17px;font-weight:600;margin-bottom:14px}
+  .consent{text-align:center}
+  .consent-q{font-size:18px;font-weight:600;margin-bottom:16px}
+  .consent-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px;margin:0 auto}
+  .consent-btns .btn{margin-top:0}
+  .decline-box{max-width:540px;margin:18px auto 0;text-align:right}
 
   .success{text-align:center;padding:26px 10px}
   .success .check{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;font-size:38px;color:#fff;
     background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));box-shadow:0 16px 38px rgba(15,156,108,.4)}
   .success h2{font-size:26px;margin-bottom:12px}
-  .success .btn{max-width:400px;margin:24px auto 0}
+  .success .btn{max-width:360px;margin:22px auto 0}
 
   footer{position:relative;z-index:2;text-align:center;padding:46px 20px 36px;color:var(--muted);font-size:13px;font-family:var(--mono);letter-spacing:.5px}
 
@@ -138,6 +155,8 @@
     .field label{font-size:14px}
     .field input,.field select,.field textarea{font-size:14px;padding:12px 13px;border-radius:12px}
     .check-opt{font-size:13px;padding:10px 13px}
+    .consent-btns{grid-template-columns:1fr}
+    .consent-q{font-size:16px}
     .success h2{font-size:22px}
     .toast{font-size:14px;padding:12px 18px;bottom:16px}
   }
@@ -154,8 +173,10 @@
     <div class="track">
       <div class="node active" id="tl-1"><span class="tc">00:01</span><span class="knob"><i class="ph-bold ph-play"></i></span></div>
       <div class="line" id="ln-1"><span class="fill"></span></div>
-      <div class="node" id="tl-2"><span class="tc">00:02</span><span class="knob"><i class="ph-bold ph-paper-plane-tilt"></i></span></div>
+      <div class="node" id="tl-2"><span class="tc">00:02</span><span class="knob"><i class="ph-bold ph-pencil-simple-line"></i></span></div>
       <div class="line" id="ln-2"><span class="fill"></span></div>
+      <div class="node" id="tl-3"><span class="tc">00:03</span><span class="knob"><i class="ph-bold ph-film-slate"></i></span></div>
+      <div class="line" id="ln-3"><span class="fill"></span></div>
       <div class="node" id="tl-done"><span class="tc">تم</span><span class="knob"><i class="ph-bold ph-check"></i></span></div>
     </div>
   </div>
@@ -188,8 +209,17 @@
         <div class="stage-head"><span class="tag">STEP 02</span><h2>قدّم معلوماتك</h2><p>دقيقتان فقط — حتى لو لم تنجز ترايل بعد.</p></div>
         <div class="stage-inner" id="formWrap">
           <form id="applyForm" onsubmit="return false"></form>
-          <button class="btn" id="submitBtn" onclick="submitForm()">إرسال</button>
+          <button class="btn" id="submitBtn" onclick="submitForm()">إرسال ومتابعة</button>
         </div>
+      </div>
+    </section>
+
+    <!-- STAGE 3: TRIAL + CONSENT -->
+    <section class="stage" id="stage3">
+      <div class="glass stage-card">
+        <span class="lock-chip"><i class="ph-bold ph-lock-simple"></i> أكمل الفورم أولاً</span>
+        <div class="stage-head"><span class="tag">STEP 03</span><h2>الترايل</h2></div>
+        <div class="stage-inner" id="trialWrap"></div>
       </div>
     </section>
 
@@ -201,7 +231,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, doc, getDoc }
+  import { getFirestore, collection, addDoc, updateDoc, doc, getDoc }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -223,7 +253,7 @@
       {id:"portfolio",label:"رابط البورتفوليو",placeholder:"https://...",type:"url",required:true},
       {id:"software",label:"البرامج التي تتقنها",type:"checkbox",options:["Figma","After Effects","Premiere Pro","DaVinci Resolve"],required:true},
       {id:"price",label:"السعر المتوقع لكل فيديو (بالدولار)",placeholder:"مثال: 30",type:"number",required:true},
-      {id:"payment",label:"طريقة الدفع المفضلة",type:"select",options:["PayPal","Wise","بنك محلي","أخرى"],required:true},
+      {id:"payment",label:"طريقة الدفع المفضلة (يمكن اختيار أكثر من واحدة)",type:"checkbox",options:["PayPal","Wise","Binance","بنك محلي","أخرى"],required:true},
       {id:"experience",label:"هل سبق أن عملت مع وكالة أو صانع محتوى؟",placeholder:"نعم — مع... / لا، هذه أول مرة",type:"text",required:true},
       {id:"availability",label:"ما مدى توفّرك للعمل؟",type:"select",options:["متفرّغ بدوام كامل","متاح بدوام جزئي","متاح أوقاتاً محددة"],required:true},
       {id:"setup",label:"هل لديك إنترنت مستقر وجهاز مناسب للمونتاج؟",type:"select",options:["نعم، الاثنان متوفّران","إنترنت مستقر فقط","جهاز مناسب فقط","لا، أحتاج تحسيناً"],required:true},
@@ -233,6 +263,20 @@
     scorecard: [{label:"الالتزام",max:40},{label:"الجودة",max:35},{label:"التواصل",max:25}]
   };
   let content = DEFAULT_CONTENT;
+  let appDocId = null;
+
+  const LOGO = {
+    'figma':'figma','after effects':'adobeaftereffects','premiere pro':'adobepremierepro','premiere':'adobepremierepro',
+    'davinci resolve':'davinciresolve','davinci':'davinciresolve',
+    'paypal':'paypal','wise':'wise','binance':'binance'
+  };
+  function optIcon(label){
+    const k=String(label).trim().toLowerCase();
+    if(LOGO[k]) return '<img class="opt-logo" src="https://cdn.simpleicons.org/'+LOGO[k]+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+    if(k.includes('بنك')) return '<i class="ph-bold ph-bank"></i>';
+    if(k==='أخرى') return '<i class="ph-bold ph-dots-three-outline"></i>';
+    return '';
+  }
 
   function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   function toast(msg,type){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3200); }
@@ -243,11 +287,17 @@
       let input;
       if(q.type==='textarea') input='<textarea id="'+id+'" placeholder="'+ph+'"></textarea>';
       else if(q.type==='select') input='<select id="'+id+'"><option value="">اختر...</option>'+(q.options||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
-      else if(q.type==='checkbox') input='<div class="checks">'+(q.options||[]).map(o=>'<label class="check-opt"><input type="checkbox" name="'+id+'" value="'+esc(o)+'"> '+esc(o)+'</label>').join('')+'</div>';
+      else if(q.type==='checkbox'){
+        input='<div class="checks">'+(q.options||[]).map(o=>'<label class="check-opt"><input type="checkbox" name="'+id+'" value="'+esc(o)+'"> '+optIcon(o)+'<span>'+esc(o)+'</span></label>').join('')+'</div>';
+        if((q.options||[]).includes('أخرى')) input+='<input type="text" class="other-in" id="'+id+'_other" placeholder="اذكر الطريقة الأخرى..." style="display:none">';
+      }
       else input='<input type="'+esc(q.type||'text')+'" id="'+id+'" placeholder="'+ph+'"'+(q.type==='number'?' min="0"':'')+'>';
       return '<div class="field"><label>'+esc(q.label)+'</label>'+input+'</div>';
     }).join('');
-    document.querySelectorAll('.check-opt input').forEach(cb=>cb.addEventListener('change',()=>cb.closest('.check-opt').classList.toggle('on',cb.checked)));
+    document.querySelectorAll('.check-opt input').forEach(cb=>cb.addEventListener('change',()=>{
+      cb.closest('.check-opt').classList.toggle('on',cb.checked);
+      if(cb.value==='أخرى'){ const ot=document.getElementById(cb.name+'_other'); if(ot) ot.style.display=cb.checked?'block':'none'; }
+    }));
   }
   renderForm(DEFAULT_CONTENT);
 
@@ -303,28 +353,69 @@
     document.getElementById('stage2').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  /* ---------- submit ---------- */
+  /* ---------- submit form ---------- */
   async function submitForm(){
     const answers={}; let missing=false;
     (content.questions||[]).forEach(q=>{
       let val;
-      if(q.type==='checkbox') val=[...document.querySelectorAll('input[name="f_'+q.id+'"]:checked')].map(c=>c.value).join('، ');
-      else { const el=document.getElementById('f_'+q.id); val=el?String(el.value).trim():''; }
+      if(q.type==='checkbox'){
+        let vals=[...document.querySelectorAll('input[name="f_'+q.id+'"]:checked')].map(c=>c.value);
+        if(vals.includes('أخرى')){ const ot=document.getElementById('f_'+q.id+'_other'); if(ot&&ot.value.trim()) vals=vals.map(v=>v==='أخرى'?('أخرى: '+ot.value.trim()):v); }
+        val=vals.join('، ');
+      } else { const el=document.getElementById('f_'+q.id); val=el?String(el.value).trim():''; }
       answers[q.id]=val;
       if(q.required && !val) missing=true;
     });
     if(missing){ toast('يرجى تعبئة جميع الحقول المطلوبة','err'); return; }
     const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='جارٍ الإرسال...';
     try{
-      await addDoc(collection(db,'applicants'), Object.assign({date:new Date().toISOString(),status:'pending',scoreTotal:null,notes:''}, answers));
-      let html='<div class="success"><div class="check"><i class="ph-bold ph-check"></i></div>'+
-        '<h2>تم استلام معلوماتك</h2><p class="muted">الخطوة التالية: اطّلع على تفاصيل الترايل وابدأ التنفيذ.</p>';
-      if(content.notionUrl) html+='<a class="btn" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-arrow-up-left"></i> تفاصيل الترايل (Notion)</a>';
-      else html+='<p class="muted" style="margin-top:14px">سنرسل لك تفاصيل الترايل قريباً.</p>';
-      html+='</div>';
-      document.getElementById('formWrap').innerHTML=html;
-      setNode('tl-2','done'); fillLine('ln-2'); setNode('tl-done','done');
-    }catch(e){ console.error(e); toast('حدث خطأ أثناء الإرسال — حاول مجدداً','err'); btn.disabled=false; btn.textContent='إرسال'; }
+      const ref=await addDoc(collection(db,'applicants'), Object.assign({date:new Date().toISOString(),status:'pending',scoreTotal:null,notes:'',trialConsent:null},answers));
+      appDocId=ref.id;
+      unlockTrial();
+    }catch(e){ console.error(e); toast('حدث خطأ أثناء الإرسال — حاول مجدداً','err'); btn.disabled=false; btn.textContent='إرسال ومتابعة'; }
+  }
+
+  /* ---------- trial stage ---------- */
+  function renderTrial(){
+    let h='<div class="trial-intro"><div class="t-h">موضوع الترايل وتفاصيله الكاملة على صفحة Notion</div>';
+    if(content.notionUrl) h+='<a class="btn outline" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> فتح تفاصيل الترايل</a>';
+    else h+='<p class="muted">سنشارك تفاصيل الترايل معك قريباً.</p>';
+    h+='</div>';
+    h+='<div class="consent"><p class="consent-q">هل توافق على تنفيذ هذا الترايل؟</p>'+
+       '<div class="consent-btns">'+
+         '<button class="btn green" id="agreeBtn"><i class="ph-bold ph-check"></i> أوافق على العمل عليه</button>'+
+         '<button class="btn ghost" id="declineBtn"><i class="ph-bold ph-x"></i> لا أوافق</button>'+
+       '</div>'+
+       '<div class="decline-box" id="declineBox" style="display:none">'+
+         '<div class="field"><label>ما سبب عدم رغبتك في تنفيذه؟</label><textarea id="declineReason" placeholder="اكتب السبب بصراحة — يساعدنا على التحسين."></textarea></div>'+
+         '<button class="btn" id="sendDeclineBtn">إرسال السبب</button>'+
+       '</div></div>';
+    const w=document.getElementById('trialWrap'); w.innerHTML=h;
+    document.getElementById('agreeBtn').addEventListener('click', agreeTrial);
+    document.getElementById('declineBtn').addEventListener('click', ()=>{ document.getElementById('declineBox').style.display='block'; document.getElementById('declineReason').focus(); });
+    document.getElementById('sendDeclineBtn').addEventListener('click', sendDecline);
+  }
+  function unlockTrial(){
+    renderTrial();
+    document.getElementById('stage3').classList.remove('locked');
+    setNode('tl-2','done'); fillLine('ln-2'); setNode('tl-3','active');
+    document.getElementById('stage3').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function trialDone(title,sub){
+    document.getElementById('trialWrap').innerHTML='<div class="success"><div class="check"><i class="ph-bold ph-check"></i></div><h2>'+title+'</h2><p class="muted">'+sub+'</p>'+
+      (content.notionUrl?'<a class="btn outline" href="'+esc(content.notionUrl)+'" target="_blank" rel="noopener"><i class="ph-bold ph-notion-logo"></i> تفاصيل الترايل</a>':'')+'</div>';
+    setNode('tl-3','done'); fillLine('ln-3'); setNode('tl-done','done');
+  }
+  async function agreeTrial(){
+    try{ if(appDocId) await updateDoc(doc(db,'applicants',appDocId),{trialConsent:'agreed'}); }catch(e){ console.error(e); }
+    trialDone('رائع — بالتوفيق في الترايل!','نتطلّع لمشاهدة عملك. التفاصيل الكاملة على صفحة Notion.');
+  }
+  async function sendDecline(){
+    const reason=document.getElementById('declineReason').value.trim();
+    if(!reason){ toast('اكتب السبب أولاً','err'); return; }
+    const btn=document.getElementById('sendDeclineBtn'); btn.disabled=true; btn.textContent='جارٍ الإرسال...';
+    try{ if(appDocId) await updateDoc(doc(db,'applicants',appDocId),{trialConsent:'declined',declineReason:reason}); }catch(e){ console.error(e); }
+    trialDone('شكراً على صراحتك','سجّلنا ملاحظتك، وقد نتواصل معك مستقبلاً.');
   }
 
   /* ---------- load ---------- */
@@ -334,6 +425,7 @@
   }
 
   document.getElementById('stage2').classList.add('locked');
+  document.getElementById('stage3').classList.add('locked');
   document.getElementById('videoPh').addEventListener('click', startVideo);
   window.startVideo=startVideo; window.goForm=goForm; window.submitForm=submitForm;
   loadAll();
