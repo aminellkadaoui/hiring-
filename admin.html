@@ -6,166 +6,193 @@
 <title>لوحة التحكم — التوظيف</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 <style>
   :root{
-    --bg:#0A0A0A;--bg2:#121212;--card:#161616;--line:#262626;
-    --gold:#C8A96E;--gold-soft:rgba(200,169,110,.12);
-    --text:#EDEDED;--muted:#9A9A9A;
-    --green:#3DBF7E;--yellow:#C8A96E;--red:#E05656;
+    --bg:#f7fcff;--ink:#101418;--muted:#6b7a89;
+    --blue:#42a5ff;--blue-2:#1689f5;--mint:#b9f3dc;--mint-2:#8ee8c8;--mint-ink:#0f9c6c;
+    --red:#e05656;--red-ink:#c0392b;
+    --glass:rgba(255,255,255,.6);--glass-line:rgba(255,255,255,.9);
+    --soft-shadow:0 12px 30px rgba(27,137,245,.12);--shadow:0 18px 45px rgba(26,132,214,.18);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Arabic',sans-serif;-webkit-font-smoothing:antialiased}
-  .gold{color:var(--gold)} .muted{color:var(--muted)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(circle at 16% 12%, rgba(66,165,255,.07), transparent 30%),
+      radial-gradient(circle at 86% 10%, rgba(142,232,200,.14), transparent 28%),
+      linear-gradient(135deg,#fafdff 0%,#f4fafd 52%,#f8fdfb 100%);min-height:100vh}
+  .blue{color:var(--blue-2)} .muted{color:var(--muted)}
+
+  .aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .blob{position:absolute;border-radius:999px;filter:blur(70px);opacity:.14}
+  .blob-a{width:420px;height:420px;right:6%;top:8%;background:rgba(66,165,255,.16)}
+  .blob-b{width:480px;height:480px;left:4%;bottom:4%;background:rgba(142,232,200,.24)}
+
+  .glass{background:var(--glass);border:1px solid var(--glass-line);
+    box-shadow:var(--soft-shadow),inset 0 1px 0 rgba(255,255,255,1);
+    backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%);border-radius:24px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-family:inherit;font-weight:600;font-size:15px;
+    padding:13px 22px;border:0;border-radius:14px;cursor:pointer;transition:transform .12s,box-shadow .25s,opacity .2s;
+    box-shadow:0 12px 26px rgba(22,137,245,.26)}
+  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)} .btn:active{transform:translateY(0)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.full{width:100%}
+  .btn.ghost{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);color:var(--ink);box-shadow:var(--soft-shadow)}
+  .btn.green{background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));box-shadow:0 12px 26px rgba(15,156,108,.26)}
+  .btn.red{background:linear-gradient(135deg,#f08a8a,var(--red-ink));box-shadow:0 12px 26px rgba(192,57,43,.22)}
+
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:14px;font-weight:500;margin-bottom:7px}
+  .field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);
+    color:var(--ink);font-family:inherit;font-size:15px;padding:12px 15px;border-radius:13px;transition:.2s;
+    box-shadow:inset 0 1px 2px rgba(16,20,24,.03)}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
 
   /* ---------- LOGIN ---------- */
-  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-  .login-card{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:38px 30px}
-  .login-card h1{font-size:24px;margin-bottom:6px;text-align:center}
-  .login-card p{color:var(--muted);text-align:center;margin-bottom:26px;font-size:14px}
-  .field{margin-bottom:16px}
-  .field label{display:block;font-size:14px;margin-bottom:7px}
-  .field input,.field select,.field textarea{
-    width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);
-    font-family:inherit;font-size:15px;padding:12px 14px;border-radius:10px;
-  }
-  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:#0A0A0A;
-    font-family:inherit;font-weight:600;font-size:15px;padding:12px 22px;border:0;border-radius:10px;cursor:pointer;transition:opacity .2s}
-  .btn:hover{opacity:.92}
-  .btn.full{width:100%}
-  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
-  .btn.green{background:var(--green);color:#06140d}
-  .btn.red{background:var(--red);color:#1a0606}
-  .btn.gold{background:var(--gold)}
-  .login-err{color:var(--red);font-size:13px;text-align:center;margin-top:12px;min-height:18px}
+  #login{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{width:100%;max-width:390px;padding:40px 32px}
+  .login-logo{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;margin:0 auto 20px;color:#fff;font-size:28px;
+    background:linear-gradient(135deg,var(--blue),var(--blue-2));box-shadow:0 14px 32px rgba(22,137,245,.36)}
+  .login-card h1{font-size:24px;text-align:center;margin-bottom:4px}
+  .login-card .sub{color:var(--muted);text-align:center;margin-bottom:26px;font-size:14px}
+  .login-err{color:var(--red-ink);font-size:13px;text-align:center;margin-top:12px;min-height:18px;font-weight:500}
 
   /* ---------- APP LAYOUT ---------- */
-  #app{display:none;min-height:100vh}
+  #app{display:none;position:relative;z-index:2}
   .layout{display:flex;min-height:100vh}
-  .sidebar{
-    width:220px;flex:0 0 220px;background:var(--bg2);border-left:1px solid var(--line);
-    padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
-  }
-  .brand{font-size:18px;font-weight:700;margin-bottom:4px;padding:0 8px}
-  .brand small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:2px}
-  .nav{margin-top:26px;display:flex;flex-direction:column;gap:4px}
-  .nav button{
-    text-align:right;background:transparent;border:0;color:var(--muted);font-family:inherit;font-size:15px;
-    padding:11px 14px;border-radius:10px;cursor:pointer;transition:.2s;display:flex;gap:10px;align-items:center;
-  }
-  .nav button:hover{background:var(--card);color:var(--text)}
-  .nav button.active{background:var(--gold-soft);color:var(--gold)}
+  .sidebar{width:230px;flex:0 0 230px;padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+    margin:14px;border-radius:24px;
+    background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--soft-shadow);
+    backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%)}
+  .brand{display:flex;align-items:center;gap:11px;padding:6px 8px}
+  .brand .mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#fff;font-size:20px;flex:0 0 42px;
+    background:linear-gradient(135deg,var(--blue),var(--blue-2));box-shadow:0 10px 22px rgba(22,137,245,.3)}
+  .brand b{font-size:17px;display:block;line-height:1.2} .brand small{color:var(--muted);font-size:12px}
+  .nav{margin-top:28px;display:flex;flex-direction:column;gap:5px}
+  .nav button{text-align:right;background:transparent;border:0;color:var(--muted);font-family:inherit;font-size:15px;font-weight:500;
+    padding:12px 14px;border-radius:13px;cursor:pointer;transition:.2s;display:flex;gap:11px;align-items:center}
+  .nav button i{font-size:20px}
+  .nav button:hover{background:rgba(255,255,255,.6);color:var(--ink)}
+  .nav button.active{background:linear-gradient(135deg,rgba(66,165,255,.14),rgba(142,232,200,.14));color:var(--blue-2);font-weight:600}
   .sidebar .logout{margin-top:auto}
 
-  .main{flex:1;padding:30px 34px;max-width:100%;overflow-x:auto}
-  .page-title{font-size:24px;font-weight:600;margin-bottom:24px}
-  .page{display:none}
-  .page.active{display:block}
+  .main{flex:1;padding:30px 34px;overflow-x:auto}
+  .page-title{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+  .page{display:none} .page.active{display:block;animation:fade .4s}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
   /* ---------- STAT CARDS ---------- */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
-  .stat .v{font-size:32px;font-weight:700}
-  .stat .k{color:var(--muted);font-size:14px;margin-top:4px}
-  .stat.total .v{color:var(--text)}
-  .stat.pending .v{color:var(--yellow)}
-  .stat.accepted .v{color:var(--green)}
-  .stat.rejected .v{color:var(--red)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+  .stat{padding:22px 24px}
+  .stat .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .stat .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px}
+  .stat .v{font-size:38px;font-weight:700;line-height:1}
+  .stat .k{color:var(--muted);font-size:14px;margin-top:6px}
+  .stat.total .ic{background:rgba(16,20,24,.06);color:var(--ink)}
+  .stat.pending .v{color:var(--blue-2)} .stat.pending .ic{background:rgba(66,165,255,.14);color:var(--blue-2)}
+  .stat.accepted .v{color:var(--mint-ink)} .stat.accepted .ic{background:rgba(142,232,200,.3);color:var(--mint-ink)}
+  .stat.rejected .v{color:var(--red-ink)} .stat.rejected .ic{background:rgba(254,202,202,.5);color:var(--red-ink)}
 
   /* ---------- TABLE ---------- */
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .card-head{padding:16px 20px;border-bottom:1px solid var(--line);font-weight:600}
+  .card-head{padding:18px 22px;font-weight:600;font-size:16px;display:flex;align-items:center;gap:10px}
+  .tbl-wrap{overflow-x:auto}
   table{width:100%;border-collapse:collapse}
-  th,td{text-align:right;padding:13px 18px;font-size:14px;border-bottom:1px solid var(--line)}
-  th{color:var(--muted);font-weight:500;background:var(--bg2)}
-  tbody tr{cursor:pointer;transition:background .15s}
-  tbody tr:hover{background:var(--bg2)}
-  tbody tr:last-child td{border-bottom:0}
-  .empty{padding:40px;text-align:center;color:var(--muted)}
+  th,td{text-align:right;padding:14px 20px;font-size:14px}
+  th{color:var(--muted);font-weight:500;font-size:13px;border-bottom:1px solid rgba(16,20,24,.06)}
+  tbody tr{cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(16,20,24,.04)}
+  tbody tr:hover{background:rgba(255,255,255,.55)}
+  tbody tr:last-child{border-bottom:0}
+  .empty{padding:44px;text-align:center;color:var(--muted)}
 
-  .status-badge{font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px;white-space:nowrap;display:inline-block}
-  .s-pending{background:rgba(200,169,110,.15);color:var(--yellow)}
-  .s-accepted{background:rgba(61,191,126,.15);color:var(--green)}
-  .s-rejected{background:rgba(224,86,86,.15);color:var(--red)}
+  .status-badge{font-size:12px;font-weight:600;padding:5px 13px;border-radius:999px;white-space:nowrap;display:inline-block}
+  .s-pending{background:rgba(66,165,255,.14);color:var(--blue-2)}
+  .s-accepted{background:rgba(142,232,200,.32);color:var(--mint-ink)}
+  .s-rejected{background:rgba(254,202,202,.5);color:var(--red-ink)}
 
-  .filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-  .filters button{background:var(--card);border:1px solid var(--line);color:var(--muted);font-family:inherit;
-    font-size:14px;padding:8px 16px;border-radius:100px;cursor:pointer;transition:.2s}
-  .filters button.active{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+  .filters{display:flex;gap:9px;margin-bottom:20px;flex-wrap:wrap}
+  .filters button{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);color:var(--muted);font-family:inherit;
+    font-size:14px;font-weight:500;padding:9px 18px;border-radius:999px;cursor:pointer;transition:.2s;box-shadow:var(--soft-shadow)}
+  .filters button.active{background:linear-gradient(135deg,rgba(66,165,255,.16),rgba(142,232,200,.16));border-color:rgba(66,165,255,.4);color:var(--blue-2);font-weight:600}
 
-  .score-cell{font-weight:700;font-variant-numeric:tabular-nums}
-  .sc-g{color:var(--green)} .sc-y{color:var(--yellow)} .sc-r{color:var(--red)} .sc-n{color:var(--muted)}
+  .score-cell{font-family:var(--mono);font-weight:600;font-size:15px}
+  .sc-g{color:var(--mint-ink)} .sc-y{color:var(--blue-2)} .sc-r{color:var(--red-ink)} .sc-n{color:var(--muted)}
+  .price-cell{font-family:var(--mono);direction:ltr;display:inline-block}
 
   /* ---------- DRAWER ---------- */
-  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+  .overlay{position:fixed;inset:0;background:rgba(16,32,48,.28);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.25s;z-index:40}
   .overlay.show{opacity:1;pointer-events:auto}
-  .drawer{
-    position:fixed;top:0;right:0;height:100vh;width:460px;max-width:92vw;background:var(--bg2);
-    border-left:1px solid var(--line);box-shadow:-20px 0 60px rgba(0,0,0,.5);
-    transform:translateX(100%);transition:transform .28s ease;z-index:50;overflow-y:auto;
-  }
+  .drawer{position:fixed;top:0;right:0;height:100vh;width:480px;max-width:94vw;z-index:50;overflow-y:auto;
+    transform:translateX(100%);transition:transform .3s ease;
+    background:rgba(247,252,255,.85);border-left:1px solid var(--glass-line);box-shadow:-20px 0 60px rgba(26,132,214,.18);
+    backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%)}
   .drawer.show{transform:translateX(0)}
-  .drawer-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg2);z-index:2}
-  .drawer-head h2{font-size:20px}
-  .x{background:transparent;border:0;color:var(--muted);font-size:26px;cursor:pointer;line-height:1}
-  .drawer-body{padding:24px}
+  .drawer-head{padding:22px 26px;border-bottom:1px solid rgba(16,20,24,.06);display:flex;justify-content:space-between;align-items:center;
+    position:sticky;top:0;background:rgba(247,252,255,.9);backdrop-filter:blur(10px);z-index:2}
+  .drawer-head h2{font-size:21px;font-weight:700}
+  .x{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);
+    color:var(--muted);font-size:22px;cursor:pointer;display:grid;place-items:center;transition:.2s}
+  .x:hover{color:var(--ink);background:#fff}
+  .drawer-body{padding:24px 26px}
   .info-row{margin-bottom:16px}
-  .info-row .lbl{font-size:13px;color:var(--muted);margin-bottom:3px}
+  .info-row .lbl{font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:500}
   .info-row .val{font-size:15px;word-break:break-word}
-  .info-row a{color:var(--gold);text-decoration:none}
+  .info-row a{color:var(--blue-2);text-decoration:none;font-weight:500}
   .info-row a:hover{text-decoration:underline}
-  .divider{height:1px;background:var(--line);margin:22px 0}
+  .divider{height:1px;background:rgba(16,20,24,.07);margin:22px 0}
 
   .score-edit{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
-  .score-edit .se{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
-  .score-edit .se label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-  .score-edit .se input{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);
-    text-align:center;font-family:inherit;font-size:18px;font-weight:700;padding:8px;border-radius:8px}
-  .score-edit .se input:focus{outline:none;border-color:var(--gold)}
-  .total-box{text-align:center;padding:16px;border-radius:12px;margin:8px 0 18px;border:1px solid var(--line);background:var(--card)}
-  .total-box .tn{font-size:40px;font-weight:700}
-  .total-box .tl{font-size:13px;color:var(--muted)}
-  .tg{color:var(--green)} .ty{color:var(--yellow)} .tr{color:var(--red)}
+  .se{padding:14px 10px;border-radius:16px;text-align:center;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85)}
+  .se label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+  .se input{width:100%;background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.9);color:var(--ink);
+    text-align:center;font-family:var(--mono);font-size:20px;font-weight:600;padding:8px;border-radius:11px}
+  .se input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(66,165,255,.16)}
+  .total-box{text-align:center;padding:18px;border-radius:18px;margin:8px 0 18px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.5)}
+  .total-box .tn{font-size:44px;font-weight:700;font-family:var(--mono);line-height:1}
+  .total-box .tl{font-size:13px;color:var(--muted);margin-top:4px}
+  .tg{color:var(--mint-ink)} .ty{color:var(--blue-2)} .tr{color:var(--red-ink)}
   .drawer-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px}
-  .drawer-actions .btn{padding:12px 0;font-size:14px}
+  .drawer-actions .btn{padding:13px 0;font-size:14px}
 
   /* ---------- SETTINGS ---------- */
-  .settings-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:22px;max-width:620px}
-  .settings-card h3{font-size:17px;margin-bottom:16px}
-  .danger{border-color:rgba(224,86,86,.4)}
-  .danger h3{color:var(--red)}
-  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);
-    border:1px solid var(--line);color:var(--text);padding:14px 22px;border-radius:12px;font-size:15px;opacity:0;
-    pointer-events:none;transition:.3s;z-index:99;box-shadow:0 10px 40px rgba(0,0,0,.5)}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast.ok{border-color:var(--green)} .toast.err{border-color:var(--red)}
+  .settings-card{padding:26px;margin-bottom:22px;max-width:640px}
+  .settings-card h3{font-size:18px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .danger{background:rgba(254,242,242,.55)!important;border-color:rgba(254,202,202,.85)!important}
+  .danger h3{color:var(--red-ink)}
 
-  @media(max-width:860px){
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(40px);z-index:99;
+    background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95);color:var(--ink);
+    padding:14px 24px;border-radius:16px;font-size:15px;font-weight:500;opacity:0;pointer-events:none;
+    box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:.3s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.ok{border-color:rgba(142,232,200,.9)} .toast.err{border-color:rgba(254,202,202,.95)}
+
+  @media(max-width:900px){
     .stats{grid-template-columns:repeat(2,1fr)}
-    .sidebar{width:64px;flex:0 0 64px;padding:18px 8px}
-    .brand,.nav button span{display:none}
-    .nav button{justify-content:center}
-    .main{padding:20px 16px}
+    .sidebar{width:68px;flex:0 0 68px;padding:16px 8px;margin:8px}
+    .brand b,.brand small,.nav button span{display:none}
+    .brand{justify-content:center} .nav button{justify-content:center}
+    .main{padding:20px 14px}
   }
 </style>
 </head>
 <body>
 
+<div class="aurora"><div class="blob blob-a"></div><div class="blob blob-b"></div></div>
+
 <!-- LOGIN -->
 <div id="login">
-  <div class="login-card">
+  <div class="glass login-card">
     <h1>لوحة التحكم</h1>
-    <p class="muted">دخول المشرف</p>
-    <div class="field">
-      <label>البريد الإلكتروني</label>
-      <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="username">
-    </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password">
-    </div>
-    <button class="btn full" id="loginBtn">دخول</button>
+    <p class="sub">دخول المشرف</p>
+    <div class="field"><label>البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="username"></div>
+    <div class="field"><label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"></div>
+    <button class="btn full" id="loginBtn"><i class="ph-bold ph-sign-in"></i> دخول</button>
     <div class="login-err" id="loginErr"></div>
   </div>
 </div>
@@ -173,78 +200,75 @@
 <!-- APP -->
 <div id="app">
   <div class="layout">
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="brand">التوظيف<small>أمين الكداوي</small></div>
+      <div class="brand">
+        <div class="mark"><i class="ph-bold ph-scissors"></i></div>
+        <div><b>التوظيف</b><small>أمين الكداوي</small></div>
+      </div>
       <nav class="nav">
-        <button class="active" data-page="dashboard"><span>📊 لوحة البيانات</span></button>
-        <button data-page="applicants"><span>👥 المتقدمون</span></button>
-        <button data-page="settings"><span>⚙️ الإعدادات</span></button>
+        <button class="active" data-page="dashboard"><i class="ph-bold ph-squares-four"></i><span>لوحة البيانات</span></button>
+        <button data-page="applicants"><i class="ph-bold ph-users"></i><span>المتقدمون</span></button>
+        <button data-page="settings"><i class="ph-bold ph-gear-six"></i><span>الإعدادات</span></button>
       </nav>
-      <button class="btn ghost logout" id="logoutBtn">تسجيل الخروج</button>
+      <button class="btn ghost logout" id="logoutBtn"><i class="ph-bold ph-sign-out"></i> <span>تسجيل الخروج</span></button>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
 
       <!-- DASHBOARD -->
       <section class="page active" id="page-dashboard">
-        <div class="page-title">لوحة البيانات</div>
+        <div class="page-title"><i class="ph-bold ph-squares-four blue"></i> لوحة البيانات</div>
         <div class="stats">
-          <div class="stat total"><div class="v" id="st-total">0</div><div class="k">إجمالي المتقدمين</div></div>
-          <div class="stat pending"><div class="v" id="st-pending">0</div><div class="k">قيد المراجعة</div></div>
-          <div class="stat accepted"><div class="v" id="st-accepted">0</div><div class="k">مقبول</div></div>
-          <div class="stat rejected"><div class="v" id="st-rejected">0</div><div class="k">مرفوض</div></div>
+          <div class="glass stat total"><div class="top"><div class="ic"><i class="ph-bold ph-users-three"></i></div></div><div class="v" id="st-total">0</div><div class="k">إجمالي المتقدمين</div></div>
+          <div class="glass stat pending"><div class="top"><div class="ic"><i class="ph-bold ph-hourglass-medium"></i></div></div><div class="v" id="st-pending">0</div><div class="k">قيد المراجعة</div></div>
+          <div class="glass stat accepted"><div class="top"><div class="ic"><i class="ph-bold ph-check-circle"></i></div></div><div class="v" id="st-accepted">0</div><div class="k">مقبول</div></div>
+          <div class="glass stat rejected"><div class="top"><div class="ic"><i class="ph-bold ph-x-circle"></i></div></div><div class="v" id="st-rejected">0</div><div class="k">مرفوض</div></div>
         </div>
-        <div class="card">
-          <div class="card-head">آخر 5 متقدمين</div>
-          <table>
-            <thead><tr><th>الاسم</th><th>البلد / الهاتف</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
-            <tbody id="recentBody"><tr><td colspan="5" class="empty">جارٍ التحميل...</td></tr></tbody>
-          </table>
+        <div class="glass">
+          <div class="card-head"><i class="ph-bold ph-clock-counter-clockwise blue"></i> آخر 5 متقدمين</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>الاسم</th><th>البلد / الهاتف</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+              <tbody id="recentBody"><tr><td colspan="5" class="empty">جارٍ التحميل...</td></tr></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
       <!-- APPLICANTS -->
       <section class="page" id="page-applicants">
-        <div class="page-title">المتقدمون</div>
+        <div class="page-title"><i class="ph-bold ph-users blue"></i> المتقدمون</div>
         <div class="filters" id="filters">
           <button class="active" data-filter="all">الكل</button>
           <button data-filter="pending">قيد المراجعة</button>
           <button data-filter="accepted">مقبول</button>
           <button data-filter="rejected">مرفوض</button>
         </div>
-        <div class="card">
-          <table>
-            <thead><tr><th>الاسم / الهاتف</th><th>البلد</th><th>السعر</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
-            <tbody id="applicantsBody"><tr><td colspan="6" class="empty">جارٍ التحميل...</td></tr></tbody>
-          </table>
+        <div class="glass">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>الاسم / الهاتف</th><th>البلد</th><th>السعر</th><th>النقاط</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+              <tbody id="applicantsBody"><tr><td colspan="6" class="empty">جارٍ التحميل...</td></tr></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
       <!-- SETTINGS -->
       <section class="page" id="page-settings">
-        <div class="page-title">الإعدادات</div>
-        <div class="settings-card">
-          <h3>إعدادات الفيديو</h3>
-          <div class="field">
-            <label>رابط الفيديو</label>
-            <input type="url" id="set-videoUrl" placeholder="https://...">
-          </div>
-          <div class="field">
-            <label>نوع الفيديو</label>
-            <select id="set-videoType">
-              <option value="youtube">YouTube</option>
-              <option value="direct">Direct (رابط مباشر mp4)</option>
-            </select>
-          </div>
-          <button class="btn gold" id="saveSettingsBtn">حفظ الإعدادات</button>
+        <div class="page-title"><i class="ph-bold ph-gear-six blue"></i> الإعدادات</div>
+        <div class="glass settings-card">
+          <h3><i class="ph-bold ph-video-camera blue"></i> إعدادات الفيديو</h3>
+          <div class="field"><label>رابط الفيديو</label><input type="url" id="set-videoUrl" placeholder="https://..."></div>
+          <div class="field"><label>نوع الفيديو</label>
+            <select id="set-videoType"><option value="youtube">YouTube</option><option value="direct">Direct (رابط مباشر mp4)</option></select></div>
+          <button class="btn" id="saveSettingsBtn"><i class="ph-bold ph-floppy-disk"></i> حفظ الإعدادات</button>
         </div>
 
-        <div class="settings-card danger">
-          <h3>⚠️ منطقة الخطر</h3>
-          <p class="muted" style="margin-bottom:16px">حذف جميع المتقدمين نهائياً. لا يمكن التراجع.</p>
-          <button class="btn red" id="deleteAllBtn">حذف جميع المتقدمين</button>
+        <div class="glass settings-card danger">
+          <h3><i class="ph-bold ph-warning-octagon"></i> منطقة الخطر</h3>
+          <p class="muted" style="margin-bottom:18px">حذف جميع المتقدمين نهائياً. لا يمكن التراجع.</p>
+          <button class="btn red" id="deleteAllBtn"><i class="ph-bold ph-trash"></i> حذف جميع المتقدمين</button>
         </div>
       </section>
 
@@ -280,147 +304,90 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  /* ---------- fixed admin creds ---------- */
   const ADMIN_EMAIL = "contact.amineelka@gmail.com";
   const ADMIN_PASS  = "1234";
 
-  /* ---------- state ---------- */
-  let applicants = [];        // [{id, ...data}]
+  let applicants = [];
   let currentFilter = 'all';
   let currentId = null;
 
-  /* ---------- helpers ---------- */
   const $ = id => document.getElementById(id);
-  function toast(msg, type){
-    const t = $('toast'); t.textContent = msg;
-    t.className = 'toast show ' + (type||'');
-    setTimeout(()=>{ t.className='toast'; }, 3000);
-  }
+  function toast(msg, type){ const t=$('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3000); }
   function statusBadge(s){
     if (s==='accepted') return '<span class="status-badge s-accepted">مقبول</span>';
     if (s==='rejected') return '<span class="status-badge s-rejected">مرفوض</span>';
     return '<span class="status-badge s-pending">قيد المراجعة</span>';
   }
-  function scoreClass(v){
-    if (v==null) return 'sc-n';
-    if (v>=65) return 'sc-g'; if (v>=55) return 'sc-y'; return 'sc-r';
-  }
-  function totalClass(v){ if (v>=65) return 'tg'; if (v>=55) return 'ty'; return 'tr'; }
-  function fmtDate(iso){
-    if(!iso) return '—';
-    try{ const d=new Date(iso); return d.toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'}); }
-    catch(e){ return iso; }
-  }
+  function scoreClass(v){ if(v==null) return 'sc-n'; if(v>=65) return 'sc-g'; if(v>=55) return 'sc-y'; return 'sc-r'; }
+  function totalClass(v){ if(v>=65) return 'tg'; if(v>=55) return 'ty'; return 'tr'; }
+  function fmtDate(iso){ if(!iso) return '—'; try{ return new Date(iso).toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'}); }catch(e){ return iso; } }
   function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-  // best-effort country extraction from "name — country"
-  function country(name){
-    if(!name) return '—';
-    const parts = name.split(/[—\-–|،,]/);
-    return parts.length>1 ? parts[parts.length-1].trim() : '—';
-  }
+  function country(name){ if(!name) return '—'; const p=name.split(/[—\-–|،,]/); return p.length>1?p[p.length-1].trim():'—'; }
 
   /* ---------- LOGIN ---------- */
   function doLogin(){
-    const email = $('loginEmail').value.trim();
-    const pass  = $('loginPass').value;
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS){
-      sessionStorage.setItem('admin_authed','1');
-      showApp();
-    } else {
-      $('loginErr').textContent = 'بيانات الدخول غير صحيحة';
-    }
+    const email=$('loginEmail').value.trim(), pass=$('loginPass').value;
+    if (email===ADMIN_EMAIL && pass===ADMIN_PASS){ sessionStorage.setItem('admin_authed','1'); showApp(); }
+    else { $('loginErr').textContent='بيانات الدخول غير صحيحة'; }
   }
-  function showApp(){
-    $('login').style.display = 'none';
-    $('app').style.display = 'block';
-    loadApplicants();
-    loadSettings();
-  }
-  function logout(){
-    sessionStorage.removeItem('admin_authed');
-    location.reload();
-  }
+  function showApp(){ $('login').style.display='none'; $('app').style.display='block'; loadApplicants(); loadSettings(); }
+  function logout(){ sessionStorage.removeItem('admin_authed'); location.reload(); }
 
   /* ---------- DATA ---------- */
   async function loadApplicants(){
     try{
       let snap;
-      try{
-        snap = await getDocs(query(collection(db,'applicants'), orderBy('date','desc')));
-      }catch(e){
-        snap = await getDocs(collection(db,'applicants'));
-      }
-      applicants = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-      applicants.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
-      renderStats();
-      renderRecent();
-      renderApplicants();
+      try{ snap = await getDocs(query(collection(db,'applicants'), orderBy('date','desc'))); }
+      catch(e){ snap = await getDocs(collection(db,'applicants')); }
+      applicants = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      applicants.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+      renderStats(); renderRecent(); renderApplicants();
     }catch(e){
       console.error(e);
-      $('recentBody').innerHTML = '<tr><td colspan="5" class="empty">تعذّر تحميل البيانات</td></tr>';
-      $('applicantsBody').innerHTML = '<tr><td colspan="6" class="empty">تعذّر تحميل البيانات</td></tr>';
+      $('recentBody').innerHTML='<tr><td colspan="5" class="empty">تعذّر تحميل البيانات</td></tr>';
+      $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">تعذّر تحميل البيانات</td></tr>';
     }
   }
-
   function renderStats(){
-    $('st-total').textContent    = applicants.length;
-    $('st-pending').textContent  = applicants.filter(a=>a.status==='pending').length;
-    $('st-accepted').textContent = applicants.filter(a=>a.status==='accepted').length;
-    $('st-rejected').textContent = applicants.filter(a=>a.status==='rejected').length;
+    $('st-total').textContent=applicants.length;
+    $('st-pending').textContent=applicants.filter(a=>a.status==='pending').length;
+    $('st-accepted').textContent=applicants.filter(a=>a.status==='accepted').length;
+    $('st-rejected').textContent=applicants.filter(a=>a.status==='rejected').length;
   }
-
   function renderRecent(){
-    const rows = applicants.slice(0,5);
-    if (!rows.length){ $('recentBody').innerHTML='<tr><td colspan="5" class="empty">لا يوجد متقدمون بعد</td></tr>'; return; }
-    $('recentBody').innerHTML = rows.map(a=>{
-      const sv = a.scoreTotal;
-      return `<tr data-id="${a.id}">
-        <td>${esc(a.name)}</td>
-        <td class="muted">${esc(country(a.name))} · ${esc(a.phone)}</td>
-        <td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td>
-        <td>${statusBadge(a.status)}</td>
-        <td class="muted">${fmtDate(a.date)}</td>
-      </tr>`;
-    }).join('');
+    const rows=applicants.slice(0,5);
+    if(!rows.length){ $('recentBody').innerHTML='<tr><td colspan="5" class="empty">لا يوجد متقدمون بعد</td></tr>'; return; }
+    $('recentBody').innerHTML=rows.map(a=>{ const sv=a.scoreTotal; return `<tr data-id="${a.id}">
+      <td>${esc(a.name)}</td>
+      <td class="muted">${esc(country(a.name))} · ${esc(a.phone)}</td>
+      <td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td class="muted">${fmtDate(a.date)}</td></tr>`; }).join('');
     bindRows('recentBody');
   }
-
   function renderApplicants(){
-    let rows = applicants;
-    if (currentFilter!=='all') rows = rows.filter(a=>a.status===currentFilter);
-    if (!rows.length){ $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">لا يوجد متقدمون في هذه الفئة</td></tr>'; return; }
-    $('applicantsBody').innerHTML = rows.map(a=>{
-      const sv = a.scoreTotal;
-      return `<tr data-id="${a.id}">
-        <td><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></td>
-        <td class="muted">${esc(country(a.name))}</td>
-        <td>$${esc(a.price)}</td>
-        <td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td>
-        <td>${statusBadge(a.status)}</td>
-        <td class="muted">${fmtDate(a.date)}</td>
-      </tr>`;
-    }).join('');
+    let rows=applicants;
+    if(currentFilter!=='all') rows=rows.filter(a=>a.status===currentFilter);
+    if(!rows.length){ $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">لا يوجد متقدمون في هذه الفئة</td></tr>'; return; }
+    $('applicantsBody').innerHTML=rows.map(a=>{ const sv=a.scoreTotal; return `<tr data-id="${a.id}">
+      <td><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></td>
+      <td class="muted">${esc(country(a.name))}</td>
+      <td><span class="price-cell">$${esc(a.price)}</span></td>
+      <td class="score-cell ${scoreClass(sv)}">${sv==null?'—':sv}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td class="muted">${fmtDate(a.date)}</td></tr>`; }).join('');
     bindRows('applicantsBody');
   }
-
-  function bindRows(bodyId){
-    $(bodyId).querySelectorAll('tr[data-id]').forEach(tr=>{
-      tr.addEventListener('click', ()=> openDrawer(tr.dataset.id));
-    });
-  }
+  function bindRows(bodyId){ $(bodyId).querySelectorAll('tr[data-id]').forEach(tr=> tr.addEventListener('click',()=>openDrawer(tr.dataset.id))); }
 
   /* ---------- DRAWER ---------- */
   function openDrawer(id){
-    const a = applicants.find(x=>x.id===id);
-    if (!a) return;
-    currentId = id;
-    $('dr-name').textContent = a.name || '—';
-
-    const commit = (a.scoreCommit!=null)?a.scoreCommit:'';
-    const quality= (a.scoreQuality!=null)?a.scoreQuality:'';
-    const comm   = (a.scoreComm!=null)?a.scoreComm:'';
-
-    $('drawerBody').innerHTML = `
+    const a=applicants.find(x=>x.id===id); if(!a) return;
+    currentId=id; $('dr-name').textContent=a.name||'—';
+    const commit=(a.scoreCommit!=null)?a.scoreCommit:'';
+    const quality=(a.scoreQuality!=null)?a.scoreQuality:'';
+    const comm=(a.scoreComm!=null)?a.scoreComm:'';
+    $('drawerBody').innerHTML=`
       <div class="info-row"><div class="lbl">رقم واتساب</div><div class="val">${esc(a.phone)}</div></div>
       <div class="info-row"><div class="lbl">البلد</div><div class="val">${esc(country(a.name))}</div></div>
       <div class="info-row"><div class="lbl">طريقة الدفع</div><div class="val">${esc(a.payment)}</div></div>
@@ -428,130 +395,75 @@
       <div class="info-row"><div class="lbl">البورتفوليو</div><div class="val">${a.portfolio?`<a href="${esc(a.portfolio)}" target="_blank" rel="noopener">${esc(a.portfolio)}</a>`:'—'}</div></div>
       <div class="info-row"><div class="lbl">رابط الترايل</div><div class="val">${a.trial?`<a href="${esc(a.trial)}" target="_blank" rel="noopener">${esc(a.trial)}</a>`:'—'}</div></div>
       <div class="info-row"><div class="lbl">على ماذا ركّز ولماذا؟</div><div class="val">${esc(a.think)}</div></div>
-
       <div class="divider"></div>
-      <div class="lbl" style="font-size:14px;color:var(--text);margin-bottom:10px">التقييم (Scorecard)</div>
+      <div class="lbl" style="font-size:14px;color:var(--ink);margin-bottom:10px;font-weight:600">التقييم (Scorecard)</div>
       <div class="score-edit">
         <div class="se"><label>الالتزام / 40</label><input type="number" id="sc-commit" min="0" max="40" value="${commit}"></div>
         <div class="se"><label>الجودة / 35</label><input type="number" id="sc-quality" min="0" max="35" value="${quality}"></div>
         <div class="se"><label>التواصل / 25</label><input type="number" id="sc-comm" min="0" max="25" value="${comm}"></div>
       </div>
-      <div class="total-box">
-        <div class="tn" id="sc-total">0</div>
-        <div class="tl">المجموع من 100</div>
-      </div>
-
-      <div class="info-row"><div class="lbl">ملاحظات</div>
-        <textarea id="sc-notes" placeholder="ملاحظاتك الداخلية...">${esc(a.notes)}</textarea>
-      </div>
-
+      <div class="total-box"><div class="tn" id="sc-total">0</div><div class="tl">المجموع من 100</div></div>
+      <div class="info-row"><div class="lbl">ملاحظات</div><textarea id="sc-notes" placeholder="ملاحظاتك الداخلية...">${esc(a.notes)}</textarea></div>
       <div class="drawer-actions">
-        <button class="btn green" id="actAccept">قبول</button>
-        <button class="btn gold"  id="actReview">للمراجعة</button>
-        <button class="btn red"   id="actReject">رفض</button>
-      </div>
-    `;
-
-    ['sc-commit','sc-quality','sc-comm'].forEach(cid=>{
-      $(cid).addEventListener('input', recalcTotal);
-    });
+        <button class="btn green" id="actAccept"><i class="ph-bold ph-check"></i> قبول</button>
+        <button class="btn" id="actReview"><i class="ph-bold ph-hourglass"></i> للمراجعة</button>
+        <button class="btn red" id="actReject"><i class="ph-bold ph-x"></i> رفض</button>
+      </div>`;
+    ['sc-commit','sc-quality','sc-comm'].forEach(cid=> $(cid).addEventListener('input', recalcTotal));
     recalcTotal();
-
-    $('actAccept').addEventListener('click', ()=> saveApplicant('accepted'));
-    $('actReview').addEventListener('click', ()=> saveApplicant('pending'));
-    $('actReject').addEventListener('click', ()=> saveApplicant('rejected'));
-
-    $('overlay').classList.add('show');
-    $('drawer').classList.add('show');
+    $('actAccept').addEventListener('click',()=>saveApplicant('accepted'));
+    $('actReview').addEventListener('click',()=>saveApplicant('pending'));
+    $('actReject').addEventListener('click',()=>saveApplicant('rejected'));
+    $('overlay').classList.add('show'); $('drawer').classList.add('show');
   }
-
   function getScores(){
-    const c = parseInt($('sc-commit').value);
-    const q = parseInt($('sc-quality').value);
-    const m = parseInt($('sc-comm').value);
-    const commit  = isNaN(c)?null:Math.min(40,Math.max(0,c));
-    const quality = isNaN(q)?null:Math.min(35,Math.max(0,q));
-    const comm    = isNaN(m)?null:Math.min(25,Math.max(0,m));
-    const any = commit!=null||quality!=null||comm!=null;
-    const total = any ? (commit||0)+(quality||0)+(comm||0) : null;
-    return { commit, quality, comm, total };
+    const c=parseInt($('sc-commit').value), q=parseInt($('sc-quality').value), m=parseInt($('sc-comm').value);
+    const commit=isNaN(c)?null:Math.min(40,Math.max(0,c));
+    const quality=isNaN(q)?null:Math.min(35,Math.max(0,q));
+    const comm=isNaN(m)?null:Math.min(25,Math.max(0,m));
+    const any=commit!=null||quality!=null||comm!=null;
+    const total=any?(commit||0)+(quality||0)+(comm||0):null;
+    return {commit,quality,comm,total};
   }
-
-  function recalcTotal(){
-    const { total } = getScores();
-    const el = $('sc-total');
-    const t = total==null?0:total;
-    el.textContent = t;
-    el.className = 'tn ' + totalClass(t);
-  }
-
+  function recalcTotal(){ const {total}=getScores(); const el=$('sc-total'); const t=total==null?0:total; el.textContent=t; el.className='tn '+totalClass(t); }
   async function saveApplicant(status){
-    if (!currentId) return;
-    const { commit, quality, comm, total } = getScores();
-    const notes = $('sc-notes').value;
+    if(!currentId) return;
+    const {commit,quality,comm,total}=getScores(); const notes=$('sc-notes').value;
     try{
-      await updateDoc(doc(db,'applicants',currentId), {
-        status,
-        scoreCommit: commit,
-        scoreQuality: quality,
-        scoreComm: comm,
-        scoreTotal: total,
-        notes
-      });
-      // update local
-      const a = applicants.find(x=>x.id===currentId);
-      if (a){ a.status=status; a.scoreCommit=commit; a.scoreQuality=quality; a.scoreComm=comm; a.scoreTotal=total; a.notes=notes; }
-      renderStats(); renderRecent(); renderApplicants();
-      closeDrawer();
-      toast('تم الحفظ بنجاح','ok');
-    }catch(e){
-      console.error(e); toast('تعذّر الحفظ','err');
-    }
+      await updateDoc(doc(db,'applicants',currentId), {status,scoreCommit:commit,scoreQuality:quality,scoreComm:comm,scoreTotal:total,notes});
+      const a=applicants.find(x=>x.id===currentId);
+      if(a){ a.status=status; a.scoreCommit=commit; a.scoreQuality=quality; a.scoreComm=comm; a.scoreTotal=total; a.notes=notes; }
+      renderStats(); renderRecent(); renderApplicants(); closeDrawer(); toast('تم الحفظ بنجاح','ok');
+    }catch(e){ console.error(e); toast('تعذّر الحفظ','err'); }
   }
-
-  function closeDrawer(){
-    $('overlay').classList.remove('show');
-    $('drawer').classList.remove('show');
-    currentId = null;
-  }
+  function closeDrawer(){ $('overlay').classList.remove('show'); $('drawer').classList.remove('show'); currentId=null; }
 
   /* ---------- SETTINGS ---------- */
   async function loadSettings(){
     try{
-      const snap = await getDoc(doc(db,'config','settings'));
-      if (snap.exists()){
-        const d = snap.data();
-        $('set-videoUrl').value = d.videoUrl || '';
-        $('set-videoType').value = d.videoType || 'youtube';
-      }
+      const snap=await getDoc(doc(db,'config','settings'));
+      if(snap.exists()){ const d=snap.data(); $('set-videoUrl').value=d.videoUrl||''; $('set-videoType').value=d.videoType||'youtube'; }
     }catch(e){ console.error(e); }
   }
-
   async function saveSettings(){
-    const videoUrl  = $('set-videoUrl').value.trim();
-    const videoType = $('set-videoType').value;
-    try{
-      await setDoc(doc(db,'config','settings'), { videoUrl, videoType }, { merge:true });
-      toast('تم حفظ الإعدادات','ok');
-    }catch(e){ console.error(e); toast('تعذّر حفظ الإعدادات','err'); }
+    const videoUrl=$('set-videoUrl').value.trim(), videoType=$('set-videoType').value;
+    try{ await setDoc(doc(db,'config','settings'),{videoUrl,videoType},{merge:true}); toast('تم حفظ الإعدادات','ok'); }
+    catch(e){ console.error(e); toast('تعذّر حفظ الإعدادات','err'); }
   }
-
   async function deleteAll(){
-    if (!confirm('هل أنت متأكد من حذف جميع المتقدمين نهائياً؟ لا يمكن التراجع.')) return;
-    if (!confirm('تأكيد أخير: سيتم حذف كل البيانات.')) return;
+    if(!confirm('هل أنت متأكد من حذف جميع المتقدمين نهائياً؟ لا يمكن التراجع.')) return;
+    if(!confirm('تأكيد أخير: سيتم حذف كل البيانات.')) return;
     try{
-      const snap = await getDocs(collection(db,'applicants'));
-      await Promise.all(snap.docs.map(d=> deleteDoc(doc(db,'applicants',d.id))));
-      applicants = [];
-      renderStats(); renderRecent(); renderApplicants();
-      toast('تم حذف جميع المتقدمين','ok');
+      const snap=await getDocs(collection(db,'applicants'));
+      await Promise.all(snap.docs.map(d=>deleteDoc(doc(db,'applicants',d.id))));
+      applicants=[]; renderStats(); renderRecent(); renderApplicants(); toast('تم حذف جميع المتقدمين','ok');
     }catch(e){ console.error(e); toast('تعذّر الحذف','err'); }
   }
 
   /* ---------- NAV ---------- */
   function switchPage(page){
-    document.querySelectorAll('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.page===page));
-    document.querySelectorAll('.page').forEach(p=> p.classList.toggle('active', p.id==='page-'+page));
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
   }
 
   /* ---------- WIRE UP ---------- */
@@ -559,31 +471,19 @@
   $('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   $('loginEmail').addEventListener('keydown', e=>{ if(e.key==='Enter') $('loginPass').focus(); });
   $('logoutBtn').addEventListener('click', logout);
-
-  document.querySelectorAll('.nav button').forEach(b=>{
-    b.addEventListener('click', ()=> switchPage(b.dataset.page));
-  });
-  document.querySelectorAll('#filters button').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      currentFilter = b.dataset.filter;
-      document.querySelectorAll('#filters button').forEach(x=> x.classList.toggle('active', x===b));
-      renderApplicants();
-    });
-  });
-
+  document.querySelectorAll('.nav button').forEach(b=> b.addEventListener('click',()=>switchPage(b.dataset.page)));
+  document.querySelectorAll('#filters button').forEach(b=> b.addEventListener('click',()=>{
+    currentFilter=b.dataset.filter;
+    document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x===b));
+    renderApplicants();
+  }));
   $('drawerClose').addEventListener('click', closeDrawer);
   $('overlay').addEventListener('click', closeDrawer);
   $('saveSettingsBtn').addEventListener('click', saveSettings);
   $('deleteAllBtn').addEventListener('click', deleteAll);
 
-  // expose (in case any inline handler is added later)
-  window.doLogin = doLogin;
-  window.logout = logout;
-  window.switchPage = switchPage;
-  window.saveSettings = saveSettings;
-  window.deleteAll = deleteAll;
+  window.doLogin=doLogin; window.logout=logout; window.switchPage=switchPage; window.saveSettings=saveSettings; window.deleteAll=deleteAll;
 
-  /* ---------- BOOT ---------- */
   if (sessionStorage.getItem('admin_authed')==='1'){ showApp(); }
 </script>
 </body>
