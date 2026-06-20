@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نبحث عن محترف واحد — التوظيف</title>
+<title>التقديم — التوظيف</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,92 +12,41 @@
 
 <style>
   :root{
-    --bg:#f7fcff;
-    --ink:#101418;
-    --muted:#6b7a89;
-    --blue:#42a5ff;
-    --blue-2:#1689f5;
-    --mint:#b9f3dc;
-    --mint-2:#8ee8c8;
-    --mint-ink:#0f9c6c;
-    --glass:rgba(255,255,255,.6);
-    --glass-line:rgba(255,255,255,.9);
-    --soft-shadow:0 12px 30px rgba(27,137,245,.12);
-    --shadow:0 18px 45px rgba(26,132,214,.18);
+    --bg:#f7fcff;--ink:#101418;--muted:#6b7a89;
+    --blue:#42a5ff;--blue-2:#1689f5;--mint:#b9f3dc;--mint-2:#8ee8c8;--mint-ink:#0f9c6c;
+    --glass:rgba(255,255,255,.6);--glass-line:rgba(255,255,255,.9);
+    --soft-shadow:0 12px 30px rgba(27,137,245,.12);--shadow:0 18px 45px rgba(26,132,214,.18);
     --mono:'IBM Plex Mono',ui-monospace,monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;
-    color:var(--ink);line-height:1.85;
+  body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);line-height:1.85;
     background:
       radial-gradient(circle at 18% 14%, rgba(66,165,255,.08), transparent 30%),
       radial-gradient(circle at 84% 12%, rgba(142,232,200,.16), transparent 28%),
       linear-gradient(135deg,#fafdff 0%,#f4fafd 52%,#f8fdfb 100%);
-    -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;
-  }
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
 
-  /* ---------- aurora atmosphere (brand) ---------- */
   .aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
   .blob{position:absolute;border-radius:999px;filter:blur(60px);opacity:.16;animation:float 30s infinite alternate ease-in-out}
   .blob-a{width:420px;height:420px;right:4%;top:6%;background:rgba(66,165,255,.18)}
   .blob-b{width:520px;height:520px;left:3%;bottom:2%;background:rgba(142,232,200,.28);animation-delay:-6s}
-  .shape{position:absolute;filter:blur(2px);opacity:.13}
-  .shape-back{right:-8%;bottom:-4%;width:112%;height:50%;
-    background:linear-gradient(180deg,rgba(142,232,200,.4),rgba(142,232,200,.04));
-    clip-path:polygon(0 60%,7% 48%,12% 55%,19% 35%,25% 43%,32% 27%,39% 37%,48% 18%,55% 26%,62% 12%,69% 20%,78% 0,100% 0,100% 100%,0 100%)}
-  .wave-lines{position:absolute;left:-5%;right:-5%;bottom:0;height:48%;
-    background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.18) 0,rgba(255,255,255,.18) 1px,transparent 1px,transparent 10px);
-    -webkit-mask-image:linear-gradient(to top,#000,transparent 85%);mask-image:linear-gradient(to top,#000,transparent 85%);opacity:.25}
   @keyframes float{0%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,18px) scale(1.02)}100%{transform:translate(-18px,10px) scale(.98)}}
 
-  /* ---------- shared shells ---------- */
   .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 28px}
   .stage-wrap{display:grid;grid-template-columns:96px 1fr;gap:8px;max-width:1180px;margin:0 auto;padding:0 28px}
   .blue{color:var(--blue-2)} .muted{color:var(--muted)}
 
-  .glass{
-    background:var(--glass);border:1px solid var(--glass-line);
+  .glass{background:var(--glass);border:1px solid var(--glass-line);
     box-shadow:var(--soft-shadow),inset 0 1px 0 rgba(255,255,255,1);
-    backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%);
-    border-radius:28px;
-  }
-  .icon-box{
-    width:52px;height:52px;flex:0 0 52px;display:grid;place-items:center;border-radius:16px;
-    background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(255,255,255,.3));
-    border:1px solid rgba(255,255,255,.9);
-    box-shadow:0 12px 28px rgba(22,137,245,.15),inset 0 1px 0 rgba(255,255,255,.9);
-    position:relative;overflow:hidden;
-  }
-  .icon-box::before{content:"";position:absolute;inset:6px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--blue-2));z-index:0}
-  .icon-box.mint::before{background:linear-gradient(135deg,var(--mint),var(--mint-2))}
-  .icon-box i{position:relative;z-index:1;font-size:24px;color:#fff}
-  .icon-box.mint i{color:#0d5c41}
+    backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%);border-radius:28px}
 
-  .badge{
-    display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;
-    background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);
-    box-shadow:var(--soft-shadow);font-size:14px;font-weight:600;
-  }
-  .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--blue-2);box-shadow:0 0 0 6px rgba(66,165,255,.15)}
+  .badge{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;
+    background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);box-shadow:var(--soft-shadow);font-size:14px;font-weight:600}
 
-  /* ---------- HERO ---------- */
-  .hero{min-height:86vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 28px 70px;position:relative;z-index:2}
-  .hero .badge{margin-bottom:30px;opacity:0;animation:rise .7s .05s forwards}
-  .title-wrap{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:14px;margin-bottom:22px}
-  .t-blue{font-size:clamp(38px,6vw,68px);font-weight:700;color:var(--blue-2);letter-spacing:-1.5px;opacity:0;animation:rise .7s .15s forwards}
-  .t-ink{font-size:clamp(34px,5.4vw,60px);font-weight:500;color:var(--ink);letter-spacing:-1.5px;opacity:0;animation:rise .7s .25s forwards}
-  .hero .lead{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:560px;opacity:0;animation:rise .7s .4s forwards}
-  .hero .cue{margin-top:54px;color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:2px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:rise .7s .6s forwards}
-  .hero .cue i{font-size:20px;animation:bob 2s ease-in-out infinite}
-  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
-
-  /* ---------- TIMELINE RAIL (signature) ---------- */
+  /* TIMELINE RAIL */
   .rail{position:relative}
-  .rail .track{position:sticky;top:64px;display:flex;flex-direction:column;align-items:center;gap:0;padding-top:8px}
-  .rail .seg{display:flex;flex-direction:column;align-items:center;gap:0}
+  .rail .track{position:sticky;top:48px;display:flex;flex-direction:column;align-items:center;padding-top:8px}
   .node{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
   .node .tc{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.5px;transition:color .4s}
   .node .knob{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #cfe3f6;display:grid;place-items:center;transition:.4s}
@@ -112,51 +61,52 @@
   .rail .line .fill{position:absolute;inset:0;height:0;background:linear-gradient(to bottom,var(--blue-2),var(--mint-2));transition:height .5s ease}
   .rail .line.filled .fill{height:100%}
 
-  /* ---------- STAGES ---------- */
+  /* STAGES */
   .flow{padding:48px 0 40px}
-  section.stage{margin-bottom:30px;scroll-margin-top:110px}
-  .stage-card{padding:34px 36px;position:relative;transition:transform .3s,box-shadow .3s,opacity .4s,filter .4s}
-  .stage-head{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  section.stage{margin-bottom:30px;scroll-margin-top:24px}
+  .stage-card{padding:32px 34px;position:relative;transition:opacity .4s,filter .4s}
+  .stage-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
   .stage-head .tag{font-family:var(--mono);font-size:12px;color:var(--blue-2);background:rgba(66,165,255,.1);padding:4px 10px;border-radius:8px;letter-spacing:.5px}
-  .stage-head h2{font-size:clamp(22px,3.2vw,30px);font-weight:600;letter-spacing:-.5px}
+  .stage-head h2{font-size:clamp(20px,3vw,28px);font-weight:600;letter-spacing:-.5px}
   .locked .stage-card{opacity:.55;filter:saturate(.6)}
   .locked .stage-inner{filter:blur(3px);opacity:.4;pointer-events:none;user-select:none}
-  .lock-chip{display:none;position:absolute;top:18px;left:24px;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:600;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);padding:7px 14px;border-radius:999px;box-shadow:var(--soft-shadow)}
+  .lock-chip{display:none;position:absolute;top:16px;left:20px;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:600;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);padding:7px 13px;border-radius:999px;box-shadow:var(--soft-shadow)}
   .locked .lock-chip{display:inline-flex}
 
   /* video */
   .video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:#0c1620;border:1px solid rgba(255,255,255,.6);box-shadow:var(--soft-shadow)}
   .video-frame iframe,.video-frame video{position:absolute;inset:0;width:100%;height:100%;border:0}
   .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;color:#eaf4ff;
-    background:radial-gradient(circle at 50% 45%,rgba(66,165,255,.25),transparent 60%)}
-  .play-ring{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:28px;
+    background:radial-gradient(circle at 50% 45%,rgba(66,165,255,.25),transparent 60%);text-align:center;padding:18px}
+  .play-ring{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:26px;
     background:linear-gradient(135deg,var(--blue),var(--blue-2));box-shadow:0 16px 40px rgba(22,137,245,.5);transition:transform .2s}
   .video-ph:hover .play-ring{transform:scale(1.08)}
   .video-ph span{font-size:14px;font-weight:600}
-  /* scrubber */
-  .scrubber{margin-top:20px;display:flex;align-items:center;gap:14px}
-  .scrub-track{flex:1;height:8px;border-radius:999px;background:#e6eef6;position:relative;overflow:visible}
+  .scrubber{margin-top:18px;display:flex;align-items:center;gap:14px}
+  .scrub-track{flex:1;height:8px;border-radius:999px;background:#e6eef6;position:relative}
   .scrub-fill{position:absolute;inset:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--mint-2),var(--blue-2));transition:width .25s}
   .scrub-knob{position:absolute;top:50%;right:0;transform:translate(50%,-50%);width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--blue-2);box-shadow:0 4px 12px rgba(22,137,245,.4);transition:right .25s}
-  .scrub-tc{font-family:var(--mono);font-size:13px;color:var(--muted);min-width:48px;text-align:left}
+  .scrub-tc{font-family:var(--mono);font-size:13px;color:var(--muted);min-width:46px;text-align:left}
 
-  /* spec list */
-  .hl-card{display:flex;gap:14px;align-items:flex-start;padding:20px 22px;border-radius:20px;margin-bottom:22px;
+  /* trial */
+  .hl-card{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:20px;margin-bottom:22px;
     background:linear-gradient(135deg,rgba(66,165,255,.08),rgba(142,232,200,.1));border:1px solid rgba(66,165,255,.18)}
-  .spec-grid{display:grid;gap:12px;margin-bottom:26px}
-  .spec{display:flex;gap:14px;align-items:center;padding:15px 18px;border-radius:16px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.7)}
-  .spec i{color:var(--blue-2);font-size:22px;flex:0 0 22px}
+  .hl-card .icon{width:46px;height:46px;flex:0 0 46px;border-radius:14px;display:grid;place-items:center;color:#0d5c41;font-size:22px;
+    background:linear-gradient(135deg,var(--mint),var(--mint-2))}
+  .spec-grid{display:grid;gap:11px;margin-bottom:26px}
+  .spec{display:flex;gap:13px;align-items:center;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.7)}
+  .spec>i{color:var(--blue-2);font-size:20px;flex:0 0 20px}
   .spec code{font-family:var(--mono);font-size:13px;background:rgba(16,20,24,.06);padding:2px 7px;border-radius:6px;direction:ltr;display:inline-block}
 
   .sub-h{font-size:17px;font-weight:600;margin:6px 0 14px}
-  .scorecard{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-  .sc{padding:22px 14px;border-radius:18px;text-align:center;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.75)}
-  .sc .n{font-size:38px;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--blue),var(--blue-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .scorecard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+  .sc{padding:20px 12px;border-radius:18px;text-align:center;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.75)}
+  .sc .n{font-size:34px;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--blue),var(--blue-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
   .sc:nth-child(2) .n{background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .sc .l{font-size:14px;color:var(--muted);margin-top:8px}
+  .sc .l{font-size:13px;color:var(--muted);margin-top:8px}
   .thresholds{display:grid;gap:10px}
   .th{display:flex;align-items:center;gap:12px;font-size:15px}
-  .pill{font-family:var(--mono);font-size:12px;font-weight:600;padding:4px 11px;border-radius:999px}
+  .pill{font-family:var(--mono);font-size:12px;font-weight:600;padding:4px 11px;border-radius:999px;white-space:nowrap}
   .pill.g{background:rgba(142,232,200,.3);color:var(--mint-ink)}
   .pill.y{background:rgba(66,165,255,.16);color:var(--blue-2)}
   .pill.r{background:rgba(254,202,202,.5);color:#c0392b}
@@ -164,79 +114,96 @@
   /* form */
   .field{margin-bottom:18px}
   .field label{display:block;font-size:15px;font-weight:500;margin-bottom:8px}
-  .field input,.field select,.field textarea{
-    width:100%;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.85);color:var(--ink);
-    font-family:inherit;font-size:15px;padding:13px 16px;border-radius:14px;transition:border .2s,box-shadow .2s;
-    box-shadow:inset 0 1px 2px rgba(16,20,24,.03)}
-  .field textarea{min-height:112px;resize:vertical}
+  .field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.85);color:var(--ink);
+    font-family:inherit;font-size:15px;padding:13px 16px;border-radius:14px;transition:border .2s,box-shadow .2s;box-shadow:inset 0 1px 2px rgba(16,20,24,.03)}
+  .field textarea{min-height:110px;resize:vertical}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
   .field select{cursor:pointer}
 
-  /* buttons */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;
     background:linear-gradient(135deg,var(--blue),var(--blue-2));color:#fff;font-family:inherit;font-weight:600;font-size:16px;
-    padding:15px 30px;border:0;border-radius:999px;cursor:pointer;transition:transform .12s,box-shadow .25s,opacity .2s;
-    box-shadow:0 14px 30px rgba(22,137,245,.28)}
+    padding:15px 30px;border:0;border-radius:999px;cursor:pointer;transition:transform .12s,box-shadow .25s;box-shadow:0 14px 30px rgba(22,137,245,.28)}
   .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
   .btn:active{transform:translateY(0)}
   .btn:disabled{background:#dfe8f1;color:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
 
-  /* split panels */
   .split{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:18px 0}
   .panel{padding:30px 32px;border-radius:26px}
   .panel.no{background:rgba(254,242,242,.6);border:1px solid rgba(254,202,202,.8);box-shadow:var(--soft-shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
   .panel.yes{background:rgba(240,253,244,.6);border:1px solid rgba(187,247,208,.85);box-shadow:var(--soft-shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-  .panel h3{font-size:clamp(20px,3vw,26px);font-weight:700;margin-bottom:22px;display:flex;align-items:center;gap:12px}
+  .panel h3{font-size:clamp(19px,2.6vw,25px);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:12px}
   .panel.no h3{color:#c0392b} .panel.yes h3{color:var(--mint-ink)}
-  .panel li{list-style:none;display:flex;gap:12px;align-items:flex-start;margin-bottom:15px;font-size:16px;font-weight:500}
+  .panel li{list-style:none;display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;font-size:16px;font-weight:500}
   .panel li i{font-size:20px;margin-top:3px;flex:0 0 20px}
   .panel.no li i{color:#e05656} .panel.yes li i{color:var(--mint-ink)}
 
-  .section-title{text-align:center;margin:60px 0 26px}
-  .section-title .title-wrap{margin-bottom:0}
+  .section-title{text-align:center;margin:54px 0 24px;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:12px}
+  .section-title .a{font-size:clamp(26px,4vw,40px);font-weight:500;color:var(--ink);letter-spacing:-1px}
+  .section-title .b{font-size:clamp(28px,4.4vw,44px);font-weight:700;color:var(--blue-2);letter-spacing:-1px}
 
-  /* success */
-  .success{text-align:center;padding:30px 10px}
-  .success .check{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;margin:0 auto 22px;font-size:40px;color:#fff;
+  .success{text-align:center;padding:24px 10px}
+  .success .check{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;font-size:38px;color:#fff;
     background:linear-gradient(135deg,var(--mint-2),var(--mint-ink));box-shadow:0 16px 38px rgba(15,156,108,.4)}
-  .success h2{font-size:28px;margin-bottom:12px}
+  .success h2{font-size:26px;margin-bottom:12px}
 
-  footer{position:relative;z-index:2;text-align:center;padding:50px 20px 40px;color:var(--muted);font-size:13px;font-family:var(--mono);letter-spacing:.5px}
+  footer{position:relative;z-index:2;text-align:center;padding:46px 20px 36px;color:var(--muted);font-size:13px;font-family:var(--mono);letter-spacing:.5px}
 
-  /* toast */
-  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(40px);z-index:99;
-    background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.95);color:var(--ink);
-    padding:14px 24px;border-radius:16px;font-size:15px;font-weight:500;opacity:0;pointer-events:none;
-    box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:opacity .3s,transform .3s}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(40px);z-index:99;
+    background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95);color:var(--ink);
+    padding:13px 22px;border-radius:16px;font-size:15px;font-weight:500;opacity:0;pointer-events:none;
+    box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:opacity .3s,transform .3s;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast.ok{border-color:rgba(142,232,200,.9)} .toast.err{border-color:rgba(254,202,202,.95)}
 
+  /* ---------- TABLET ---------- */
   @media(max-width:820px){
-    .stage-wrap{grid-template-columns:1fr;padding:0 18px}
-    .wrap{padding:0 18px}
+    .stage-wrap{grid-template-columns:1fr;padding:0 16px}
+    .wrap{padding:0 16px}
     .rail{display:none}
-    .split,.scorecard{grid-template-columns:1fr}
-    .stage-card{padding:26px 22px}
+    .split{grid-template-columns:1fr;gap:16px}
+    .flow{padding:26px 0 30px}
+    .stage-card{padding:22px 18px;border-radius:22px}
+    section.stage{margin-bottom:20px}
+  }
+  /* ---------- PHONE ---------- */
+  @media(max-width:520px){
+    .stage-card{padding:18px 14px;border-radius:20px}
+    .stage-head{gap:10px;margin-bottom:16px}
+    .stage-head h2{font-size:19px}
+    .stage-head .tag{font-size:11px;padding:3px 8px}
+    .video-frame{border-radius:14px}
+    .scrubber{gap:10px;margin-top:14px}
+    .scrub-tc{font-size:12px;min-width:38px}
+    .btn{font-size:15px;padding:13px 20px}
+    .hl-card{padding:14px 14px;gap:11px;border-radius:16px}
+    .hl-card .icon{width:40px;height:40px;flex:0 0 40px;font-size:19px;border-radius:12px}
+    .hl-card strong{font-size:15px}
+    .spec{padding:12px 13px;gap:11px;font-size:14px}
+    .spec code{font-size:11px}
+    .scorecard{gap:9px;margin-bottom:18px}
+    .sc{padding:14px 6px;border-radius:14px}
+    .sc .n{font-size:26px}
+    .sc .l{font-size:12px;margin-top:5px}
+    .th{font-size:14px;gap:9px}
+    .field label{font-size:14px}
+    .field input,.field select,.field textarea{font-size:14px;padding:12px 13px;border-radius:12px}
+    .panel{padding:22px 18px;border-radius:20px}
+    .panel li{font-size:15px;margin-bottom:12px}
+    .success h2{font-size:22px}
+    .toast{font-size:14px;padding:12px 18px;bottom:16px}
   }
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-    .badge,.t-blue,.t-ink,.hero .lead,.hero .cue{opacity:1!important;transform:none!important}
   }
 </style>
 </head>
 <body>
 
-<div class="aurora">
-  <div class="blob blob-a"></div>
-  <div class="blob blob-b"></div>
-  <div class="shape shape-back"></div>
-  <div class="wave-lines"></div>
-</div>
+<div class="aurora"><div class="blob blob-a"></div><div class="blob blob-b"></div></div>
 
 <!-- FLOW with timeline rail -->
 <div class="stage-wrap flow">
 
-  <!-- timeline rail (signature) -->
   <div class="rail">
     <div class="track">
       <div class="node active" id="tl-1"><span class="tc">00:01</span><span class="knob"><i class="ph-bold ph-play"></i></span></div>
@@ -249,7 +216,6 @@
     </div>
   </div>
 
-  <!-- stages column -->
   <div>
 
     <!-- STAGE 1: VIDEO -->
@@ -275,39 +241,13 @@
     <section class="stage" id="stage2">
       <div class="glass stage-card">
         <span class="lock-chip"><i class="ph-bold ph-lock-simple"></i> أكمل الفيديو أولاً</span>
-        <div class="stage-head">
-          <span class="tag">STEP 02</span>
-          <h2>تعليمات الترايل</h2>
-        </div>
+        <div class="stage-head"><span class="tag">STEP 02</span><h2>تعليمات الترايل</h2></div>
         <div class="stage-inner">
-          <div class="hl-card">
-            <div class="icon-box mint"><i class="ph-bold ph-seal-check"></i></div>
-            <div>
-              <strong style="font-size:18px">الترايل فيديو حقيقي — مهلة 48 ساعة — ويُدفع لو اعتُمد.</strong><br>
-              <span class="muted">ليس اختباراً وهمياً. شغل حقيقي بأجر حقيقي عند الاعتماد.</span>
-            </div>
-          </div>
-
-          <div class="spec-grid">
-            <div class="spec"><i class="ph-bold ph-frame-corners"></i><div>التسليم عبر <strong>Frame.io فقط</strong> — لا روابط أخرى.</div></div>
-            <div class="spec"><i class="ph-bold ph-file-video"></i><div>تسمية الملف: <code>01 - Client - VideoName - V1.mp4</code></div></div>
-            <div class="spec"><i class="ph-bold ph-speaker-simple-x"></i><div><strong>لا موسيقى</strong> في الترايل.</div></div>
-            <div class="spec"><i class="ph-bold ph-lightning"></i><div><strong>Hook واضح في أول 3 ثواني</strong> — يمسك المشاهد فوراً.</div></div>
-          </div>
-
+          <div class="hl-card" id="trialIntroBox"></div>
+          <div class="spec-grid" id="specsBox"></div>
           <h3 class="sub-h">Scorecard التقييم</h3>
-          <div class="scorecard">
-            <div class="sc"><div class="n">40</div><div class="l">الالتزام</div></div>
-            <div class="sc"><div class="n">35</div><div class="l">الجودة</div></div>
-            <div class="sc"><div class="n">25</div><div class="l">التواصل</div></div>
-          </div>
-
-          <div class="thresholds">
-            <div class="th"><span class="pill g">65+</span> قبول مباشر</div>
-            <div class="th"><span class="pill y">55–64</span> نتواصل معك لمزيد من النقاش</div>
-            <div class="th"><span class="pill r">&lt; 55</span> رفض</div>
-          </div>
-
+          <div class="scorecard" id="scorecardBox"></div>
+          <div class="thresholds" id="thresholdsBox"></div>
           <button class="btn" id="understoodBtn" onclick="unlockForm()">فهمت — تابع للتقديم</button>
         </div>
       </div>
@@ -317,31 +257,10 @@
     <section class="stage" id="stage3">
       <div class="glass stage-card">
         <span class="lock-chip"><i class="ph-bold ph-lock-simple"></i> اقرأ التعليمات أولاً</span>
-        <div class="stage-head">
-          <span class="tag">STEP 03</span>
-          <h2>قدّم طلبك</h2>
-        </div>
+        <div class="stage-head"><span class="tag">STEP 03</span><h2>قدّم طلبك</h2></div>
         <div class="stage-inner" id="formWrap">
-          <form id="applyForm" onsubmit="return false">
-            <div class="field"><label>الاسم الكامل والبلد</label>
-              <input type="text" id="f_name" placeholder="مثال: أحمد العلي — المغرب" required></div>
-            <div class="field"><label>رقم واتساب</label>
-              <input type="text" id="f_phone" placeholder="+212 6 00 00 00 00" required></div>
-            <div class="field"><label>طريقة الدفع المفضلة</label>
-              <select id="f_payment" required>
-                <option value="">اختر...</option>
-                <option>PayPal</option><option>Wise</option><option>بنك محلي</option><option>أخرى</option>
-              </select></div>
-            <div class="field"><label>السعر المتوقع لكل فيديو (بالدولار)</label>
-              <input type="number" id="f_price" min="0" placeholder="مثال: 30" required></div>
-            <div class="field"><label>رابط البورتفوليو</label>
-              <input type="url" id="f_portfolio" placeholder="https://..." required></div>
-            <div class="field"><label>رابط الترايل المنجز (Frame.io أو Drive)</label>
-              <input type="url" id="f_trial" placeholder="https://..." required></div>
-            <div class="field"><label>على ماذا ركّزت أكثر في الترايل ولماذا؟</label>
-              <textarea id="f_think" placeholder="اشرح قرارك..." required></textarea></div>
-            <button class="btn" id="submitBtn" onclick="submitForm()">إرسال الطلب</button>
-          </form>
+          <form id="applyForm" onsubmit="return false"></form>
+          <button class="btn" id="submitBtn" onclick="submitForm()">إرسال الطلب</button>
         </div>
       </div>
     </section>
@@ -351,34 +270,20 @@
 
 <!-- SPLIT PANELS -->
 <div class="wrap">
-  <div class="section-title">
-    <div class="title-wrap"><h2 class="t-ink">الوضوح</h2><h2 class="t-blue">قبل البدء</h2></div>
-  </div>
+  <div class="section-title"><span class="a">الوضوح</span><span class="b">قبل البدء</span></div>
   <div class="split">
     <div class="panel no">
       <h3><i class="ph-bold ph-x-circle"></i> هذا المكان ليس لك إذا…</h3>
-      <ul>
-        <li><i class="ph-fill ph-x"></i> تبحث عن دخل جانبي بدون التزام.</li>
-        <li><i class="ph-fill ph-x"></i> تختفي لما تواجهك مشكلة.</li>
-        <li><i class="ph-fill ph-x"></i> تأخذ الملاحظات كهجوم شخصي.</li>
-        <li><i class="ph-fill ph-x"></i> ما عندك بورتفوليو حقيقي.</li>
-        <li><i class="ph-fill ph-x"></i> تقبل مشاريع أكثر مما تستطيع تسليمه.</li>
-      </ul>
+      <ul id="notForYouList"></ul>
     </div>
     <div class="panel yes">
       <h3><i class="ph-bold ph-check-circle"></i> ما ستحصل عليه</h3>
-      <ul>
-        <li><i class="ph-fill ph-check"></i> Workflow جاهز ومجرّب.</li>
-        <li><i class="ph-fill ph-check"></i> أجر يرتفع تلقائياً مع الأداء.</li>
-        <li><i class="ph-fill ph-check"></i> Feedback مكتوب على كل فيديو.</li>
-        <li><i class="ph-fill ph-check"></i> علاقة عمل طويلة المدى.</li>
-      </ul>
+      <ul id="whatYouGetList"></ul>
     </div>
   </div>
 </div>
 
 <footer>© أمين الكداوي · نظام التوظيف</footer>
-
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -397,157 +302,212 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
+  /* ---------- default content (fallback) ---------- */
+  const DEFAULT_CONTENT = {
+    trialIntro: "الترايل فيديو حقيقي — مهلة 48 ساعة — ويُدفع لو اعتُمد.",
+    trialIntroSub: "ليس اختباراً وهمياً. شغل حقيقي بأجر حقيقي عند الاعتماد.",
+    specs: [
+      "التسليم عبر Frame.io فقط — لا روابط أخرى.",
+      "تسمية الملف: 01 - Client - VideoName - V1.mp4",
+      "لا موسيقى في الترايل.",
+      "Hook واضح في أول 3 ثواني — يمسك المشاهد فوراً."
+    ],
+    scorecard: [
+      {label:"الالتزام", max:40},
+      {label:"الجودة", max:35},
+      {label:"التواصل", max:25}
+    ],
+    thresholds: [
+      {pill:"65+", cls:"g", text:"قبول مباشر"},
+      {pill:"55–64", cls:"y", text:"نتواصل معك لمزيد من النقاش"},
+      {pill:"< 55", cls:"r", text:"رفض"}
+    ],
+    questions: [
+      {id:"name", label:"الاسم الكامل والبلد", placeholder:"مثال: أحمد العلي — المغرب", type:"text", required:true},
+      {id:"phone", label:"رقم واتساب", placeholder:"+212 6 00 00 00 00", type:"text", required:true},
+      {id:"payment", label:"طريقة الدفع المفضلة", type:"select", options:["PayPal","Wise","بنك محلي","أخرى"], required:true},
+      {id:"price", label:"السعر المتوقع لكل فيديو (بالدولار)", placeholder:"مثال: 30", type:"number", required:true},
+      {id:"portfolio", label:"رابط البورتفوليو", placeholder:"https://...", type:"url", required:true},
+      {id:"trial", label:"رابط الترايل المنجز (Frame.io أو Drive)", placeholder:"https://...", type:"url", required:true},
+      {id:"think", label:"على ماذا ركّزت أكثر في الترايل ولماذا؟", placeholder:"اشرح قرارك...", type:"textarea", required:true}
+    ],
+    notForYou: [
+      "تبحث عن دخل جانبي بدون التزام.",
+      "تختفي لما تواجهك مشكلة.",
+      "تأخذ الملاحظات كهجوم شخصي.",
+      "ما عندك بورتفوليو حقيقي.",
+      "تقبل مشاريع أكثر مما تستطيع تسليمه."
+    ],
+    whatYouGet: [
+      "Workflow جاهز ومجرّب.",
+      "أجر يرتفع تلقائياً مع الأداء.",
+      "Feedback مكتوب على كل فيديو.",
+      "علاقة عمل طويلة المدى."
+    ]
+  };
+
+  let content = DEFAULT_CONTENT;
+
   /* ---------- helpers ---------- */
-  function toast(msg, type){
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.className = 'toast show ' + (type||'');
-    setTimeout(()=>{ t.className='toast'; }, 3200);
+  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function toast(msg, type){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3200); }
+
+  /* ---------- render content ---------- */
+  function render(c){
+    // trial intro
+    document.getElementById('trialIntroBox').innerHTML =
+      '<div class="icon"><i class="ph-bold ph-seal-check"></i></div>'+
+      '<div><strong style="font-size:17px">'+esc(c.trialIntro)+'</strong><br><span class="muted">'+esc(c.trialIntroSub)+'</span></div>';
+    // specs
+    document.getElementById('specsBox').innerHTML = (c.specs||[]).map(s=>
+      '<div class="spec"><i class="ph-bold ph-check-circle"></i><div>'+esc(s)+'</div></div>').join('');
+    // scorecard
+    document.getElementById('scorecardBox').innerHTML = (c.scorecard||[]).map(s=>
+      '<div class="sc"><div class="n">'+esc(s.max)+'</div><div class="l">'+esc(s.label)+'</div></div>').join('');
+    // thresholds
+    document.getElementById('thresholdsBox').innerHTML = (c.thresholds||[]).map(t=>
+      '<div class="th"><span class="pill '+esc(t.cls||'y')+'">'+esc(t.pill)+'</span> '+esc(t.text)+'</div>').join('');
+    // questions
+    document.getElementById('applyForm').innerHTML = (c.questions||[]).map(q=>{
+      const id='f_'+q.id; const ph=esc(q.placeholder||'');
+      let input;
+      if (q.type==='textarea') input='<textarea id="'+id+'" placeholder="'+ph+'"></textarea>';
+      else if (q.type==='select') input='<select id="'+id+'"><option value="">اختر...</option>'+(q.options||[]).map(o=>'<option>'+esc(o)+'</option>').join('')+'</select>';
+      else input='<input type="'+esc(q.type||'text')+'" id="'+id+'" placeholder="'+ph+'"'+(q.type==='number'?' min="0"':'')+'>';
+      return '<div class="field"><label>'+esc(q.label)+'</label>'+input+'</div>';
+    }).join('');
+    // panels
+    document.getElementById('notForYouList').innerHTML = (c.notForYou||[]).map(t=>
+      '<li><i class="ph-fill ph-x"></i> '+esc(t)+'</li>').join('');
+    document.getElementById('whatYouGetList').innerHTML = (c.whatYouGet||[]).map(t=>
+      '<li><i class="ph-fill ph-check"></i> '+esc(t)+'</li>').join('');
   }
+  render(DEFAULT_CONTENT);   // show immediately, even before Firestore
+
+  /* ---------- video ---------- */
   function setProgress(pct){
-    pct = Math.max(0, Math.min(100, Math.round(pct)));
-    document.getElementById('vidFill').style.width = pct + '%';
-    document.getElementById('vidPct').textContent = pct + '%';
-    const btn = document.getElementById('videoNextBtn');
-    if (pct >= 95){ btn.disabled = false; btn.textContent = 'تابع إلى تعليمات الترايل'; }
+    pct=Math.max(0,Math.min(100,Math.round(pct)));
+    document.getElementById('vidFill').style.width=pct+'%';
+    document.getElementById('vidPct').textContent=pct+'%';
+    const btn=document.getElementById('videoNextBtn');
+    if (pct>=95){ btn.disabled=false; btn.textContent='تابع إلى تعليمات الترايل'; }
   }
+  let videoUrl='', ytPlayer=null, ytTimer=null, started=false;
+  function ytId(s){
+    const m = String(s).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([\w-]{11})/);
+    if (m) return m[1];
+    const bare = String(s).trim().match(/^[\w-]{11}$/);
+    return bare ? bare[0] : '';
+  }
+  function isYouTube(s){ return /youtu\.?be|youtube\.com/i.test(s); }
 
-  /* ---------- video config ---------- */
-  let videoUrl='', videoType='youtube', ytPlayer=null, ytTimer=null, started=false;
-
-  async function loadVideoConfig(){
-    try{
-      const snap = await getDoc(doc(db,'config','settings'));
-      if (snap.exists()){
-        const d = snap.data();
-        videoUrl  = d.videoUrl  || '';
-        videoType = d.videoType || 'youtube';
-      }
-    }catch(e){ console.error('config load failed', e); }
-  }
-  function ytId(url){
-    const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]{11})/);
-    return m ? m[1] : url.trim();
-  }
   function startVideo(){
     if (started) return;
-    if (!videoUrl){ toast('لم يتم ضبط رابط الفيديو بعد', 'err'); return; }
-    started = true;
-    document.getElementById('videoPh').style.display = 'none';
-    if (videoType === 'youtube'){
-      const holder = document.createElement('div'); holder.id='ytplayer';
+    if (!videoUrl){ toast('لم يتم ضبط رابط الفيديو بعد','err'); return; }
+    started=true;
+    document.getElementById('videoPh').style.display='none';
+
+    if (isYouTube(videoUrl)){
+      const id = ytId(videoUrl);
+      if (!id){ toast('رابط يوتيوب غير صحيح','err'); started=false; document.getElementById('videoPh').style.display='flex'; return; }
+      const holder=document.createElement('div'); holder.id='ytplayer';
       document.getElementById('videoBox').appendChild(holder);
-      const make = () => {
-        ytPlayer = new YT.Player('ytplayer', {
-          videoId: ytId(videoUrl),
-          playerVars:{ autoplay:1, rel:0, modestbranding:1, controls:1, playsinline:1 },
+      const make=()=>{
+        ytPlayer=new YT.Player('ytplayer',{
+          videoId:id,
+          playerVars:{autoplay:1,rel:0,modestbranding:1,controls:1,playsinline:1},
           events:{
-            onReady: e => e.target.playVideo(),
-            onStateChange: e => {
-              if (e.data === YT.PlayerState.PLAYING){
+            onReady:e=>e.target.playVideo(),
+            onStateChange:e=>{
+              if (e.data===YT.PlayerState.PLAYING){
                 clearInterval(ytTimer);
-                ytTimer = setInterval(()=>{
-                  const dur = ytPlayer.getDuration();
-                  if (dur>0) setProgress(ytPlayer.getCurrentTime()/dur*100);
-                }, 500);
-              } else if (e.data === YT.PlayerState.ENDED){
-                setProgress(100); clearInterval(ytTimer);
-              }
+                ytTimer=setInterval(()=>{ const d=ytPlayer.getDuration(); if(d>0) setProgress(ytPlayer.getCurrentTime()/d*100); },500);
+              } else if (e.data===YT.PlayerState.ENDED){ setProgress(100); clearInterval(ytTimer); }
             },
-            onError: () => {
+            onError:()=>{
               clearInterval(ytTimer);
-              document.getElementById('videoBox').innerHTML =
-                '<div class="video-ph" style="cursor:default;text-align:center;padding:24px">'+
-                '<div class="play-ring" style="background:rgba(255,255,255,.08)"><i class="ph-bold ph-warning"></i></div>'+
-                '<span>تعذّر تشغيل هذا الفيديو من يوتيوب هنا.<br>للأفضل: ارفعه كرابط mp4 مباشر من الإعدادات (نوع Direct).</span></div>';
+              document.getElementById('videoBox').innerHTML=
+                '<div class="video-ph" style="cursor:default"><div class="play-ring" style="background:rgba(255,255,255,.12)"><i class="ph-bold ph-warning"></i></div>'+
+                '<span>تعذّر تشغيل هذا الفيديو من يوتيوب.<br>تأكد أن الفيديو ليس خاصاً ويسمح بالتضمين، أو استخدم رابط mp4 مباشر.</span></div>';
             }
           }
         });
       };
-      if (window.YT && window.YT.Player){ make(); }
-      else {
-        window.onYouTubeIframeAPIReady = make;
-        const s = document.createElement('script'); s.src='https://www.youtube.com/iframe_api';
-        document.head.appendChild(s);
-      }
+      if (window.YT && window.YT.Player) make();
+      else { window.onYouTubeIframeAPIReady=make; const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s); }
     } else {
-      const v = document.createElement('video');
+      const v=document.createElement('video');
       v.src=videoUrl; v.controls=true; v.autoplay=true; v.playsInline=true;
       v.setAttribute('controlsList','nodownload noplaybackrate');
       v.setAttribute('disablePictureInPicture','');
-      v.addEventListener('contextmenu', e=> e.preventDefault());
-
-      // --- منع التقديم (fast-forward) — يُسمح بالرجوع فقط ---
-      let maxWatched = 0;
-      v.addEventListener('timeupdate', ()=>{
-        if (!v.seeking) maxWatched = Math.max(maxWatched, v.currentTime);
-        if (v.duration>0) setProgress(v.currentTime/v.duration*100);
+      v.addEventListener('contextmenu', e=>e.preventDefault());
+      let maxWatched=0;
+      v.addEventListener('timeupdate',()=>{ if(!v.seeking) maxWatched=Math.max(maxWatched,v.currentTime); if(v.duration>0) setProgress(v.currentTime/v.duration*100); });
+      v.addEventListener('seeking',()=>{ if(v.currentTime>maxWatched+0.5) v.currentTime=maxWatched; });
+      v.addEventListener('ratechange',()=>{ if(v.playbackRate>1) v.playbackRate=1; });
+      v.addEventListener('ended',()=>setProgress(100));
+      v.addEventListener('error',()=>{
+        document.getElementById('videoBox').innerHTML=
+          '<div class="video-ph" style="cursor:default"><div class="play-ring" style="background:rgba(255,255,255,.12)"><i class="ph-bold ph-warning"></i></div>'+
+          '<span>تعذّر تحميل الفيديو — تأكد أن الرابط مباشر (ينتهي بـ mp4) ويسمح بالتشغيل.</span></div>';
       });
-      v.addEventListener('seeking', ()=>{
-        if (v.currentTime > maxWatched + 0.5){ v.currentTime = maxWatched; }
-      });
-      v.addEventListener('ratechange', ()=>{ if (v.playbackRate > 1) v.playbackRate = 1; });
-      v.addEventListener('ended', ()=> setProgress(100));
       document.getElementById('videoBox').appendChild(v);
     }
   }
 
-  /* ---------- timeline + stage transitions ---------- */
-  function setNode(id, state){
-    const n = document.getElementById(id);
-    n.classList.remove('active','done');
-    if (state) n.classList.add(state);
-  }
+  /* ---------- timeline + transitions ---------- */
+  function setNode(id,state){ const n=document.getElementById(id); n.classList.remove('active','done'); if(state) n.classList.add(state); }
   function fillLine(id){ document.getElementById(id).classList.add('filled'); }
-
   function unlockTrial(){
-    const s1=document.getElementById('stage1'), s2=document.getElementById('stage2');
-    s1.classList.add('done');                 // (visual class on section, harmless)
-    s2.classList.remove('locked');
+    document.getElementById('stage2').classList.remove('locked');
     setNode('tl-1','done'); fillLine('ln-1'); setNode('tl-2','active');
-    s2.scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('stage2').scrollIntoView({behavior:'smooth',block:'start'});
   }
   function unlockForm(){
-    const s3=document.getElementById('stage3');
-    s3.classList.remove('locked');
+    document.getElementById('stage3').classList.remove('locked');
     setNode('tl-2','done'); fillLine('ln-2'); setNode('tl-3','active');
-    s3.scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('stage3').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
   /* ---------- submit ---------- */
   async function submitForm(){
-    const name=document.getElementById('f_name').value.trim();
-    const phone=document.getElementById('f_phone').value.trim();
-    const payment=document.getElementById('f_payment').value;
-    const price=document.getElementById('f_price').value.trim();
-    const portfolio=document.getElementById('f_portfolio').value.trim();
-    const trial=document.getElementById('f_trial').value.trim();
-    const think=document.getElementById('f_think').value.trim();
-    if (!name||!phone||!payment||!price||!portfolio||!trial||!think){ toast('يرجى تعبئة جميع الحقول','err'); return; }
+    const answers={}; let missing=false;
+    (content.questions||[]).forEach(q=>{
+      const el=document.getElementById('f_'+q.id);
+      const val=el?String(el.value).trim():'';
+      answers[q.id]=val;
+      if (q.required && !val) missing=true;
+    });
+    if (missing){ toast('يرجى تعبئة جميع الحقول المطلوبة','err'); return; }
     const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='جارٍ الإرسال...';
     try{
-      await addDoc(collection(db,'applicants'), {
-        date:new Date().toISOString(), status:'pending',
-        name, phone, payment, price, portfolio, trial, think,
-        scoreTotal:null, notes:''
-      });
-      document.getElementById('formWrap').innerHTML =
+      await addDoc(collection(db,'applicants'), Object.assign({
+        date:new Date().toISOString(), status:'pending', scoreTotal:null, notes:''
+      }, answers));
+      document.getElementById('formWrap').innerHTML=
         '<div class="success"><div class="check"><i class="ph-bold ph-check"></i></div>'+
-        '<h2>تم استلام طلبك</h2>'+
-        '<p class="muted">سنراجع الترايل ونتواصل معك عبر واتساب. شكراً لوقتك واحترافيتك.</p></div>';
+        '<h2>تم استلام طلبك</h2><p class="muted">سنراجع الترايل ونتواصل معك. شكراً لوقتك واحترافيتك.</p></div>';
       setNode('tl-3','done'); fillLine('ln-3'); setNode('tl-done','done');
-    }catch(e){
-      console.error(e); toast('حدث خطأ أثناء الإرسال — حاول مجدداً','err');
-      btn.disabled=false; btn.textContent='إرسال الطلب';
-    }
+    }catch(e){ console.error(e); toast('حدث خطأ أثناء الإرسال — حاول مجدداً','err'); btn.disabled=false; btn.textContent='إرسال الطلب'; }
   }
 
-  /* ---------- init: lock stages 2 & 3 ---------- */
+  /* ---------- load from Firestore ---------- */
+  async function loadAll(){
+    try{
+      const sSnap=await getDoc(doc(db,'config','settings'));
+      if (sSnap.exists()) videoUrl=sSnap.data().videoUrl||'';
+    }catch(e){ console.error('settings load failed',e); }
+    try{
+      const cSnap=await getDoc(doc(db,'config','content'));
+      if (cSnap.exists()){ content=Object.assign({}, DEFAULT_CONTENT, cSnap.data()); render(content); }
+    }catch(e){ console.error('content load failed',e); }
+  }
+
   document.getElementById('stage2').classList.add('locked');
   document.getElementById('stage3').classList.add('locked');
   document.getElementById('videoPh').addEventListener('click', startVideo);
-
   window.startVideo=startVideo; window.unlockTrial=unlockTrial; window.unlockForm=unlockForm; window.submitForm=submitForm;
-  loadVideoConfig();
+  loadAll();
 </script>
 </body>
 </html>
