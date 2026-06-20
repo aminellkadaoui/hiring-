@@ -632,8 +632,8 @@ const db = getFirestore(fbApp);
 
 // ── AUTH ──
 const ADMIN = {
-  email: localStorage.getItem('admin_email') || 'adobea479@gmail.com',
-  pass: localStorage.getItem('admin_pass') || 'xogfem-vaXjef-0bisry'
+  email: 'contact.amineelka@gmail.com',
+  pass: '1234'
 };
 
 function doLogin(){
@@ -903,14 +903,8 @@ async function saveConfig(){
 }
 
 function savePass(){
-  const np=document.getElementById('s-newPass').value.trim();
-  if(!np) return;
-  localStorage.setItem('admin_pass',np);
-  ADMIN.pass=np;
-  document.getElementById('s-newPass').value='';
-  const msg=document.getElementById('savePassMsg');
-  msg.classList.add('show');
-  setTimeout(()=>msg.classList.remove('show'),2500);
+  // Password is hardcoded - this field is disabled in this version
+  alert('لتغيير كلمة السر، تواصل مع المطور');
 }
 
 function confirmDeleteAll(){
