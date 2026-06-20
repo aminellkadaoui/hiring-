@@ -613,7 +613,23 @@ body{
   </div>
 </div>
 
-<script>
+<script type="module">
+// ── FIREBASE ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCZhafPqlaBoapQ8df0Y_U8KzKyHKsNE-k",
+  authDomain: "hiring-9104c.firebaseapp.com",
+  projectId: "hiring-9104c",
+  storageBucket: "hiring-9104c.firebasestorage.app",
+  messagingSenderId: "300070302147",
+  appId: "1:300070302147:web:f6af240cb1f74763308d76"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+
 // ── AUTH ──
 const ADMIN = {
   email: localStorage.getItem('admin_email') || 'adobea479@gmail.com',
@@ -645,15 +661,31 @@ if(sessionStorage.getItem('admin_authed')==='1'){
 }
 
 // ── DATA ──
-function getApps(){ return JSON.parse(localStorage.getItem('funnel_apps')||'[]'); }
-function saveApps(apps){ localStorage.setItem('funnel_apps',JSON.stringify(apps)); }
-function getConfig(){ return JSON.parse(localStorage.getItem('funnel_config')||'{}'); }
-function saveConfigData(cfg){ localStorage.setItem('funnel_config',JSON.stringify(cfg)); }
+async function getApps(){
+  const q = query(collection(db,'applicants'), orderBy('date','desc'));
+  const snap = await getDocs(q);
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+
+async function updateApp(id, data){
+  await updateDoc(doc(db,'applicants',id), data);
+}
+
+async function getConfig(){
+  try{
+    const snap = await getDoc(doc(db,'config','settings'));
+    return snap.exists() ? snap.data() : {};
+  }catch(e){ return {}; }
+}
+
+async function saveConfigData(cfg){
+  await setDoc(doc(db,'config','settings'), cfg);
+}
 
 // ── INIT ──
-function initApp(){
-  loadSettings();
-  renderDashboard();
+async function initApp(){
+  await loadSettings();
+  await renderDashboard();
   updatePendingBadge();
   setTopbarMeta();
 }
@@ -679,8 +711,8 @@ function showPage(id){
 }
 
 // ── DASHBOARD ──
-function renderDashboard(){
-  const apps=getApps();
+async function renderDashboard(){
+  const apps = await getApps();
   document.getElementById('statTotal').textContent=apps.length;
   document.getElementById('statPending').textContent=apps.filter(a=>a.status==='pending').length;
   document.getElementById('statAccepted').textContent=apps.filter(a=>a.status==='accepted').length;
@@ -694,20 +726,23 @@ function renderDashboard(){
 
 // ── APPLICANTS ──
 let currentFilter='all';
+let allAppsCache=[];
 
-function renderApplicants(filter){
+async function renderApplicants(filter){
   currentFilter=filter;
-  const apps=getApps();
-  const filtered=filter==='all'?apps:apps.filter(a=>a.status===filter);
+  allAppsCache = await getApps();
+  const filtered=filter==='all'?allAppsCache:allAppsCache.filter(a=>a.status===filter);
   const el=document.getElementById('appsList');
   if(!filtered.length){el.innerHTML='<div class="empty-state">لا يوجد متقدمون في هذا التصنيف</div>';return;}
   el.innerHTML=filtered.map(a=>rowHTML(a)).join('');
 }
 
-function filterApps(f,btn){
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderApplicants(f);
+async function updatePendingBadge(){
+  const apps = await getApps();
+  const n=apps.filter(a=>a.status==='pending').length;
+  const b=document.getElementById('pendingBadge');
+  if(n>0){b.textContent=n;b.style.display='inline';}
+  else{b.style.display='none';}
 }
 
 function rowHTML(a){
@@ -823,25 +858,24 @@ function calcTotal(){
   }
 }
 
-function setStatus(status){
-  const apps=getApps();
-  const idx=apps.findIndex(a=>a.id==currentAppId);
-  if(idx===-1) return;
+async function setStatus(status){
+  if(!currentAppId) return;
 
   const c=parseInt(document.getElementById('sc-commitment')?.value)||0;
   const q=parseInt(document.getElementById('sc-quality')?.value)||0;
   const co=parseInt(document.getElementById('sc-communication')?.value)||0;
 
-  apps[idx].status=status;
-  apps[idx].score={commitment:c,quality:q,communication:co};
-  apps[idx].scoreTotal=c+q+co;
-  apps[idx].notes=document.getElementById('d-notes')?.value||'';
+  await updateApp(currentAppId,{
+    status,
+    scoreTotal: c+q+co,
+    score: {commitment:c,quality:q,communication:co},
+    notes: document.getElementById('d-notes')?.value||''
+  });
 
-  saveApps(apps);
   closeDrawer();
-  renderDashboard();
-  renderApplicants(currentFilter);
-  updatePendingBadge();
+  await renderDashboard();
+  await renderApplicants(currentFilter);
+  await updatePendingBadge();
 }
 
 function closeDrawer(){
@@ -851,18 +885,18 @@ function closeDrawer(){
 }
 
 // ── SETTINGS ──
-function loadSettings(){
-  const cfg=getConfig();
+async function loadSettings(){
+  const cfg = await getConfig();
   document.getElementById('s-videoUrl').value=cfg.videoUrl||'';
   document.getElementById('s-videoType').value=cfg.videoType||'youtube';
 }
 
-function saveConfig(){
+async function saveConfig(){
   const cfg={
     videoUrl:document.getElementById('s-videoUrl').value.trim(),
     videoType:document.getElementById('s-videoType').value
   };
-  saveConfigData(cfg);
+  await saveConfigData(cfg);
   const msg=document.getElementById('saveMsg');
   msg.classList.add('show');
   setTimeout(()=>msg.classList.remove('show'),2500);
@@ -883,15 +917,32 @@ function confirmDeleteAll(){
   document.getElementById('confirmModal').classList.add('open');
 }
 
-function deleteAllApps(){
-  localStorage.removeItem('funnel_apps');
+async function deleteAllApps(){
+  const apps = await getApps();
+  for(const a of apps){
+    await deleteDoc(doc(db,'applicants',a.id));
+  }
   document.getElementById('confirmModal').classList.remove('open');
-  renderDashboard();
-  renderApplicants('all');
-  updatePendingBadge();
+  await renderDashboard();
+  await renderApplicants('all');
+  await updatePendingBadge();
 }
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Expose to window for onclick handlers
+window.doLogin=doLogin;
+window.doLogout=doLogout;
+window.showPage=showPage;
+window.filterApps=filterApps;
+window.openDrawer=openDrawer;
+window.closeDrawer=closeDrawer;
+window.calcTotal=calcTotal;
+window.setStatus=setStatus;
+window.saveConfig=saveConfig;
+window.savePass=savePass;
+window.confirmDeleteAll=confirmDeleteAll;
+window.deleteAllApps=deleteAllApps;
 
 // Init if already logged in
 if(sessionStorage.getItem('admin_authed')==='1') initApp();
