@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام التصميم — هوية التوظيف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<style>
+  :root{
+    --bg:#f7fcff;--ink:#101418;--muted:#6b7a89;
+    --blue:#42a5ff;--blue-2:#1689f5;--mint:#b9f3dc;--mint-2:#8ee8c8;--mint-ink:#0f9c6c;
+    --red:#e05656;--red-ink:#c0392b;
+    --glass:rgba(255,255,255,.6);--glass-line:rgba(255,255,255,.9);
+    --soft-shadow:0 12px 30px rgba(27,137,245,.12);--shadow:0 18px 45px rgba(26,132,214,.18);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --r-pill:999px;--r-glass:28px;--r-card:22px;--r-md:18px;--r-sm:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);line-height:1.8;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(66,165,255,.08), transparent 30%),
+      radial-gradient(circle at 84% 10%, rgba(142,232,200,.16), transparent 28%),
+      linear-gradient(135deg,#fafdff 0%,#f4fafd 52%,#f8fdfb 100%);min-height:100vh}
+  .blue{color:var(--blue-2)} .muted{color:var(--muted)}
+  .mono{font-family:var(--mono)}
+
+  .glass{background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--soft-shadow),inset 0 1px 0 rgba(255,255,255,1);
+    backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%);border-radius:var(--r-glass)}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+  /* HEADER */
+  header.top{padding:64px 0 30px;text-align:center}
+  header.top .badge{display:inline-flex;align-items:center;gap:9px;padding:9px 18px;border-radius:var(--r-pill);background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.85);box-shadow:var(--soft-shadow);font-size:13px;font-weight:600;margin-bottom:22px}
+  header.top .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--blue-2);box-shadow:0 0 0 5px rgba(66,165,255,.16)}
+  header.top h1{font-size:clamp(32px,5.5vw,56px);font-weight:700;letter-spacing:-1.5px}
+  header.top h1 .g{color:var(--blue-2)}
+  header.top p{color:var(--muted);font-size:17px;max-width:560px;margin:14px auto 0}
+
+  /* NAV */
+  nav.toc{position:sticky;top:0;z-index:20;margin:24px 0;padding:12px 0;
+    background:rgba(247,252,255,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-block:1px solid rgba(255,255,255,.7)}
+  nav.toc .inner{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  nav.toc a{font-size:13.5px;font-weight:600;color:var(--muted);text-decoration:none;padding:7px 14px;border-radius:var(--r-pill);transition:.2s}
+  nav.toc a:hover{background:rgba(66,165,255,.1);color:var(--blue-2)}
+
+  /* SECTION */
+  section{padding:30px 0}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+  .sec-head .num{font-family:var(--mono);font-size:13px;color:var(--blue-2);background:rgba(66,165,255,.1);padding:4px 10px;border-radius:8px}
+  .sec-head h2{font-size:clamp(22px,3.2vw,30px);font-weight:700;letter-spacing:-.5px}
+  .sec-head p{color:var(--muted);font-size:14px}
+  .panel{padding:30px;margin-bottom:18px}
+  .grid{display:grid;gap:16px}
+  .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .lbl-sm{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:10px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase}
+
+  /* COLOR SWATCHES */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .sw{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--glass-line);box-shadow:var(--soft-shadow);background:#fff}
+  .sw .chip{height:84px}
+  .sw .meta{padding:11px 13px}
+  .sw .meta b{font-size:13.5px;display:block}
+  .sw .meta code{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  /* TYPE */
+  .type-row{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid rgba(16,20,24,.06);flex-wrap:wrap}
+  .type-row:last-child{border-bottom:0}
+  .type-row .meta{font-family:var(--mono);font-size:12px;color:var(--muted);min-width:130px}
+
+  /* RADIUS */
+  .radii{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px}
+  .radii .box{aspect-ratio:1;background:linear-gradient(135deg,rgba(66,165,255,.16),rgba(142,232,200,.18));border:1.5px solid rgba(66,165,255,.3);display:grid;place-items:center;text-align:center}
+  .radii .box code{font-family:var(--mono);font-size:13px;color:var(--blue-2);font-weight:600}
+  .radii .box small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+
+  /* SHADOWS */
+  .shadow-demo{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px}
+  .shadow-demo .box{background:#fff;border-radius:var(--r-card);padding:24px;text-align:center;font-size:13px;font-weight:600}
+  .shadow-demo .s1{box-shadow:var(--soft-shadow)}
+  .shadow-demo .s2{box-shadow:var(--shadow)}
+  .shadow-demo .s3{box-shadow:0 14px 30px rgba(22,137,245,.32), inset 0 2px 2px rgba(255,255,255,.6), inset 0 -3px 7px rgba(8,70,150,.4);background:linear-gradient(180deg,#5cb4ff,#1689f5 52%,#0f78e6);color:#fff;border:1px solid rgba(255,255,255,.35)}
+
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(180deg,#5cb4ff 0%,#1689f5 52%,#0f78e6 100%);color:#fff;font-family:inherit;font-weight:600;font-size:15px;
+    padding:0 24px;min-height:44px;border:1px solid rgba(255,255,255,.35);border-radius:var(--r-pill);cursor:pointer;text-decoration:none;
+    transition:transform .28s cubic-bezier(.22,.61,.36,1),box-shadow .28s,filter .25s;
+    box-shadow:0 12px 26px rgba(22,137,245,.28), inset 0 2px 2px rgba(255,255,255,.55), inset 0 -3px 6px rgba(8,70,150,.38)}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 16px 34px rgba(22,137,245,.4), inset 0 2px 2px rgba(255,255,255,.6), inset 0 -3px 6px rgba(8,70,150,.38)}
+  .btn:active{transform:translateY(0)}
+  .btn.lg{min-height:52px;padding:0 30px;font-size:16px}
+  .btn.sm{min-height:40px;padding:0 18px;font-size:14px}
+  .btn.green{background:linear-gradient(180deg,#a7f0cf,#3fbf8e 52%,#0f9c6c);box-shadow:0 12px 26px rgba(15,156,108,.28), inset 0 2px 2px rgba(255,255,255,.55), inset 0 -3px 6px rgba(8,110,75,.38)}
+  .btn.red{background:linear-gradient(180deg,#f6a3a3,#e05656 52%,#c0392b);box-shadow:0 12px 26px rgba(192,57,43,.24), inset 0 2px 2px rgba(255,255,255,.5), inset 0 -3px 6px rgba(120,30,20,.38)}
+  .btn.ghost{background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);color:var(--ink);box-shadow:var(--soft-shadow)}
+  .btn.outline{background:#fff;color:var(--blue-2);border:1px solid var(--blue-2);box-shadow:var(--soft-shadow)}
+  .btn.shine{position:relative;overflow:hidden}
+  .btn.shine::after{content:"";position:absolute;top:0;left:-65%;width:45%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-22deg);animation:sweep 2.8s infinite}
+  @keyframes sweep{0%{left:-65%}60%,100%{left:140%}}
+
+  /* INPUTS */
+  .field{margin-bottom:16px;max-width:420px}
+  .field label{display:block;font-size:14px;font-weight:500;margin-bottom:7px}
+  .field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.85);color:var(--ink);
+    font-family:inherit;font-size:15px;padding:14px 16px;border-radius:var(--r-sm);transition:border .25s,box-shadow .25s;box-shadow:inset 0 1px 2px rgba(16,20,24,.03)}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(66,165,255,.15)}
+  .field.bad input{border-color:#e05656;box-shadow:0 0 0 3px rgba(224,86,86,.16)}
+  .field.bad label{color:var(--red-ink)}
+
+  /* OPTION CARDS */
+  .cards{display:flex;flex-wrap:wrap;gap:14px}
+  .opt-card{position:relative;flex:0 0 auto;width:130px;height:134px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    padding:44px 12px 16px;border-radius:var(--r-card);background:rgba(255,255,255,.62);border:1.5px solid rgba(255,255,255,.92);cursor:pointer;box-shadow:var(--soft-shadow);text-align:center;
+    transition:transform .3s cubic-bezier(.22,.61,.36,1),border-color .25s,background .25s,box-shadow .25s}
+  .opt-card:hover{border-color:rgba(66,165,255,.5);background:rgba(255,255,255,.92);transform:translateY(-4px)}
+  .opt-tick{position:absolute;top:14px;right:14px;width:20px;height:20px;border-radius:7px;border:2px solid #cdd9e6;background:#fff;display:grid;place-items:center;color:#fff;font-size:11px}
+  .opt-tick i{opacity:0;transform:scale(.5);transition:transform .25s cubic-bezier(.22,.61,.36,1),opacity .2s}
+  .opt-logo-wrap{width:38px;height:38px;display:grid;place-items:center;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+  .opt-card:hover .opt-logo-wrap{transform:scale(1.12)}
+  .opt-logo-wrap img{width:36px;height:36px;object-fit:contain;display:block}
+  .opt-lbl{font-size:13px;font-weight:600;line-height:1.25;min-height:33px;display:flex;align-items:center;justify-content:center}
+  .opt-card.on{border-color:var(--blue-2);background:rgba(66,165,255,.12);box-shadow:0 0 0 3px rgba(66,165,255,.14),var(--soft-shadow)}
+  .opt-card.on .opt-tick{background:var(--blue-2);border-color:var(--blue-2)}
+  .opt-card.on .opt-tick i{opacity:1;transform:scale(1)}
+  .opt-card.on .opt-lbl{color:var(--blue-2)}
+
+  /* TEXT CHIPS */
+  .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:560px}
+  .chip{display:flex;align-items:center;justify-content:center;gap:11px;padding:15px 16px;border-radius:var(--r-md);background:rgba(255,255,255,.6);
+    border:1.5px solid rgba(255,255,255,.92);cursor:pointer;font-size:14.5px;font-weight:600;color:var(--ink);text-align:center;box-shadow:var(--soft-shadow);
+    transition:transform .28s cubic-bezier(.22,.61,.36,1),border-color .25s,background .25s,color .25s}
+  .chip:hover{border-color:rgba(66,165,255,.5);background:rgba(255,255,255,.92);transform:translateY(-3px)}
+  .chip .tick{width:24px;height:24px;border-radius:50%;border:2px solid #cdd9e6;display:grid;place-items:center;flex:0 0 24px;color:#fff;font-size:13px;transition:.25s}
+  .chip .tick i{opacity:0;transform:scale(.5);transition:.25s}
+  .chip .tick-sp{flex:0 0 24px}
+  .chip.on{border-color:var(--blue-2);background:rgba(66,165,255,.12);color:var(--blue-2)}
+  .chip.on .tick{background:var(--blue-2);border-color:var(--blue-2)}
+  .chip.on .tick i{opacity:1;transform:scale(1)}
+
+  /* BADGES */
+  .badge{font-size:12px;font-weight:600;padding:5px 13px;border-radius:var(--r-pill);display:inline-block}
+  .b-pending{background:rgba(66,165,255,.14);color:var(--blue-2)}
+  .b-accepted{background:rgba(142,232,200,.32);color:var(--mint-ink)}
+  .b-rejected{background:rgba(254,202,202,.5);color:var(--red-ink)}
+  .r-exc{background:rgba(142,232,200,.32);color:var(--mint-ink)}
+  .r-good{background:rgba(66,165,255,.16);color:var(--blue-2)}
+  .r-mid{background:rgba(255,213,128,.32);color:#b7791f}
+  .r-low{background:rgba(254,202,202,.5);color:var(--red-ink)}
+  .ans-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:var(--r-pill);background:rgba(66,165,255,.1);color:var(--blue-2);font-size:13px;font-weight:600;border:1px solid rgba(66,165,255,.22)}
+  .ans-chip img{width:16px;height:16px;object-fit:contain}
+
+  /* RATING CHIPS */
+  .rate-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px}
+  .rate-chip{font-family:inherit;font-size:14px;font-weight:600;padding:12px 6px;border-radius:var(--r-sm);cursor:pointer;background:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.9);color:var(--muted);transition:.25s}
+  .rate-chip.on.r-exc{background:rgba(142,232,200,.4);border-color:var(--mint-ink);color:var(--mint-ink)}
+  .rate-chip.on.r-good{background:rgba(66,165,255,.18);border-color:var(--blue-2);color:var(--blue-2)}
+  .rate-chip.on.r-mid{background:rgba(255,213,128,.4);border-color:#b7791f;color:#b7791f}
+  .rate-chip.on.r-low{background:rgba(254,202,202,.55);border-color:var(--red-ink);color:var(--red-ink)}
+
+  /* TIMELINE */
+  .rail{display:inline-flex;flex-direction:column;align-items:center}
+  .node{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .node .tc{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--muted)}
+  .node .knob{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid #cfe3f6;display:grid;place-items:center}
+  .node .knob i{font-size:12px;color:#cfe3f6}
+  .node.active .tc{color:var(--blue-2);font-weight:600}
+  .node.active .knob{border-color:var(--blue-2);box-shadow:0 0 0 6px rgba(66,165,255,.16)}
+  .node.active .knob i{color:var(--blue-2)}
+  .node.done .knob{background:linear-gradient(135deg,var(--mint),var(--mint-2));border-color:var(--mint-2)}
+  .node.done .knob i{color:#0d5c41}
+  .node.done .tc{color:var(--mint-ink)}
+  .line{width:2px;height:46px;background:linear-gradient(to bottom,#dce9f6,#e7f3ee)}
+  .line.fill{background:linear-gradient(to bottom,var(--blue-2),var(--mint-2))}
+
+  /* PLAY */
+  .video-demo{position:relative;width:260px;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:#0c1620;display:grid;place-items:center;border:1px solid rgba(255,255,255,.6);box-shadow:var(--soft-shadow)}
+  .video-demo::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(66,165,255,.28),transparent 62%)}
+  .play-ring{position:relative;width:66px;height:66px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:24px;padding-right:3px;
+    background:radial-gradient(120% 120% at 50% 24%,#7cc1ff,#1689f5 58%,#0a73fd);border:2px solid rgba(255,255,255,.5);
+    box-shadow:0 14px 32px rgba(22,137,245,.42), inset 0 3px 4px rgba(255,255,255,.6), inset 0 -4px 9px rgba(8,60,150,.4)}
+
+  /* LOGOS */
+  .logos{display:flex;flex-wrap:wrap;gap:18px}
+  .logo-item{display:flex;flex-direction:column;align-items:center;gap:8px;width:90px}
+  .logo-item .box{width:60px;height:60px;border-radius:var(--r-md);background:#fff;display:grid;place-items:center;box-shadow:var(--soft-shadow);border:1px solid var(--glass-line)}
+  .logo-item .box img{width:38px;height:38px;object-fit:contain}
+  .logo-item span{font-size:12px;color:var(--muted);font-weight:600}
+
+  /* TOAST */
+  .toast-demo{background:rgba(255,255,255,.88);border:1px solid rgba(142,232,200,.9);color:var(--ink);padding:13px 22px;border-radius:var(--r-md);font-size:15px;font-weight:500;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:9px}
+  .toast-demo i{color:var(--mint-ink)}
+
+  code.tok{font-family:var(--mono);font-size:12.5px;background:rgba(16,20,24,.06);padding:2px 8px;border-radius:6px;direction:ltr;display:inline-block;color:var(--blue-2)}
+
+  footer{text-align:center;padding:50px 20px 40px;color:var(--muted);font-size:13px;font-family:var(--mono)}
+  @media(max-width:520px){ .rate-chips{grid-template-columns:repeat(2,1fr)} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="badge"><span class="dot"></span> Design System · هوية التوظيف</span>
+    <h1>نظام <span class="g">التصميم</span></h1>
+    <p>مرجع الهوية البصرية الزجاجية: الألوان، الخطوط، الحواف، الأزرار، والمكوّنات — كلها في مكان واحد.</p>
+  </div>
+</header>
+
+<nav class="toc"><div class="inner">
+  <a href="#colors">الألوان</a>
+  <a href="#type">الخطوط</a>
+  <a href="#radius">الحواف</a>
+  <a href="#shadow">الظلال</a>
+  <a href="#buttons">الأزرار</a>
+  <a href="#inputs">الحقول</a>
+  <a href="#optcards">كروت البرامج</a>
+  <a href="#chips">خيارات النص</a>
+  <a href="#badges">الشارات</a>
+  <a href="#rating">التقييم</a>
+  <a href="#timeline">التايملاين</a>
+  <a href="#play">الفيديو</a>
+  <a href="#logos">الشعارات</a>
+  <a href="#toast">التنبيهات</a>
+</div></nav>
+
+<main class="wrap">
+
+  <!-- COLORS -->
+  <section id="colors">
+    <div class="sec-head"><span class="num">01</span><h2>الألوان</h2></div>
+    <div class="glass panel">
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#f7fcff"></div><div class="meta"><b>الخلفية</b><code>--bg #f7fcff</code></div></div>
+        <div class="sw"><div class="chip" style="background:#101418"></div><div class="meta"><b>النص (ink)</b><code>--ink #101418</code></div></div>
+        <div class="sw"><div class="chip" style="background:#6b7a89"></div><div class="meta"><b>نص ثانوي</b><code>--muted #6b7a89</code></div></div>
+        <div class="sw"><div class="chip" style="background:#42a5ff"></div><div class="meta"><b>أزرق فاتح</b><code>--blue #42a5ff</code></div></div>
+        <div class="sw"><div class="chip" style="background:#1689f5"></div><div class="meta"><b>أزرق أساسي</b><code>--blue-2 #1689f5</code></div></div>
+        <div class="sw"><div class="chip" style="background:#8ee8c8"></div><div class="meta"><b>مينت</b><code>--mint-2 #8ee8c8</code></div></div>
+        <div class="sw"><div class="chip" style="background:#0f9c6c"></div><div class="meta"><b>مينت غامق</b><code>--mint-ink #0f9c6c</code></div></div>
+        <div class="sw"><div class="chip" style="background:#e05656"></div><div class="meta"><b>أحمر</b><code>--red #e05656</code></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPE -->
+  <section id="type">
+    <div class="sec-head"><span class="num">02</span><h2>الخطوط</h2><p>IBM Plex Sans Arabic للعناوين والنصوص · IBM Plex Mono للأرقام والتايم كود</p></div>
+    <div class="glass panel">
+      <div class="type-row"><span class="meta">Display · 700</span><span style="font-size:40px;font-weight:700;letter-spacing:-1px">نبحث عن محترف واحد</span></div>
+      <div class="type-row"><span class="meta">Heading · 600</span><span style="font-size:28px;font-weight:600">قدّم معلوماتك</span></div>
+      <div class="type-row"><span class="meta">Body · 400</span><span style="font-size:16px">نص الفقرة العادي يستخدم لشرح التفاصيل بوضوح وراحة للقراءة.</span></div>
+      <div class="type-row"><span class="meta">Muted · 400</span><span class="muted" style="font-size:15px">نص ثانوي للملاحظات والتوضيحات.</span></div>
+      <div class="type-row"><span class="meta">Mono · 500</span><span class="mono" style="font-size:18px;color:var(--blue-2)">00:01 — 00:02 — 00:03</span></div>
+    </div>
+  </section>
+
+  <!-- RADIUS -->
+  <section id="radius">
+    <div class="sec-head"><span class="num">03</span><h2>الحواف</h2><p>نظام متدرّج موحّد للزوايا</p></div>
+    <div class="glass panel">
+      <div class="radii">
+        <div class="box" style="border-radius:14px"><div><code>--r-sm</code><small>14px · حقول</small></div></div>
+        <div class="box" style="border-radius:18px"><div><code>--r-md</code><small>18px · شيبس</small></div></div>
+        <div class="box" style="border-radius:22px"><div><code>--r-card</code><small>22px · كروت</small></div></div>
+        <div class="box" style="border-radius:28px"><div><code>--r-glass</code><small>28px · بطاقات</small></div></div>
+        <div class="box" style="border-radius:999px"><div><code>--r-pill</code><small>999px · أزرار</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHADOW -->
+  <section id="shadow">
+    <div class="sec-head"><span class="num">04</span><h2>الظلال</h2></div>
+    <div class="glass panel">
+      <div class="shadow-demo">
+        <div class="box s1">soft-shadow</div>
+        <div class="box s2">shadow</div>
+        <div class="box s3">bevel (أزرار)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section id="buttons">
+    <div class="sec-head"><span class="num">05</span><h2>الأزرار</h2><p>pill ناعم بتأثير بيفل · حركة hover سلسة</p></div>
+    <div class="glass panel">
+      <div class="lbl-sm">الأنواع</div>
+      <div class="row" style="margin-bottom:22px">
+        <button class="btn"><i class="ph-bold ph-paper-plane-tilt"></i> أساسي</button>
+        <button class="btn green"><i class="ph-bold ph-check"></i> موافقة</button>
+        <button class="btn red"><i class="ph-bold ph-x"></i> رفض</button>
+        <button class="btn ghost"><i class="ph-bold ph-eye"></i> شفاف</button>
+        <button class="btn outline"><i class="ph-bold ph-notion-logo"></i> محدّد</button>
+        <button class="btn shine"><i class="ph-bold ph-sparkle"></i> متحرّك (CTA)</button>
+      </div>
+      <div class="lbl-sm">الأحجام</div>
+      <div class="row">
+        <button class="btn lg">كبير · 52px</button>
+        <button class="btn">عادي · 44px</button>
+        <button class="btn sm">صغير · 40px</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUTS -->
+  <section id="inputs">
+    <div class="sec-head"><span class="num">06</span><h2>الحقول</h2></div>
+    <div class="glass panel">
+      <div class="field"><label>حقل نصّي</label><input type="text" placeholder="اكتب هنا..."></div>
+      <div class="field"><label>قائمة منسدلة</label><select><option>اختر...</option><option>PayPal</option><option>Binance</option></select></div>
+      <div class="field"><label>نص طويل</label><textarea placeholder="اشرح باختصار..." rows="3"></textarea></div>
+      <div class="field bad"><label>حقل خاطئ (تحقّق)</label><input type="text" placeholder="مطلوب"></div>
+    </div>
+  </section>
+
+  <!-- OPTION CARDS -->
+  <section id="optcards">
+    <div class="sec-head"><span class="num">07</span><h2>كروت البرامج والدفع</h2><p>أيقونة فوق · نص تحت · تشيك ثابت أعلى اليمين</p></div>
+    <div class="glass panel">
+      <div class="cards" id="demoCards">
+        <label class="opt-card on"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap"><img src="logos/premiere.svg" alt=""></span><span class="opt-lbl">Premiere Pro</span></label>
+        <label class="opt-card"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap"><img src="logos/aftereffects.svg" alt=""></span><span class="opt-lbl">After Effects</span></label>
+        <label class="opt-card on"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap"><img src="logos/figma.svg" alt=""></span><span class="opt-lbl">Figma</span></label>
+        <label class="opt-card"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap"><img src="logos/davinci.svg" alt=""></span><span class="opt-lbl">DaVinci Resolve</span></label>
+        <label class="opt-card on"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap"><img src="logos/paypal.svg" alt=""></span><span class="opt-lbl">PayPal</span></label>
+        <label class="opt-card"><span class="opt-tick"><i class="ph-bold ph-check"></i></span><span class="opt-logo-wrap"><img src="logos/binance.svg" alt=""></span><span class="opt-lbl">Binance</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHIPS -->
+  <section id="chips">
+    <div class="sec-head"><span class="num">08</span><h2>خيارات النص</h2><p>كروت Grid متوازنة · نص متوسّط · دائرة 24px</p></div>
+    <div class="glass panel">
+      <div class="choice" id="demoChips">
+        <label class="chip on"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">متفرّغ بدوام كامل</span><span class="tick-sp"></span></label>
+        <label class="chip"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">متاح بدوام جزئي</span><span class="tick-sp"></span></label>
+        <label class="chip"><span class="tick"><i class="ph-bold ph-check"></i></span><span class="lbl">متاح أوقاتاً محددة</span><span class="tick-sp"></span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section id="badges">
+    <div class="sec-head"><span class="num">09</span><h2>الشارات</h2></div>
+    <div class="glass panel">
+      <div class="lbl-sm">حالة المتقدم</div>
+      <div class="row" style="margin-bottom:22px">
+        <span class="badge b-pending">قيد المراجعة</span>
+        <span class="badge b-accepted">مقبول</span>
+        <span class="badge b-rejected">مرفوض</span>
+      </div>
+      <div class="lbl-sm">شارات الاختيارات (في اللوحة)</div>
+      <div class="row">
+        <span class="ans-chip"><img src="logos/figma.svg" alt=""> Figma</span>
+        <span class="ans-chip"><img src="logos/paypal.svg" alt=""> PayPal</span>
+        <span class="ans-chip"><i class="ph-bold ph-bank"></i> بنك محلي</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RATING -->
+  <section id="rating">
+    <div class="sec-head"><span class="num">10</span><h2>التقييم</h2><p>تقييم بدون أرقام</p></div>
+    <div class="glass panel">
+      <div class="rate-chips">
+        <button class="rate-chip r-low">ضعيف</button>
+        <button class="rate-chip r-mid">متوسط</button>
+        <button class="rate-chip on r-good">جيد</button>
+        <button class="rate-chip r-exc">ممتاز</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <div class="sec-head"><span class="num">11</span><h2>التايملاين</h2><p>3 مراحل · timecode</p></div>
+    <div class="glass panel">
+      <div class="rail">
+        <div class="node done"><span class="tc">00:01</span><span class="knob"><i class="ph-bold ph-play"></i></span></div>
+        <div class="line fill"></div>
+        <div class="node active"><span class="tc">00:02</span><span class="knob"><i class="ph-bold ph-pencil-simple-line"></i></span></div>
+        <div class="line"></div>
+        <div class="node"><span class="tc">00:03</span><span class="knob"><i class="ph-bold ph-film-slate"></i></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section id="play">
+    <div class="sec-head"><span class="num">12</span><h2>زر الفيديو</h2></div>
+    <div class="glass panel">
+      <div class="video-demo"><div class="play-ring"><i class="ph-fill ph-play"></i></div></div>
+    </div>
+  </section>
+
+  <!-- LOGOS -->
+  <section id="logos">
+    <div class="sec-head"><span class="num">13</span><h2>الشعارات</h2><p>شعارات حقيقية ملوّنة · مخزّنة محلياً</p></div>
+    <div class="glass panel">
+      <div class="logos">
+        <div class="logo-item"><div class="box"><img src="logos/premiere.svg" alt=""></div><span>Premiere</span></div>
+        <div class="logo-item"><div class="box"><img src="logos/aftereffects.svg" alt=""></div><span>After Effects</span></div>
+        <div class="logo-item"><div class="box"><img src="logos/figma.svg" alt=""></div><span>Figma</span></div>
+        <div class="logo-item"><div class="box"><img src="logos/davinci.svg" alt=""></div><span>DaVinci</span></div>
+        <div class="logo-item"><div class="box"><img src="logos/notion.svg" alt=""></div><span>Notion</span></div>
+        <div class="logo-item"><div class="box"><img src="logos/paypal.svg" alt=""></div><span>PayPal</span></div>
+        <div class="logo-item"><div class="box"><img src="logos/binance.svg" alt=""></div><span>Binance</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOAST -->
+  <section id="toast">
+    <div class="sec-head"><span class="num">14</span><h2>التنبيهات</h2></div>
+    <div class="glass panel">
+      <div class="toast-demo"><i class="ph-bold ph-check-circle"></i> تم استلام معلوماتك ✓</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>© <span dir="ltr">aminellkadaoui</span> · نظام التصميم — هوية التوظيف</footer>
+
+<script>
+  // demo: toggle selection on cards/chips/ratings
+  document.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+  document.querySelectorAll('#demoChips .chip').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('#demoChips .chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
+  }));
+  document.querySelectorAll('.rate-chip').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('.rate-chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
+  }));
+</script>
+</body>
+</html>
