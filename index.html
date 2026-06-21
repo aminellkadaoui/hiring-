@@ -367,13 +367,33 @@
   let videoUrl='', ytPlayer=null, ytTimer=null, started=false;
   function ytId(s){ const m=String(s).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([\w-]{11})/); if(m) return m[1]; const b=String(s).trim().match(/^[\w-]{11}$/); return b?b[0]:''; }
   function isYouTube(s){ return /youtu\.?be|youtube\.com/i.test(s); }
+  function isVimeo(s){ return /vimeo\.com/i.test(s); }
+  function vimeoParts(s){
+    s=String(s); let id='', hash='';
+    const m=s.match(/vimeo\.com\/(?:video\/)?(\d+)/); if(m) id=m[1];
+    const hm=s.match(/[?&]h=([\w]+)/);
+    if(hm) hash=hm[1];
+    else { const pm=s.match(/vimeo\.com\/\d+\/(\w+)/); if(pm) hash=pm[1]; }
+    return {id,hash};
+  }
   function vErr(msg){ document.getElementById('videoBox').innerHTML='<div class="video-ph" style="cursor:default"><div class="play-ring" style="background:rgba(255,255,255,.12)"><i class="ph-bold ph-warning"></i></div><span>'+msg+'</span></div>'; }
 
   function startVideo(){
     if(started) return;
     if(!videoUrl){ toast('لم يتم ضبط رابط الفيديو بعد','err'); return; }
     started=true; document.getElementById('videoPh').style.display='none';
-    if(isYouTube(videoUrl)){
+    if(isVimeo(videoUrl)){
+      const {id,hash}=vimeoParts(videoUrl);
+      if(!id){ toast('رابط Vimeo غير صحيح','err'); started=false; document.getElementById('videoPh').style.display='flex'; return; }
+      const iframe=document.createElement('iframe');
+      iframe.src='https://player.vimeo.com/video/'+id+'?'+(hash?('h='+hash+'&'):'')+'autoplay=1&title=0&byline=0&portrait=0';
+      iframe.allow='autoplay; fullscreen; picture-in-picture; encrypted-media';
+      iframe.setAttribute('allowfullscreen','');
+      document.getElementById('videoBox').appendChild(iframe);
+      const attach=()=>{ try{ const p=new Vimeo.Player(iframe); p.on('timeupdate',d=>{ if(d&&typeof d.percent==='number') setProgress(d.percent*100); }); p.on('ended',()=>setProgress(100)); }catch(e){ console.error(e); } };
+      if(window.Vimeo && window.Vimeo.Player) attach();
+      else { const s=document.createElement('script'); s.src='https://player.vimeo.com/api/player.js'; s.onload=attach; s.onerror=()=>vErr('تعذّر تحميل مشغّل Vimeo — تأكد من الرابط والاتصال.'); document.head.appendChild(s); }
+    } else if(isYouTube(videoUrl)){
       const id=ytId(videoUrl);
       if(!id){ toast('رابط يوتيوب غير صحيح','err'); started=false; document.getElementById('videoPh').style.display='flex'; return; }
       const holder=document.createElement('div'); holder.id='ytplayer'; document.getElementById('videoBox').appendChild(holder);
