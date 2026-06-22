@@ -99,6 +99,11 @@
   .filters button:hover{transform:translateY(-2px)}
   .filters button.active{background:linear-gradient(135deg,rgba(66,165,255,.16),rgba(142,232,200,.16));border-color:rgba(66,165,255,.4);color:var(--blue-2);font-weight:600}
   .filters button.trash.active{background:rgba(254,202,202,.4);border-color:rgba(254,202,202,.9);color:var(--red-ink)}
+  .trashbar{display:none;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding:12px 18px;border-radius:16px;background:rgba(254,242,242,.6);border:1px solid rgba(254,202,202,.7)}
+  .trashbar .selall{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer}
+  .trashbar input[type=checkbox]{width:18px;height:18px;accent-color:var(--blue-2);cursor:pointer}
+  .rsel{display:inline-grid;place-items:center}
+  .rsel-cb{width:18px;height:18px;accent-color:var(--blue-2);cursor:pointer}
 
   /* TABLE */
   .tbl-wrap{overflow-x:auto}
@@ -238,6 +243,15 @@
           <button class="btn sm" id="exportBtn"><i class="ph-bold ph-microsoft-excel-logo"></i> تصدير Excel</button>
         </div>
 
+        <div class="trashbar" id="trashBar">
+          <label class="selall"><input type="checkbox" id="selAll"> تحديد الكل</label>
+          <span id="selCount" class="muted">0 محدد</span>
+          <div style="margin-right:auto;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn green sm" id="bulkRestore" disabled><i class="ph-bold ph-arrow-counter-clockwise"></i> استعادة المحدد</button>
+            <button class="btn red sm" id="bulkDelete" disabled><i class="ph-bold ph-trash"></i> حذف نهائي للمحدد</button>
+          </div>
+        </div>
+
         <div class="glass"><div class="tbl-wrap"><table>
           <thead><tr><th>الاسم / الهاتف</th><th>البلد</th><th>السعر</th><th>التقييم</th><th>الحالة</th><th>التاريخ</th></tr></thead>
           <tbody id="applicantsBody"><tr><td colspan="6" class="empty">جارٍ التحميل...</td></tr></tbody>
@@ -321,6 +335,7 @@
   const RATINGS = ["ضعيف","متوسط","جيد","ممتاز"];
 
   let applicants=[], currentFilter='all', currentId=null, currentRating=null, content=DEFAULT_CONTENT, qSeq=0;
+  let selected=new Set();
 
   const $ = id => document.getElementById(id);
   function toast(msg,type){ const t=$('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>{t.className='toast';},3000); }
@@ -379,16 +394,45 @@
     return rows;
   }
   function renderTable(){
+    const trash=currentFilter==='trash';
+    $('trashBar').style.display = trash ? 'flex' : 'none';
+    if(!trash) selected.clear();
     const rows=visibleRows();
-    if(!rows.length){ $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">'+(currentFilter==='trash'?'سلة المهملات فارغة':'لا يوجد متقدمون')+'</td></tr>'; return; }
-    $('applicantsBody').innerHTML=rows.map(a=>`<tr data-id="${a.id}">
-      <td><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></td>
+    if(!rows.length){ $('applicantsBody').innerHTML='<tr><td colspan="6" class="empty">'+(trash?'سلة المهملات فارغة':'لا يوجد متقدمون')+'</td></tr>'; updateSelUI(); return; }
+    $('applicantsBody').innerHTML=rows.map(a=>{
+      const sel = trash ? `<label class="rsel"><input type="checkbox" class="rsel-cb" data-id="${a.id}" ${selected.has(a.id)?'checked':''}></label>` : '';
+      return `<tr data-id="${a.id}">
+      <td><div style="display:flex;align-items:center;gap:11px">${sel}<div><div>${esc(a.name)}</div><div class="muted" style="font-size:12px">${esc(a.phone)}</div></div></div></td>
       <td class="muted">${esc(country(a.name))}</td>
       <td><span class="price-cell">$${esc(a.price)}</span></td>
       <td>${ratingBadge(a.rating)}</td>
       <td>${statusBadge(a.status)}</td>
-      <td class="muted">${fmtDate(a.date)}</td></tr>`).join('');
+      <td class="muted">${fmtDate(a.date)}</td></tr>`;
+    }).join('');
     $('applicantsBody').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>openDrawer(tr.dataset.id)));
+    $('applicantsBody').querySelectorAll('.rsel').forEach(l=>l.addEventListener('click',e=>e.stopPropagation()));
+    $('applicantsBody').querySelectorAll('.rsel-cb').forEach(cb=>cb.addEventListener('change',()=>{
+      if(cb.checked) selected.add(cb.dataset.id); else selected.delete(cb.dataset.id);
+      updateSelUI();
+    }));
+    updateSelUI();
+  }
+  function updateSelUI(){
+    const trashRows=applicants.filter(a=>a.deleted);
+    if($('selCount')) $('selCount').textContent=selected.size+' محدد';
+    if($('selAll')) $('selAll').checked = trashRows.length>0 && trashRows.every(a=>selected.has(a.id));
+    if($('bulkDelete')) $('bulkDelete').disabled = selected.size===0;
+    if($('bulkRestore')) $('bulkRestore').disabled = selected.size===0;
+  }
+  async function bulkApply(perm){
+    if(!selected.size) return;
+    const ids=[...selected];
+    if(perm && !confirm('حذف '+ids.length+' متقدم نهائياً؟ لا يمكن التراجع.')) return;
+    try{
+      if(perm){ await Promise.all(ids.map(id=>deleteDoc(doc(db,'applicants',id)))); applicants=applicants.filter(a=>!selected.has(a.id)); }
+      else { await Promise.all(ids.map(id=>updateDoc(doc(db,'applicants',id),{deleted:false}))); applicants.forEach(a=>{ if(selected.has(a.id)) a.deleted=false; }); }
+      selected.clear(); renderStats(); renderTable(); toast(perm?'تم حذف المحدد نهائياً':'تمت استعادة المحدد','ok');
+    }catch(e){ console.error(e); toast('تعذّرت العملية','err'); }
   }
 
   /* DRAWER */
@@ -558,6 +602,13 @@
     document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x===b));
     renderTable();
   }));
+  $('selAll').addEventListener('change',()=>{
+    const trashRows=applicants.filter(a=>a.deleted);
+    if($('selAll').checked) trashRows.forEach(a=>selected.add(a.id)); else selected.clear();
+    renderTable();
+  });
+  $('bulkDelete').addEventListener('click',()=>bulkApply(true));
+  $('bulkRestore').addEventListener('click',()=>bulkApply(false));
   $('drawerClose').addEventListener('click',closeDrawer);
   $('overlay').addEventListener('click',closeDrawer);
   $('exportBtn').addEventListener('click',exportCSV);
