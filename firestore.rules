@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // إعدادات ومحتوى الصفحة (الفيديو + الأسئلة + رابط Notion)
+    // القراءة للجميع لأن فورم التقديم يحتاجها — الكتابة للأدمن المسجّل فقط
+    match /config/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // المتقدمون
+    match /applicants/{id} {
+      // أي زائر يقدر يرسل طلباً جديداً (إنشاء فقط)
+      allow create: if true;
+
+      // التحديث: الأدمن المسجّل كامل الصلاحية،
+      // أو الزائر لكن فقط على حقلَي موافقة الترايل (لا يقدر يغيّر الحالة/التقييم)
+      allow update: if request.auth != null
+                    || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['trialConsent','declineReason']);
+
+      // قراءة كل الطلبات وحذفها للأدمن المسجّل فقط
+      allow read, delete: if request.auth != null;
+    }
+  }
+}

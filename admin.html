@@ -301,6 +301,8 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCZhafPqlaBoapQ8df0Y_U8KzKyHKsNE-k",
@@ -312,9 +314,7 @@
   };
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
-
-  const ADMIN_EMAIL = "contact.amineelka@gmail.com";
-  const ADMIN_PASS  = "1234";
+  const auth = getAuth(app);
 
   const DEFAULT_CONTENT = {
     notionUrl: "",
@@ -361,13 +361,18 @@
   }
 
   /* LOGIN */
-  function doLogin(){
+  async function doLogin(){
     const email=$('loginEmail').value.trim(), pass=$('loginPass').value;
-    if (email===ADMIN_EMAIL && pass===ADMIN_PASS){ sessionStorage.setItem('admin_authed','1'); showApp(); }
-    else $('loginErr').textContent='بيانات الدخول غير صحيحة';
+    $('loginErr').textContent='';
+    const btn=$('loginBtn'); btn.disabled=true; btn.innerHTML='<i class="ph-bold ph-circle-notch"></i> جارٍ الدخول...';
+    try{ await signInWithEmailAndPassword(auth,email,pass); }
+    catch(e){ console.error(e); $('loginErr').textContent='بيانات الدخول غير صحيحة'; }
+    btn.disabled=false; btn.innerHTML='<i class="ph-bold ph-sign-in"></i> دخول';
   }
-  function showApp(){ $('login').style.display='none'; $('app').style.display='block'; loadApplicants(); loadConfig(); }
-  function logout(){ sessionStorage.removeItem('admin_authed'); location.reload(); }
+  let booted=false;
+  function showApp(){ $('login').style.display='none'; $('app').style.display='block'; if(!booted){ booted=true; loadApplicants(); loadConfig(); } }
+  function showLogin(){ $('app').style.display='none'; $('login').style.display='flex'; }
+  function logout(){ signOut(auth); }
 
   /* DATA */
   async function loadApplicants(){
@@ -618,7 +623,7 @@
 
   window.doLogin=doLogin; window.logout=logout;
 
-  if (sessionStorage.getItem('admin_authed')==='1') showApp();
+  onAuthStateChanged(auth, user=>{ if(user) showApp(); else showLogin(); });
 </script>
 </body>
 </html>
